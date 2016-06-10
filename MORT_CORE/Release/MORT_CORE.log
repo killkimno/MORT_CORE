@@ -1,0 +1,4 @@
+﻿     Creating library G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.lib and object G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.exp
+  LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
+main.obj : warning LNK4248: unresolved typeref token (0100001F) for 'ETEXT_DESC'; image may not run
+  MORT_CORE.vcxproj -> G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.dll

@@ -1,0 +1,503 @@
+/s
+a unique horror adventure
+by benjamin rivers
+/t
+밴자민 리버의 유니크 호러 어드벤쳐
+/e
+
+/s
+ONCE YOU START OVER, ANY PREVIOUS
+PROGRESS WILL BE ERASED.
+
+ARE YOU SURE YOU WANT TO START FROM
+THE BEGINNING?
+/t
+일단 시작하면 이전의 진행은 모두 지워집니다.
+정말 처음부터 다시 할겁니까?
+/e
+
+/s
+YOUR GAME WILL BE SAVED AUTOMATICALLY
+AT CERTAIN POINTS.
+
+HOWEVER, WE RECOMMEND YOU PUT ASIDE
+AN HOUR AND A HALF AND COMPLETE HOME
+IN A SINGLE SITTING
+/t
+이 게임은 체크포인트에 자동으로 저장됩니다.
+하지만 한 시간 또는 30분 동안 진득하게 쳐 할걸
+추천합니다.
+/e
+
+
+/s
+Did I give up, and forget
+everything I had done so
+far?
+/t
+만약 내가 때려치면 난 모든걸 잃게 될거다.
+/e
+
+
+/s
+All I remembered at that
+point was finding myself
+alone.
+/t
+나는 나 자신혼자 있다는걸 완벽하게 기억하고 있다.
+/e
+
+/s
+There was something hy my
+feet.
+
+ll flashlight...
+/t
+내 근처에 뭔가가 있다. 손전등이다.
+/e
+
+
+/s
+Oh...
+Oh, my head...
+Where was I? it was so
+dark....
+/t
+어
+어 내 머리.
+난 어디있었던 거야? 너무 어둡다
+/e
+
+
+/s
+A thin, grey mouse was
+stuck in a trap. It looked
+frantic but exhausted.
+
+Did I free it?
+/t
+외소하고 회색 쥐가 함정에 걸렸다.
+보기에 날뛰고 있지만 힘이 빠져 있다.
+
+풀어줄까?
+/e
+
+/s
+The mouse was dead;it
+looked like the cat had got
+to it.
+/t
+쥐새끼는 죽었다. 굉이가 가져간듯 하다
+/e
+
+
+
+
+/s
+That house... where was I?
+/t
+이 집은... 난 어딨는건가?
+/e
+
+/s
+There was a body... lying on
+the floor. Who was it?
+/t
+하나의 몸뚱아리가 방바닥에 뒹굴고 있다.
+누구인가?
+/e
+
+/s
+I didn't reco nize his face.
+he was still kind of warm
+/t
+나는 그의 얼굴을 인지하지 못했다.
+그는 여전히 따듯했다.
+/e
+
+
+/s
+the desk had a computer
+and some papers on it, and
+a single drawer. I didn't
+want to snoop, but...
+
+Did i open the drawer?
+/t
+책상에 컴퓨터와 몇장의 종이가 있다.
+그리고 책장 서랍도 함께. 나는 탐정을하고 싶지 않다.
+
+하지만
+
+이거 열까?
+/e
+
+
+/s
+Maybe it was better that I left the desk alone.
+/t
+아마도 그냥 내비두고 가는게 좋을거 같다.
+/e
+
+/s
+Receipts, pens...
+...and a blurry photo. looked
+like a store of some kind.
+
+Why did this look so
+familiar?
+/t
+영수증, 팬, 그리고 흐린 사진.
+한 가게 같다.
+
+왜이리 친숙하지?
+/e
+
+/s
+I really shouldn't have been 
+going through this stuff,
+getting my fingerprints
+everywhere
+/t
+내 손이 가르키는 그 어느 지역도 난 가본적이 없다.
+/e
+
+
+/s
+Blood on the wall... It
+smeeld fresh, and
+sickening.
+
+I realized there was blood
+on my shoes and pants.
+/t
+피가 벽에 있다. 냄새가 죽이고 그지같다.
+
+나는 이 피가 내 바지와 신발에도 있는걸 깨닳았다.
+/e
+
+/s
+Oh, man... I had to get out of there.
+out of there.
+/t
+난 여기서 나가야 겠어
+/e
+
+/s
+If that man died in the
+hallway, what was the
+blood doing there?
+/t
+만약 사람이 현관에 뒤졌다면, 이 피는 뭐냐?
+/e
+
+/s
+I noticed that I limped as i
+moved down the stairs.
+
+How did I hurt my leg, I
+wondred?
+
+All i could really recall
+was coming home, seeing
+/t
+난 계단에서 내려갈때 내가 다리를 절고 있다는걸 깨닳았다.
+
+어떻게 내 다리가?? 어떻게 다친거지 궁금하다
+내가 정말로 기억할 수 있는건 집으로 가던거
+/e
+
+/s
+Rachel. I was upset. She
+looked afraid.
+
+I shook my head and tried
+to clear it. I knew I should
+head downstairs, try to
+find a way out.
+/t
+집으로 가던 레첼이다. 나는 당황스럽다.
+그녀는 걱정스러워 보였다.
+
+나는 머리를 밀고 정리했다. 나는 아래로 
+가야한다는 걸 알고 있다. 자 길을 찾자
+/e
+
+
+/s
+Did I give up, and forget
+everthing I had done so
+far?
+/t
+만약 내가 때려치면 난 모든걸 잃게 될거다.
+/e
+
+/s
+A collection of rusty tools.
+These looked like they'd
+seen a lot of use, and were
+caked in amp-smelling
+dirt.
+
+Why weren't they in a
+shed?
+/t
+더러운 도구의 모움이다.
+이건 많이 사용한거 같고 더러운
+곳에 쳐 넣었던것 같다
+/e
+
+/s
+This was an odd place to
+keep yard tools.
+
+What would they have been
+used for in here?
+/t
+여기에 정원의 도구가 있는건 이상하다.
+이게 어떻게 사용 되었던 걸까?
+/e
+
+/s
+I found a picture of a
+couple. It looked like it'd
+been moved a lot; there
+seemd to be a switch
+behind it.
+
+Did I push the switch?
+/t
+난 커플의 사진을 발견했다. 이건 좀 많이 움직여진거 같다.
+여기 뒤에 스위치가 있다.
+
+요놈을 누를까?
+/e
+
+/s
+I didn't want to mess
+around with everybody's
+stuff.
+/t
+난 이곳의 그 어떤곳도 망가트리고 싶지 않다
+/e
+
+/s
+It depressed smoothly into
+the wall. I heard a faraway
+click somewhere.
+/t
+벽 깊게 부드럽게 들어갔다. 어딘가에서 눌러지는걸 들었다.
+/e
+
+/s
+The shelf was full of books
+on local history and
+hunting. Seemed like the
+owner of the house really
+knew the area.
+/t
+책장에 이 지역의 사냥에 관한 내용의 책으로 가득찼다.
+마치 주인은 이 지역에 관해 제대로 알고 있는거 같다.
+/e
+
+/s
+There were scribbles of all
+kinds on random scraps of
+paper, and notes about
+some kind of water tower.
+/t
+어떤 워터 타워에 대한 휘갈겨쓴 종이 쪼가리와 노트들이 있다.
+/e
+
+/s
+Did he mean the one by the
+old train yard?
+/t
+이게 이 오래된 기차 마당 옆에 있던걸 의미하는건가?
+/e
+
+/s
+An old dining table covered
+in dirty dishes for two
+people.
+
+There were dozens of beer
+cans and other liquor
+bottles among the dishes.
+/t
+오래된 테이블에는 두명의 사람을 위한 드러운
+접시가 있다.
+
+접시 근처에는 맥주 병, 술들이 둘러싸여 있다.
+/e
+
+/s
+The smell was turning my
+stomach.
+/t
+냄새가 날 역겹게 만들고 있다
+/e
+
+/s
+How long had this been
+here, rotting? the man
+upstairs didn't look like
+he'd been dead a long time.
+/t
+얼마나 여기서 썩고 있던걸까?
+위에 죽어 있던 사람은 별로 오래 된거 같지 않다.
+/e
+
+/s
+A blackandwhite photo.
+looked like the man
+upstairs, and his wife, I
+guessed. There was no
+reason for me to keep this.
+
+Did I take it?
+/t
+흑백 사진이 있다. 위에 죽은 사람과 그의 아내로 보이는 사진이 있다.
+이걸 내가 가지고 있을 필요는 있다.
+
+가질까?
+/e
+
+/s
+I figured this was no help to
+me, so i left it behind.
+/t
+내가 생각하기에 요건 별로 도움이 될거 같지 않다.
+그래서 여기 둔다.
+/e
+
+/s
+I slipped the photo into my
+pocket. Maybe this would
+help me find some answers.
+/t
+나는 요걸 내 주머니에 넣었다.
+아마 이게 어떤 답변에 도움을 줄거다.
+/e
+
+/s
+I lookd like hell. My clothes
+were dirty and torn, and
+there was mud caked all
+over my shoes.
+/t
+내 모습이 마치 지옥같다.
+내 옷은 더럽고 내 신발은 진흙 범벅이다.
+/e
+
+/s
+Had i been sleepwalking
+again? Was that how i got
+to that house?
+/t
+내가 몽유병이 다시 발동한건가?
+어떻게 내가 이 집에 왔지?
+/e
+
+/s
+The bathroom was spotless;
+everything had been wiped
+to a sheen
+
+I wondered if it was the
+man's wife who did the
+cleaning, or him.
+/t
+세면장은 흠잡을데 없이 매우 광택이 빛났다.
+
+그가 치운걸까? 아니면 그의 아내가 치운걸까?
+/e
+
+/s
+There was a photo
+development tray lying on
+the floor. Some leftover
+negatives were sticking
+out, but they were pretty
+blurry.
+/t
+바닥에 사진 개발함이 누워있다. 몇 가지는 튀어나와 있다. 하지만 그들은 매우 흐리다.
+/e
+
+/s
+I thought I saw what looked
+like treetops.
+/t
+내가 생각하길 나무 꼭대기에서 본것 같다.
+/e
+
+/s
+The front door was blocked
+by a pile of furniture.
+
+I knew i had to find another
+way out.
+/t
+앞의 문이 쌓여 있는 가구들에 의해 길이 막혔다.
+
+나도 안다 딴곳을 찾아야 한다는걸
+/e
+
+/s
+The door was taped up and
+seemed to be stuck.
+
+By the smell, I guessed it
+led to the kitchen.
+/t
+문이 테이프에 의해 막힌거 같다.
+
+냄새로 짐작한데 여긴 부엌인거 같다.
+/e
+
+/s
+I gave the door hard
+shove and, to my surpise,
+it cracked open.
+/t
+난 문에 힘을 주었고 놀랍게도 문이 열렸다.
+/e
+
+/s
+The box looked heavy, but
+there were marks on the
+floor. It had obviously been
+moved before.
+/t
+이 상자는 상당히 무거워 보인다, 하지만 바닥에 자국이 있다.
+이건 분명 전에 움직여 진적이 있다.
+/e
+
+/s
+Maybe I had found a way
+out.
+
+I must have move it, right?
+/t
+아마 난 길을 찾은거 같다.
+난 이걸 반드시 움직여야 한다.
+/e
+
+/s
+I left it alone, but I couldn't
+think of another option.
+/t
+요걸 그냥 뒀다. 하지만 내각 생각하기에
+딴 방법은 없는 것 같다.
+/e
+
+/s
+I heaved the box forward,
+and it finally gave.
+/t
+난 상자를 밀었고 마침네 움직였다.
+/e
+
+
+
+;

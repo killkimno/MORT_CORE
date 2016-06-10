@@ -1,0 +1,271 @@
+/*
+ayoungprogrammer.blogspot.com
+ 
+Part 1: Extracting contours from text
+ 
+*/
+ 
+#include <iostream>
+#include "MainCore.h"
+#include <Windows.h>
+ 
+#ifdef _CH_
+#pragma package <opencv>
+#endif
+ 
+#ifndef _EiC
+#include "cv.h"
+#include "highgui.h"
+#include "ml.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+#include <baseapi.h>
+#include <allheaders.h>
+
+#include <process.h>
+#include <mmsystem.h>
+
+#endif
+
+
+
+using namespace std;
+using namespace cv;
+extern "C" __declspec(dllimport)void InitNHOCR();
+extern "C" __declspec(dllimport)int ProcessNHocr(int imgWidth, int imgheight, uchar* data, wstring* resultString, int channel);
+tesseract::TessBaseAPI api;
+MainCore *myMainCore = new MainCore();
+Mat* screenImg = new Mat();
+
+int captureCount = 0;
+bool isUseQuick = false;
+
+
+extern std::wstring utfStringToWstring(std::string originalString);
+extern std::wstring stringToWstring(std::string originalString);
+	struct resultDB
+	{
+		std::wstring original;
+		std::wstring translation;
+	};
+
+	
+void getImg(int captureIndex)
+{
+
+	myMainCore->getScreen(screenImg, captureIndex);
+}
+
+void getText(resultDB *result)
+{
+		api.Clear();
+		std::string text;
+		std::wstring wText;
+		int nhocrResult = 1;
+
+		
+		if (myMainCore->GetIsUseNHocr())
+		{
+			myMainCore->debugStruct.debug = std::to_wstring(screenImg->channels());
+			nhocrResult = ProcessNHocr(screenImg->size().width, screenImg->size().height, screenImg->data, &wText, screenImg->channels());
+
+			if (nhocrResult == -1)
+			{
+				wText = L"error nhocr";
+			}
+		}
+		else
+		{ 
+			api.SetImage((uchar*)screenImg->data, screenImg->size().width, screenImg->size().height, screenImg->channels(), screenImg->step1());
+			api.Recognize(0);
+			char* out = api.GetUTF8Text();
+			text = out;
+			wText = utfStringToWstring(text);
+		}
+		 
+		 if(myMainCore->getUseCheckSpellingFlag() == true)
+		 {			 
+			 for(int i = 0; i < 2 ; i++)
+			 {
+				 bool isReplaceFlag = false;
+				 wText = myMainCore->checkSpelling(wText , &isReplaceFlag);
+
+				 if(isReplaceFlag == false)
+				 {
+					 break;
+				 }
+			 }			
+		 }
+
+		 result->original = wText;
+		 if(myMainCore->getUseDBFlag() == true)
+		 {
+			result->translation = myMainCore->getTranslation(wText);
+		 }
+		 else
+		 {
+			 result->translation = L"";
+		 }
+		 
+		 screenImg->release();
+}
+
+extern "C" __declspec(dllexport)void
+	setFiducialValue(int r[], int g[], int b[], int s1[], int s2[], int v1[], int v2[], int size)
+{
+	myMainCore->setFiducialValue(r, g, b, s1, s2, v1, v2, size);
+}
+
+extern "C" __declspec(dllexport)void
+SetIsStringUpper(bool isUpper)
+{
+	myMainCore->SetIsStringUpper(isUpper);
+}
+
+extern "C" __declspec(dllexport)void
+SetIsActiveWindow(bool isActiveWindow)
+{
+	myMainCore->SetIsActiveWindow(isActiveWindow);
+}
+
+ extern "C" __declspec(dllexport)void
+	  SetIsUseNHocr(bool isUseNHocr)
+ {
+	 myMainCore->SetIsUseNHocr(isUseNHocr);
+ }
+
+   extern "C" __declspec(dllexport)void
+	   setUseDB(bool isUseDBFlag, char *dbFileText)
+ {
+	 myMainCore->setUseDB(isUseDBFlag, dbFileText);
+ }
+      extern "C" __declspec(dllexport)void
+	   setAdvencedImgOption(bool isUseRGBFlag, bool isUseHSVFlag, bool isUseErodeFlag, float imgZoomSize)
+ {
+	 myMainCore->setAdvencedImgOption(isUseRGBFlag, isUseHSVFlag, isUseErodeFlag,  imgZoomSize);
+ }
+   extern "C" __declspec(dllexport)void
+	   setUseCheckSpelling(bool isUseCheckSpellingFlag, char *dicFileTxt)
+ {
+	 myMainCore->setUseCheckSpellingFlag(isUseCheckSpellingFlag, dicFileTxt);
+ }
+   
+
+ extern "C" __declspec(dllexport)void
+	 setTessdata(char *tessData, bool isUseJpnFlag)
+ {
+
+		api.Clear();
+		api.End();
+		api.Init(".\\tessdata",tessData); 
+		api.SetPageSegMode(tesseract::PSM_AUTO);
+		myMainCore->setIsUseJpnFlag(isUseJpnFlag);
+		if(isUseJpnFlag == false)
+		{
+			api.SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmonpqrstuvwxyz1234567890.,`'&?!()-");
+		}
+		else
+		{
+			api.SetVariable("tessedit_char_whitelist", "");
+		}
+		
+ }
+ 
+  extern "C" __declspec(dllexport)void
+	 setErode()
+ {
+	 myMainCore->setErode(true);
+  }
+
+
+
+  
+ extern "C" __declspec(dllexport)void
+	 initOcr(){
+	
+	 InitNHOCR();
+	myMainCore->init();
+	//api.Init(".\\tessdata","eng"); 
+		//api.Init("l","eng+amh");
+		//api.Init("l", "eng", tesseract::OEM_TESSERACT_CUBE_COMBINED);
+	api.Init(".\\tessdata","eng"); 
+	api.SetPageSegMode(tesseract::PSM_AUTO);
+	api.SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmonpqrstuvwxyz1234567890.,'&?!");
+	//InitNHOCR();
+	//getContours(fileName);
+ }
+ 
+
+#pragma region ::::::::::: OCR 색 그룹 사용 여부 설정 :::::::::::
+
+ extern "C" __declspec(dllexport)void
+	 ClearOcrColorSet(){
+	 myMainCore->ClearOcrColorSet();
+ }
+
+ extern "C" __declspec(dllexport)void
+	 AddOcrColorSet(int colorList[], int size){
+
+	 myMainCore->AddOcrColorSet(colorList, size);
+ }
+
+#pragma endregion
+
+
+ extern "C" __declspec(dllexport)void
+	 setCutPoint(int newX[], int newY[], int newX2[], int newY2[], int size){
+		captureCount = size;
+		myMainCore->setCutPoint(newX,newY,newX2,newY2, size);
+ 
+}
+
+
+
+    extern "C" __declspec(dllexport)void
+	 processOcr(wchar_t resultOriginal[], wchar_t resultTranslation[]){
+
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+		resultDB getDB;
+		std::wstring out;
+
+		std::wstring ocrResult = L" ";
+		std::wstring translationResult = L"";
+		if(captureCount == 1)
+		{
+				getImg(0);
+				getText(&getDB);
+				
+				ocrResult = ocrResult + getDB.original + L"\r\n";
+				translationResult = translationResult + getDB.translation;
+		}
+		else
+		{
+			for(int i=0; i < captureCount; i++)
+			{
+				getImg(i);
+				getText(&getDB);
+
+				stringstream s;
+				s << i + 1;
+				std::string converted(s.str());
+				std::wstring wConverted = stringToWstring(converted);
+				ocrResult = ocrResult + wConverted + L": " + getDB.original + L"\r\n";
+				if(getDB.translation.compare(L"not thing") != 0)
+				{						
+					translationResult = translationResult + wConverted + L": "  + getDB.translation + L"\r\n";
+				}
+
+			}
+		}
+
+		//std::wstring debug = std::to_wstring(myMainCore->debugStruct.clientCoordinateX) + L" / " + std::to_wstring(myMainCore->debugStruct.clientCoordinateY);	//for debug
+
+		std::wcscpy(resultOriginal, ocrResult.c_str());
+		//std::wcscat(resultOriginal, myMainCore->debugStruct.debug.c_str());	//for debug
+		std::wcscpy(resultTranslation , translationResult.c_str());
+}
+
+

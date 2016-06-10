@@ -1,0 +1,5 @@
+ImageRuntimeVersion: v4.0.30319
+Assembly MORT_CORE, Version=0.0.*, Culture=고정 언어(고정 국가): 
+	hash=SHA1, flags=PublicKey
+Assembly mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
