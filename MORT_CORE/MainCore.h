@@ -38,6 +38,7 @@ protected:
 	
 	bool isActiveWindow;				//활성화 된 윈도우로 이미지 추출
 	bool isUseNHocrFlag;				//NHOcr 사용 여부
+	bool isUseWin10OCR;					//윈도우 OCR 사용 여부.
 	bool isUseJpnFlag;					//일본어를 사용하는가
 	bool isUseDBFlag;					//DB파일에서 번역본 가져온다 설정
 	bool isUseSpellcheckFlag;			//스펠링 체크.

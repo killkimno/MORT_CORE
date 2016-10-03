@@ -1,4 +1,26 @@
-﻿     Creating library G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.lib and object G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.exp
+﻿  main.cpp
+g:\project\visualstudio projects\mort_core\mort_core\opencv\opencv2\flann\dist.h : warning C4819: The file contains a character that cannot be represented in the current code page (949). Save the file in Unicode format to prevent data loss
+g:\project\visualstudio projects\mort_core\mort_core\opencv\opencv2\flann\logger.h(66): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : see declaration of 'fopen'
+g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\tesseract\strngs.h(61): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
+g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\tesseract\unicharset.h(47): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
+g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\tesseract\unicharset.h(274): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : see declaration of 'fopen'
+g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\tesseract\unicharset.h(299): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : see declaration of 'fopen'
+g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\leptonica\environ.h(277): warning C4005: 'snprintf' : macro redefinition
+          g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\tesseract\platform.h(33) : see previous definition of 'snprintf'
+g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\leptonica\pix.h(169): warning C4305: 'initializing' : truncation from 'double' to 'const l_float32'
+g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\leptonica\pix.h(171): warning C4305: 'initializing' : truncation from 'double' to 'const l_float32'
+main.cpp(266): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : see declaration of 'wcscpy'
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : see declaration of 'wcscpy'
+main.cpp(268): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : see declaration of 'wcscpy'
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : see declaration of 'wcscpy'
+     Creating library G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.lib and object G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.exp
   LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
 main.obj : warning LNK4248: unresolved typeref token (0100001F) for 'ETEXT_DESC'; image may not run
   MORT_CORE.vcxproj -> G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.dll
