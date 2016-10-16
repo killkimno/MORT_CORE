@@ -272,23 +272,32 @@ SetIsActiveWindow(bool isActiveWindow)
 	extern "C" __declspec(dllexport)uchar*
 		processGetImgData(int caputreIndex, int *x, int *y, int *channels) {
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
-		getImg(caputreIndex);
-
-		//data = screenImg->data;
-		*y = screenImg->size().height;
-		*x = screenImg->size().width;
-		*channels = screenImg->channels();
-
-		uchar * data = (uchar*)LocalAlloc(LPTR, screenImg->size().height * screenImg->size().width * screenImg->channels());
-		int max = screenImg->size().height * screenImg->size().width * screenImg->channels();
-		for (int i = 0; i < max; i++)
+		
+		if (captureCount >= caputreIndex + 1)
 		{
-			data[i] = screenImg->data[i];
+			getImg(caputreIndex);
+
+			//data = screenImg->data;
+			*y = screenImg->size().height;
+			*x = screenImg->size().width;
+			*channels = screenImg->channels();
+
+			uchar * data = (uchar*)LocalAlloc(LPTR, screenImg->size().height * screenImg->size().width * screenImg->channels());
+			int max = screenImg->size().height * screenImg->size().width * screenImg->channels();
+			for (int i = 0; i < max; i++)
+			{
+				data[i] = screenImg->data[i];
+			}
+			//LocalFree(data);
+			screenImg->release();
+			return data;
 		}
-		//LocalFree(data);
-		screenImg->release();
-		return data;
+		else
+
+		{
+			return NULL;
+		}
+	
 		//myMainCore->debugStruct.debug = std::to_wstring(screenImg->channels());
 		//nhocrResult = ProcessNHocr(screenImg->size().width, screenImg->size().height, screenImg->data, &wText, screenImg->channels());
 		
