@@ -855,19 +855,155 @@ void MainCore::analysisText(std::wstring text, struct TranslationsDB* newDB)
 		newDB->tokenValue = tokenSize;
 		newDB->value = nowValue;
 	}
+}
 
+std::wstring MainCore::GetEnglishSpellingCheck(std::wstring text, bool* isReplaceFlag)
+{
+	std::wstring resultSTring = L"";
+	
+	StringTokenizer tokens(text, L" ");
+	std::wstring tokenString;
+	int addIndex = 1;
+	int tokenSize = tokens.countTokens();
+	int nowTokenCount = 0;
+	bool isReplaceWordFlag = true;
+	std::wstring *replaceText;
+
+	std::vector<std::wstring> textList;
+
+	for (int x = 1; tokens.hasMoreTokens(); x++)
+	{
+		textList.push_back(tokenString = tokens.nextToken());
+	}
+	std::pair <std::multimap<std::wstring, DicDB>::iterator, std::multimap<std::wstring, DicDB>::iterator> mapPD;
+	for (int i = 0; i < tokenSize; )			//원문 갯수 만큼 돌림
+	{
+		mapPD = myDicMap.equal_range(textList[i]);
+		replaceText = &textList[i];
+		for (std::multimap<std::wstring, DicDB>::iterator it = mapPD.first; it != mapPD.second; ++it)
+		{
+			if (it->second.tokenSize > nowTokenCount)
+			{
+				for (int j = 0; j < it->second.tokenSize; j++)
+				{
+					if (tokenSize < i + it->second.tokenSize)
+					{
+						isReplaceWordFlag = false;
+						break;
+					}
+					if (it->second.originalTextList[j].compare(textList[i + j]) == 0)
+					{
+						isReplaceWordFlag = true;
+					}
+					else
+					{
+						isReplaceWordFlag = false;
+						break;
+					}
+				}
+			}
+			if (isReplaceWordFlag == true)
+			{
+				(*isReplaceFlag) = true;
+				nowTokenCount = it->second.tokenSize;
+				replaceText = &it->second.resultText;
+				isReplaceWordFlag = false;
+			}
+		}
+		if (nowTokenCount > 1)
+		{
+			i = i + nowTokenCount;
+		}
+		else
+		{
+			i++;
+		}
+		resultSTring = resultSTring + (*replaceText) + L" ";
+		nowTokenCount = 0;
+	}
+	
+	return resultSTring;
+}
+
+std::wstring MainCore::GetJpnSpellingCheck(std::wstring text, bool* isReplaceFlag)
+{
+	std::wstring resultSTring = L"";
+
+	std::wstring replaceText;
+	int nowTokenCount = 0;
+	int tokenSize = text.length();
+	bool isReplaceWordFlag = true;
+	std::pair <std::multimap<std::wstring, DicDB>::iterator, std::multimap<std::wstring, DicDB>::iterator> mapPD;
+	std::wstring tokenString = L"";
+	for (int i = 0; i < tokenSize; )			//원문 갯수 만큼 돌림
+	{
+		tokenString = text[i];
+		mapPD = myDicMap.equal_range(tokenString);
+		replaceText = text[i];
+		for (std::multimap<std::wstring, DicDB>::iterator it = mapPD.first; it != mapPD.second; ++it)
+		{
+			if (it->second.tokenSize > nowTokenCount)
+			{
+				for (int j = 0; j < it->second.tokenSize; j++)
+				{
+					if (tokenSize < i + it->second.tokenSize)
+					{
+						isReplaceWordFlag = false;
+						break;
+					}
+					std::wstring text1 = L"";
+					text1 = it->second.originalText[j];
+					std::wstring text2 = L"";
+					text2 = text[i + j];
+
+					if (text1.compare(text2) == 0)
+					{
+						isReplaceWordFlag = true;
+					}
+					else
+					{
+						isReplaceWordFlag = false;
+						break;
+					}
+				}
+			}
+			if (isReplaceWordFlag == true)
+			{
+				(*isReplaceFlag) = true;
+				nowTokenCount = it->second.tokenSize;
+				replaceText = it->second.resultText;
+				isReplaceWordFlag = false;
+			}
+
+		}
+		if (nowTokenCount > 1)
+		{
+			i = i + nowTokenCount;
+		}
+		else
+		{
+			i++;
+		}
+
+		resultSTring = resultSTring + (replaceText);
+		nowTokenCount = 0;
+	}
+
+	return resultSTring;
 }
 
 //교정단어 검색
-std::wstring MainCore::checkSpelling(std::wstring text , bool* isReplaceFlag)
+std::wstring MainCore::checkSpelling(std::wstring text, bool* isReplaceFlag)
 {
-	ReplaceAll ( text, L"\r\n", L" " );
-	ReplaceAll ( text, L"\n", L" " );
+	ReplaceAll(text, L"\r\n", L" ");
+	ReplaceAll(text, L"\n", L" ");
 	std::wstring resultSTring = L"";
 
-	if(isUseJpnFlag == false)
+	if (isUseJpnFlag == false)
 	{
-		StringTokenizer tokens(text,L" ");
+		resultSTring = GetEnglishSpellingCheck(text, isReplaceFlag);
+		/*
+		StringTokenizer tokens(text, L" ");
 		std::wstring tokenString;
 		int addIndex = 1;
 		int tokenSize = tokens.countTokens();
@@ -876,28 +1012,28 @@ std::wstring MainCore::checkSpelling(std::wstring text , bool* isReplaceFlag)
 		std::wstring *replaceText;
 
 		std::vector<std::wstring> textList;
-		
-		for( int x = 1; tokens.hasMoreTokens(); x++ )
+
+		for (int x = 1; tokens.hasMoreTokens(); x++)
 		{
 			textList.push_back(tokenString = tokens.nextToken());
 		}
 		std::pair <std::multimap<std::wstring, DicDB>::iterator, std::multimap<std::wstring, DicDB>::iterator> mapPD;
-		for( int i = 0; i < tokenSize;  )			//원문 갯수 만큼 돌림
-		{ 
+		for (int i = 0; i < tokenSize; )			//원문 갯수 만큼 돌림
+		{
 			mapPD = myDicMap.equal_range(textList[i]);
 			replaceText = &textList[i];
-			for (std::multimap<std::wstring,DicDB>::iterator it=mapPD.first; it!=mapPD.second; ++it)
+			for (std::multimap<std::wstring, DicDB>::iterator it = mapPD.first; it != mapPD.second; ++it)
 			{
-				if(it->second.tokenSize > nowTokenCount)
+				if (it->second.tokenSize > nowTokenCount)
 				{
-					for(int j=0; j < it->second.tokenSize; j++)
+					for (int j = 0; j < it->second.tokenSize; j++)
 					{
-						if(tokenSize < i +it->second.tokenSize)
+						if (tokenSize < i + it->second.tokenSize)
 						{
 							isReplaceWordFlag = false;
 							break;
 						}
-						if(it->second.originalTextList[j].compare(textList[i+j]) == 0)
+						if (it->second.originalTextList[j].compare(textList[i + j]) == 0)
 						{
 							isReplaceWordFlag = true;
 						}
@@ -907,20 +1043,18 @@ std::wstring MainCore::checkSpelling(std::wstring text , bool* isReplaceFlag)
 							break;
 						}
 					}
-					
 				}
-
-				if(isReplaceWordFlag == true)
+				if (isReplaceWordFlag == true)
 				{
 					(*isReplaceFlag) = true;
 					nowTokenCount = it->second.tokenSize;
 					replaceText = &it->second.resultText;
 					isReplaceWordFlag = false;
-				}	
+				}
 			}
-			if(nowTokenCount > 1)
+			if (nowTokenCount > 1)
 			{
-				i = i+ nowTokenCount;
+				i = i + nowTokenCount;
 			}
 			else
 			{
@@ -929,37 +1063,40 @@ std::wstring MainCore::checkSpelling(std::wstring text , bool* isReplaceFlag)
 			resultSTring = resultSTring + (*replaceText) + L" ";
 			nowTokenCount = 0;
 		}
+		*/
 	}
-	else if(isUseJpnFlag == true)
+	else if (isUseJpnFlag == true)
 	{
+		resultSTring = GetJpnSpellingCheck(text, isReplaceFlag);
+		/*
 		std::wstring replaceText;
 		int nowTokenCount = 0;
 		int tokenSize = text.length();
 		bool isReplaceWordFlag = true;
 		std::pair <std::multimap<std::wstring, DicDB>::iterator, std::multimap<std::wstring, DicDB>::iterator> mapPD;
 		std::wstring tokenString = L"";
-		for( int i = 0; i < tokenSize;  )			//원문 갯수 만큼 돌림
-		{ 
+		for (int i = 0; i < tokenSize; )			//원문 갯수 만큼 돌림
+		{
 			tokenString = text[i];
 			mapPD = myDicMap.equal_range(tokenString);
 			replaceText = text[i];
-			for (std::multimap<std::wstring,DicDB>::iterator it=mapPD.first; it!=mapPD.second; ++it)
+			for (std::multimap<std::wstring, DicDB>::iterator it = mapPD.first; it != mapPD.second; ++it)
 			{
-				if(it->second.tokenSize > nowTokenCount)
+				if (it->second.tokenSize > nowTokenCount)
 				{
-					for(int j=0; j < it->second.tokenSize; j++)
+					for (int j = 0; j < it->second.tokenSize; j++)
 					{
-						if(tokenSize < i +it->second.tokenSize)
+						if (tokenSize < i + it->second.tokenSize)
 						{
 							isReplaceWordFlag = false;
 							break;
 						}
-						std::wstring text1 =L"";
+						std::wstring text1 = L"";
 						text1 = it->second.originalText[j];
-						std::wstring text2 =L"";
-						text2 = text[i+j];
-						
-						if(text1.compare(text2) == 0)
+						std::wstring text2 = L"";
+						text2 = text[i + j];
+
+						if (text1.compare(text2) == 0)
 						{
 							isReplaceWordFlag = true;
 						}
@@ -969,32 +1106,33 @@ std::wstring MainCore::checkSpelling(std::wstring text , bool* isReplaceFlag)
 							break;
 						}
 					}
-					
+
 				}
-				if(isReplaceWordFlag == true)
+				if (isReplaceWordFlag == true)
 				{
 					(*isReplaceFlag) = true;
 					nowTokenCount = it->second.tokenSize;
 					replaceText = it->second.resultText;
 					isReplaceWordFlag = false;
-				}			
-				
+				}
+
 			}
-				if(nowTokenCount > 1)
-				{
-					i = i+ nowTokenCount;
-				}
-				else
-				{
-					i++;
-				}
-				resultSTring = resultSTring + (replaceText);
-				nowTokenCount = 0;
+			if (nowTokenCount > 1)
+			{
+				i = i + nowTokenCount;
+			}
+			else
+			{
+				i++;
+			}
+			resultSTring = resultSTring + (replaceText);
+			nowTokenCount = 0;
 		}
+		*/
 	}
 
 	return resultSTring;
-		
+
 
 }
 

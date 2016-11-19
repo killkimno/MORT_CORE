@@ -1,26 +1,29 @@
 ﻿  main.cpp
-g:\project\visualstudio projects\mort_core\mort_core\opencv\opencv2\flann\dist.h : warning C4819: The file contains a character that cannot be represented in the current code page (949). Save the file in Unicode format to prevent data loss
+g:\project\visualstudio projects\mort_core\mort_core\opencv\opencv2\flann\dist.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
 g:\project\visualstudio projects\mort_core\mort_core\opencv\opencv2\flann\logger.h(66): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : see declaration of 'fopen'
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : 'fopen' 선언을 참조하십시오.
 g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\tesseract\strngs.h(61): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(195) : 'strncpy' 선언을 참조하십시오.
 g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\tesseract\unicharset.h(47): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(195) : 'strncpy' 선언을 참조하십시오.
 g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\tesseract\unicharset.h(274): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : see declaration of 'fopen'
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : 'fopen' 선언을 참조하십시오.
 g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\tesseract\unicharset.h(299): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : see declaration of 'fopen'
-g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\leptonica\environ.h(277): warning C4005: 'snprintf' : macro redefinition
-          g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\tesseract\platform.h(33) : see previous definition of 'snprintf'
-g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\leptonica\pix.h(169): warning C4305: 'initializing' : truncation from 'double' to 'const l_float32'
-g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\leptonica\pix.h(171): warning C4305: 'initializing' : truncation from 'double' to 'const l_float32'
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : 'fopen' 선언을 참조하십시오.
+g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\leptonica\environ.h(277): warning C4005: 'snprintf' : 매크로 재정의
+          g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\tesseract\platform.h(33) : 'snprintf'의 이전 정의를 참조하십시오.
+g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\leptonica\pix.h(169): warning C4305: '초기화 중' : 'double'에서 'const l_float32'(으)로 잘립니다.
+g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\leptonica\pix.h(171): warning C4305: '초기화 중' : 'double'에서 'const l_float32'(으)로 잘립니다.
 main.cpp(266): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : see declaration of 'wcscpy'
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : see declaration of 'wcscpy'
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : 'wcscpy' 선언을 참조하십시오.
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : 'wcscpy' 선언을 참조하십시오.
 main.cpp(268): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : see declaration of 'wcscpy'
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : see declaration of 'wcscpy'
-     Creating library G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.lib and object G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.exp
-  LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
-main.obj : warning LNK4248: unresolved typeref token (0100001F) for 'ETEXT_DESC'; image may not run
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : 'wcscpy' 선언을 참조하십시오.
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : 'wcscpy' 선언을 참조하십시오.
+main.cpp(328): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : 'wcscpy' 선언을 참조하십시오.
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : 'wcscpy' 선언을 참조하십시오.
+     G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.lib 라이브러리 및 G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.exp 개체를 생성하고 있습니다.
+  LINK : /LTCG를 지정했지만 코드를 생성할 필요가 없습니다. 명령줄에서 /LTCG를 제거하면 링커 성능이 향상됩니다.
+main.obj : warning LNK4248: 확인되지 않은 형식 정의 토큰 (0100001F)이 있습니다('ETEXT_DESC'). 이미지가 실행되지 않습니다.
   MORT_CORE.vcxproj -> G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.dll

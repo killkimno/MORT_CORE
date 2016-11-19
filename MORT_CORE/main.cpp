@@ -303,4 +303,29 @@ SetIsActiveWindow(bool isActiveWindow)
 		
 	}
 
+	//½ºÆç Ã¼Å©.
+	extern "C" __declspec(dllexport)void
+		ProcessGetSpellingCheck(wchar_t resultOriginal[], bool isUseJpn) {
+
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+		std::wstring out;
+
+		std::wstring wText = resultOriginal;
+	
+		bool isReplaceFlag = false;
+		if (isUseJpn)
+		{
+			wText = myMainCore->GetJpnSpellingCheck(wText, &isReplaceFlag);
+		}
+		else
+
+		{
+			wText = myMainCore->GetEnglishSpellingCheck(wText, &isReplaceFlag);
+		}
+	
+
+		std::wcscpy(resultOriginal, wText.c_str());
+	}
+
 

@@ -188,6 +188,8 @@ public:
 	 void setUseCheckSpellingFlag(bool newUseCheckspellFlag, char *newDicFileText);
 
 	 std::wstring checkSpelling(std::wstring text , bool* isReplaceFlag);
+	 std::wstring GetEnglishSpellingCheck(std::wstring text, bool* isReplaceFlag);
+	 std::wstring GetJpnSpellingCheck(std::wstring text, bool* isReplaceFlag);
 	 void openDicFile(char *newDicFileText);
 	 void readJPNDicFile(char *dicFileText);
 	 void readENGDicFile(char *dicFileText);
