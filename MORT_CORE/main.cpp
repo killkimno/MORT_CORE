@@ -41,15 +41,15 @@ Mat* screenImg = new Mat();
 
 int captureCount = 0;
 bool isUseQuick = false;
-
-
+struct resultDB
+{
+	std::wstring original;
+	std::wstring translation;
+};
+void GetDBText(resultDB *result);
 extern std::wstring utfStringToWstring(std::string originalString);
 extern std::wstring stringToWstring(std::string originalString);
-	struct resultDB
-	{
-		std::wstring original;
-		std::wstring translation;
-	};
+
 
 	
 void getImg(int captureIndex)
@@ -100,16 +100,22 @@ void getText(resultDB *result)
 		 }
 
 		 result->original = wText;
-		 if(myMainCore->getUseDBFlag() == true)
-		 {
-			result->translation = myMainCore->getTranslation(wText);
-		 }
-		 else
-		 {
-			 result->translation = L"";
-		 }
+		 GetDBText(result);
+
 		 
 		 screenImg->release();
+}
+
+void GetDBText(resultDB *result)
+{
+	if (myMainCore->getUseDBFlag() == true)
+	{
+		result->translation = myMainCore->getTranslation(result->original);
+	}
+	else
+	{
+		result->translation = L"";
+	}
 }
 
 extern "C" __declspec(dllexport)void
@@ -326,6 +332,28 @@ SetIsActiveWindow(bool isActiveWindow)
 	
 
 		std::wcscpy(resultOriginal, wText.c_str());
+	}
+
+	//TODO : 작업중.
+	//DB만 가져오기.
+	//TEXT를 받아오고 반환해야 함.
+	extern "C" __declspec(dllexport)void
+		ProcessGetDBText(wchar_t resultOriginal[], wchar_t resultTranslation[]) {
+
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+		resultDB getDB;
+		std::wstring out;
+
+		std::wstring ocrResult = resultOriginal;
+		std::wstring translationResult = L"";
+		getDB.original = ocrResult;
+		GetDBText(&getDB);
+
+		//ocrResult = ocrResult + getDB.original + L"\r\n";
+		translationResult = translationResult + getDB.translation;
+
+		std::wcscpy(resultTranslation, translationResult.c_str());
 	}
 
 

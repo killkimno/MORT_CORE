@@ -14,15 +14,19 @@ g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\leptonica\env
           g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\tesseract\platform.h(33) : 'snprintf'의 이전 정의를 참조하십시오.
 g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\leptonica\pix.h(169): warning C4305: '초기화 중' : 'double'에서 'const l_float32'(으)로 잘립니다.
 g:\project\visualstudio projects\mort_core\mort_core\tesseract-ocr\leptonica\pix.h(171): warning C4305: '초기화 중' : 'double'에서 'const l_float32'(으)로 잘립니다.
-main.cpp(266): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+main.cpp(272): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
           C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : 'wcscpy' 선언을 참조하십시오.
           C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : 'wcscpy' 선언을 참조하십시오.
-main.cpp(268): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+main.cpp(274): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
           C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : 'wcscpy' 선언을 참조하십시오.
           C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : 'wcscpy' 선언을 참조하십시오.
-main.cpp(328): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+main.cpp(334): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
           C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : 'wcscpy' 선언을 참조하십시오.
           C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : 'wcscpy' 선언을 참조하십시오.
+main.cpp(356): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : 'wcscpy' 선언을 참조하십시오.
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(294) : 'wcscpy' 선언을 참조하십시오.
+  .NETFramework,Version=v4.0.AssemblyAttributes.cpp
      G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.lib 라이브러리 및 G:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.exp 개체를 생성하고 있습니다.
   LINK : /LTCG를 지정했지만 코드를 생성할 필요가 없습니다. 명령줄에서 /LTCG를 제거하면 링커 성능이 향상됩니다.
 main.obj : warning LNK4248: 확인되지 않은 형식 정의 토큰 (0100001F)이 있습니다('ETEXT_DESC'). 이미지가 실행되지 않습니다.
