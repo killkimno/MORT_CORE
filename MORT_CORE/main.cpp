@@ -267,6 +267,9 @@ SetIsActiveWindow(bool isActiveWindow)
 			}
 		}
 
+		//ocrResult = ocrResult + L"utf : " + stringToWstring(std::to_string(MainCore::utf));
+
+
 		//std::wstring debug = std::to_wstring(myMainCore->debugStruct.clientCoordinateX) + L" / " + std::to_wstring(myMainCore->debugStruct.clientCoordinateY);	//for debug
 
 		std::wcscpy(resultOriginal, ocrResult.c_str());
@@ -333,6 +336,8 @@ SetIsActiveWindow(bool isActiveWindow)
 
 		std::wcscpy(resultOriginal, wText.c_str());
 	}
+
+	
 
 	//TODO : 작업중.
 	//DB만 가져오기.
