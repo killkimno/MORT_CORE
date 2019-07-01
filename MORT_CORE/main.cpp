@@ -266,7 +266,7 @@ SetIsActiveWindow(bool isActiveWindow)
 
 			}
 		}
-
+		//testestst
 		//ocrResult = ocrResult + L"utf : " + stringToWstring(std::to_string(MainCore::utf));
 
 
