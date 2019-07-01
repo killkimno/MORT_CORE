@@ -1291,8 +1291,7 @@ void MainCore::openDicFile(char *dicFileText)
 
 }
 
-int MainCore::utf = 0;
-int MainCore::isUTF8(const char *data, size_t size)
+int isUTF8(const char *data, size_t size)
 {
 	const unsigned char *str = (unsigned char*)data;
 	const unsigned char *end = str + size;
@@ -1423,7 +1422,7 @@ void MainCore::openSettingFile(char *dbFileName)
 
 
 				fin.read(buffer, length);
-				utf = isUTF8(buffer, length);
+				int utf = isUTF8(buffer, length);
 
 
 				delete[] buffer;

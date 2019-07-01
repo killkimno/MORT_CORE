@@ -195,7 +195,6 @@ public:
 	 void readENGDicFile(char *dicFileText);
 
 	 void setErode(bool newFlag);
-	 int isUTF8(const char *data, size_t size);
-	 static int utf;
+
 
 };
