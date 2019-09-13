@@ -1768,22 +1768,15 @@ void MainCore::adjustImg(cv::Mat* img, int captureIndex)
 //화면 가져오기
 void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 {
-    RECT rc, clientCoordinate;
-	/*
-    HWND hwnd = FindWindow(TEXT("Notepad"), NULL);    //the window can't be min
-    if (hwnd == NULL)
-    {
-        std::cout << "it can't find any 'note' window" << std::endl;
-        return false;
-    }
-	*/
-	//HWND hwnd= *newHwnd;
-	//HWND hwnd=GetForegroundWindow();
+	RECT rc, clientCoordinate;
+	
+	rc = { 0,0,0,0 };
+	
 	clientCoordinate.left = 0;
 	clientCoordinate.top = 0;
 	HDC hdcScreen = NULL;
 	if (!isActiveWindow)
-		hdcScreen = CreateDC(TEXT("DISPLAY"),NULL,NULL,NULL);
+		hdcScreen = CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL);
 	else
 	{
 		//엑티브 윈도우
@@ -1791,45 +1784,48 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 		hdcScreen = GetWindowDC(firstHwnd);
 		GetClipBox(hdcScreen, &rc);
 		GetWindowRect(firstHwnd, &clientCoordinate);
-	}
+
+		if (rc.bottom == 0 && rc.right == 0)
+		{
+			HWND hwnd = GetDesktopWindow();
+			GetClientRect(hwnd, &rc);
+		}
 		
+	}
+	std::cout << " rc : " << rc.left << " / " << rc.right << " + " << rc.top << " / " << rc.bottom << " top : " << cutCodinateYList[captureIndex] << " cut : " << cutHeightList[captureIndex] << "\n";
+
 	//디버그용
 	//debugStruct.clientCoordinateX = clientCoordinate.left;
 	//debugStruct.clientCoordinateY = clientCoordinate.top;
 
-	if(rc.bottom ==0 && rc.right ==0)
-	{
-		HWND hwnd=GetDesktopWindow();
-		GetClientRect(hwnd, &rc);
-	}
+	
 
 	HDC hdc = CreateCompatibleDC(hdcScreen);
-	HBITMAP hbmp = CreateCompatibleBitmap(hdcScreen, 
+	HBITMAP hbmp = CreateCompatibleBitmap(hdcScreen,
 		cutWidthList[captureIndex], cutHeightList[captureIndex]);
 	SelectObject(hdc, hbmp);
 
-	int height,width,srcheight,srcwidth;
-	srcheight = rc.bottom - rc.top;
-	srcwidth = rc.right - rc.left;
-	
+	int height, width, srcheight, srcwidth;
+
+
 	myBitmapHeader.biSize = sizeof(BITMAPINFOHEADER);    //http://msdn.microsoft.com/en-us/library/windows/window/dd183402%28v=vs.85%29.aspx
 	//myBitmapHeader.biWidth = windowsize.right;    
 	//myBitmapHeader.biHeight = -windowsize.bottom;  //this is the line that makes it draw upside down or not
 
-	myBitmapHeader.biWidth = cutWidthList[captureIndex];    
+	myBitmapHeader.biWidth = cutWidthList[captureIndex];
 	myBitmapHeader.biHeight = -cutHeightList[captureIndex];  //this is the line that makes it draw upside down or not
-	
-	myBitmapHeader.biPlanes = 1;    
+
+	myBitmapHeader.biPlanes = 1;
 	myBitmapHeader.biBitCount = 32;	//알파 = 32    
-	myBitmapHeader.biCompression = BI_RGB;    
-	myBitmapHeader.biSizeImage = 0;  
-	myBitmapHeader.biXPelsPerMeter = 0;    
-	myBitmapHeader.biYPelsPerMeter = 0;    
-	myBitmapHeader.biClrUsed = 0;    
+	myBitmapHeader.biCompression = BI_RGB;
+	myBitmapHeader.biSizeImage = 0;
+	myBitmapHeader.biXPelsPerMeter = 0;
+	myBitmapHeader.biYPelsPerMeter = 0;
+	myBitmapHeader.biClrUsed = 0;
 	myBitmapHeader.biClrImportant = 0;
 
 	//CV_8UC4
-	newImg->create(cutHeightList[captureIndex],cutWidthList[captureIndex],CV_8UC4);
+	newImg->create(cutHeightList[captureIndex], cutWidthList[captureIndex], CV_8UC4);
 	//cutScreen.create(cutHeight,cutWidth,CV_8UC4);
 
 
@@ -1838,17 +1834,20 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 
 
 	//GetDIBits(hdc,hbmp,0,cutHeight,cutScreen.data,(BITMAPINFO *)&myBitmapHeader,DIB_RGB_COLORS);  //copy from hwindowCompatibleDC to hbwindow
-	GetDIBits(hdc,hbmp,0,cutHeightList[captureIndex],newImg->data,(BITMAPINFO *)&myBitmapHeader,DIB_RGB_COLORS);  //copy from hwindowCompatibleDC to hbwindow
+	GetDIBits(hdc, hbmp, 0, cutHeightList[captureIndex], newImg->data, (BITMAPINFO *)&myBitmapHeader, DIB_RGB_COLORS);  //copy from hwindowCompatibleDC to hbwindow
 
 	DeleteDC(hdc);
 	DeleteObject(hbmp);
 	ReleaseDC(NULL, hdcScreen);;
-	
+
 	//if(isAdvencedIMGOptionFlag == true)
 	adjustImg(newImg, captureIndex);
 
+	//테스트용
+	//cv::imwrite("test.bmp", *newImg);
+
 	//debugStruct.clientCoordinateX = newImg->channels();
-	resize(*newImg, *newImg,  cv::Size(), imgZoomSize, imgZoomSize, cv::INTER_LINEAR  );
+	resize(*newImg, *newImg, cv::Size(), imgZoomSize, imgZoomSize, cv::INTER_LINEAR);
 	//cv::imwrite("test.bmp", *newImg);
 	//src.release();
 }
