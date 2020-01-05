@@ -1,7 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <map>
-#include "cv.h"
+#include "opencv.hpp"
 #include <iostream>
 #include <stdlib.h>
 #include<vector>
@@ -42,6 +42,7 @@ protected:
 	bool isUseJpnFlag;					//일본어를 사용하는가
 	bool isUseDBFlag;					//DB파일에서 번역본 가져온다 설정
 	bool isUseSpellcheckFlag;			//스펠링 체크.
+	bool isUseMatchWordDic;		//스펠링 체크.
 	bool isStringUpper;					//대소문자 구분 안 함.
 
 	bool isAdvencedIMGOptionFlag;		//이미지 보정 기능
@@ -163,6 +164,7 @@ public:
 	 void SetIsActiveWindow(bool isActiveWindow);
 	 void SetIsUseNHocr(bool isUseNHocr);
 	 void setIsUseJpnFlag(bool newJpnFlag);
+	 bool GetIsUseJpnFlag();
 	 void setFiducialValue(int newFiducialR[], int newFiducialG[], int newFiducialB[], int newFiducialSS[], int newFiducialES[], int newFiducialSV[], int newFiducialEV[], int newSize);
 	 void setUseDB(bool newIsUseDBFlag ,  char *dbFileName);
 	 bool getUseDBFlag();
@@ -185,14 +187,14 @@ public:
 
 
 	 bool getUseCheckSpellingFlag();
-	 void setUseCheckSpellingFlag(bool newUseCheckspellFlag, char *newDicFileText);
+	 void setUseCheckSpellingFlag(bool newUseCheckspellFlag, bool _isMatchingWord, char *newDicFileText);
 
 	 std::wstring checkSpelling(std::wstring text , bool* isReplaceFlag);
 	 std::wstring GetEnglishSpellingCheck(std::wstring text, bool* isReplaceFlag);
 	 std::wstring GetJpnSpellingCheck(std::wstring text, bool* isReplaceFlag);
 	 void openDicFile(char *newDicFileText);
-	 void readJPNDicFile(char *dicFileText);
-	 void readENGDicFile(char *dicFileText);
+	 void ReadUnMatchingDicFile(char *dicFileText);
+	 void ReadMatchingDicFile(char *dicFileText);
 
 	 void setErode(bool newFlag);
 

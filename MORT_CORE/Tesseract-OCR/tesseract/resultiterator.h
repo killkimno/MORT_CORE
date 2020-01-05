@@ -19,15 +19,19 @@
 //
 ///////////////////////////////////////////////////////////////////////
 
-#ifndef TESSERACT_CCMAIN_RESULT_ITERATOR_H__
-#define TESSERACT_CCMAIN_RESULT_ITERATOR_H__
+#ifndef TESSERACT_CCMAIN_RESULT_ITERATOR_H_
+#define TESSERACT_CCMAIN_RESULT_ITERATOR_H_
 
-#include "platform.h"
-#include "ltrresultiterator.h"
-#include "genericvector.h"
+#include <set>                  // for std::pair
+#include <vector>               // for std::vector
+#include "ltrresultiterator.h"  // for LTRResultIterator
+#include "platform.h"           // for TESS_API, TESS_LOCAL
+#include "publictypes.h"        // for PageIteratorLevel
+#include "unichar.h"            // for StrongScriptDirection
 
-class BLOB_CHOICE_IT;
-class WERD_RES;
+template <typename T> class GenericVector;
+template <typename T> class GenericVectorEqEq;
+
 class STRING;
 
 namespace tesseract {
@@ -42,14 +46,14 @@ class TESS_API ResultIterator : public LTRResultIterator {
    * ResultIterator is copy constructible!
    * The default copy constructor works just fine for us.
    */
-  virtual ~ResultIterator() {}
+  ~ResultIterator() override = default;
 
   // ============= Moving around within the page ============.
-  /** 
-   * Moves the iterator to point to the start of the page to begin 
+  /**
+   * Moves the iterator to point to the start of the page to begin
    * an iteration.
    */
-  virtual void Begin();
+  void Begin() override;
 
   /**
    * Moves to the start of the next object at the given level in the
@@ -63,7 +67,7 @@ class TESS_API ResultIterator : public LTRResultIterator {
    * This function iterates words in right-to-left scripts correctly, if
    * the appropriate language has been loaded into Tesseract.
    */
-  virtual bool Next(PageIteratorLevel level);
+  bool Next(PageIteratorLevel level) override;
 
   /**
    * IsAtBeginningOf() returns whether we're at the logical beginning of the
@@ -71,15 +75,19 @@ class TESS_API ResultIterator : public LTRResultIterator {
    * order).  Otherwise, this acts the same as PageIterator::IsAtBeginningOf().
    * For a full description, see pageiterator.h
    */
-  virtual bool IsAtBeginningOf(PageIteratorLevel level) const;
+  bool IsAtBeginningOf(PageIteratorLevel level) const override;
 
   /**
    * Implement PageIterator's IsAtFinalElement correctly in a BiDi context.
    * For instance, IsAtFinalElement(RIL_PARA, RIL_WORD) returns whether we
    * point at the last word in a paragraph.  See PageIterator for full comment.
   */
-  virtual bool IsAtFinalElement(PageIteratorLevel level,
-                                PageIteratorLevel element) const;
+  bool IsAtFinalElement(PageIteratorLevel level,
+                                PageIteratorLevel element) const override;
+
+  // ============= Functions that refer to words only ============.
+  // Returns the number of blanks before the current word.
+  int BlanksBeforeWord() const;
 
   // ============= Accessing data ==============.
 
@@ -88,6 +96,12 @@ class TESS_API ResultIterator : public LTRResultIterator {
    * object at the given level. Use delete [] to free after use.
   */
   virtual char* GetUTF8Text(PageIteratorLevel level) const;
+
+  /**
+   * Returns the LSTM choices for every LSTM timestep for the current word.
+  */
+  virtual std::vector<std::vector<std::pair<const char*, float>>>*
+    GetBestLSTMSymbolChoices() const;
 
   /**
    * Return whether the current paragraph's dominant reading direction
@@ -158,7 +172,7 @@ class TESS_API ResultIterator : public LTRResultIterator {
   void CalculateTextlineOrder(bool paragraph_is_ltr,
                               const LTRResultIterator &resit,
                               GenericVectorEqEq<int> *indices) const;
-  /** Same as above, but the caller's ssd gets filled in if ssd != NULL. */
+  /** Same as above, but the caller's ssd gets filled in if ssd != nullptr. */
   void CalculateTextlineOrder(bool paragraph_is_ltr,
                               const LTRResultIterator &resit,
                               GenericVector<StrongScriptDirection> *ssd,
@@ -180,7 +194,7 @@ class TESS_API ResultIterator : public LTRResultIterator {
   void MoveToLogicalStartOfTextline();
 
   /**
-   * Precondition: current_paragraph_is_ltr_ and in_minor_direction_ 
+   * Precondition: current_paragraph_is_ltr_ and in_minor_direction_
    * are set.
    */
   void MoveToLogicalStartOfWord();
@@ -230,8 +244,14 @@ class TESS_API ResultIterator : public LTRResultIterator {
 
   /** Is the currently pointed-at character in a minor-direction sequence? */
   bool in_minor_direction_;
+
+  /**
+   * Should detected inter-word spaces be preserved, or "compressed" to a single
+   * space character (default behavior).
+   */
+  bool preserve_interword_spaces_;
 };
 
 }  // namespace tesseract.
 
-#endif  // TESSERACT_CCMAIN_RESULT_ITERATOR_H__
+#endif  // TESSERACT_CCMAIN_RESULT_ITERATOR_H_

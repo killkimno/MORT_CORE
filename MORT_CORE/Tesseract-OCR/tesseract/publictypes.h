@@ -17,8 +17,8 @@
 //
 ///////////////////////////////////////////////////////////////////////
 
-#ifndef TESSERACT_CCSTRUCT_PUBLICTYPES_H__
-#define TESSERACT_CCSTRUCT_PUBLICTYPES_H__
+#ifndef TESSERACT_CCSTRUCT_PUBLICTYPES_H_
+#define TESSERACT_CCSTRUCT_PUBLICTYPES_H_
 
 // This file contains types that are used both by the API and internally
 // to Tesseract. In order to decouple the API from Tesseract and prevent cyclic
@@ -30,7 +30,19 @@
 // API-level code should include apitypes.h in preference to this file.
 
 /** Number of printers' points in an inch. The unit of the pointsize return. */
-const int kPointsPerInch = 72;
+constexpr int kPointsPerInch = 72;
+/**
+ * Minimum believable resolution. Used as a default if there is no other
+ * information, as it is safer to under-estimate than over-estimate.
+ */
+constexpr int kMinCredibleResolution = 70;
+/** Maximum believable resolution.  */
+constexpr int kMaxCredibleResolution = 2400;
+/**
+ * Ratio between median blob size and likely resolution. Used to estimate
+ * resolution when none is provided. This is basically 1/usual text size in
+ * inches.  */
+constexpr int kResolutionEstimationFactor = 10;
 
 /**
  * Possible types for a POLY_BLOCK or ColPartition.
@@ -72,6 +84,10 @@ inline bool PTIsTextType(PolyBlockType type) {
          type == PT_PULLOUT_TEXT || type == PT_TABLE ||
          type == PT_VERTICAL_TEXT || type == PT_CAPTION_TEXT ||
          type == PT_INLINE_EQUATION;
+}
+// Returns true if PolyBlockType is of pullout(inter-column) type
+inline bool PTIsPulloutType(PolyBlockType type) {
+  return type == PT_PULLOUT_IMAGE || type == PT_PULLOUT_TEXT;
 }
 
 /** String name for each block type. Keep in sync with PolyBlockType. */
@@ -145,37 +161,55 @@ enum TextlineOrder {
  * so that the inequality test macros below work.
 */
 enum PageSegMode {
-  PSM_OSD_ONLY,       ///< Orientation and script detection only.
-  PSM_AUTO_OSD,       ///< Automatic page segmentation with orientation and
+  PSM_OSD_ONLY = 0,       ///< Orientation and script detection only.
+  PSM_AUTO_OSD = 1,       ///< Automatic page segmentation with orientation and
                       ///< script detection. (OSD)
-  PSM_AUTO_ONLY,      ///< Automatic page segmentation, but no OSD, or OCR.
-  PSM_AUTO,           ///< Fully automatic page segmentation, but no OSD.
-  PSM_SINGLE_COLUMN,  ///< Assume a single column of text of variable sizes.
-  PSM_SINGLE_BLOCK_VERT_TEXT,  ///< Assume a single uniform block of vertically
+  PSM_AUTO_ONLY = 2,      ///< Automatic page segmentation, but no OSD, or OCR.
+  PSM_AUTO = 3,           ///< Fully automatic page segmentation, but no OSD.
+  PSM_SINGLE_COLUMN = 4,  ///< Assume a single column of text of variable sizes.
+  PSM_SINGLE_BLOCK_VERT_TEXT = 5,  ///< Assume a single uniform block of vertically
                                ///< aligned text.
-  PSM_SINGLE_BLOCK,   ///< Assume a single uniform block of text. (Default.)
-  PSM_SINGLE_LINE,    ///< Treat the image as a single text line.
-  PSM_SINGLE_WORD,    ///< Treat the image as a single word.
-  PSM_CIRCLE_WORD,    ///< Treat the image as a single word in a circle.
-  PSM_SINGLE_CHAR,    ///< Treat the image as a single character.
+  PSM_SINGLE_BLOCK = 6,   ///< Assume a single uniform block of text. (Default.)
+  PSM_SINGLE_LINE = 7,    ///< Treat the image as a single text line.
+  PSM_SINGLE_WORD = 8,    ///< Treat the image as a single word.
+  PSM_CIRCLE_WORD = 9,    ///< Treat the image as a single word in a circle.
+  PSM_SINGLE_CHAR = 10,    ///< Treat the image as a single character.
+  PSM_SPARSE_TEXT = 11,    ///< Find as much text as possible in no particular order.
+  PSM_SPARSE_TEXT_OSD = 12,  ///< Sparse text with orientation and script det.
+  PSM_RAW_LINE = 13,       ///< Treat the image as a single text line, bypassing
+                      ///< hacks that are Tesseract-specific.
 
   PSM_COUNT           ///< Number of enum entries.
 };
 
 /**
- * Macros that act on a PageSegMode to determine whether components of
+ * Inline functions that act on a PageSegMode to determine whether components of
  * layout analysis are enabled.
  * *Depend critically on the order of elements of PageSegMode.*
+ * NOTE that arg is an int for compatibility with INT_PARAM.
 */
-#define PSM_OSD_ENABLED(pageseg_mode) ((pageseg_mode) <= PSM_AUTO_OSD)
-#define PSM_COL_FIND_ENABLED(pageseg_mode) \
-  ((pageseg_mode) >= PSM_AUTO_OSD && (pageseg_mode) <= PSM_AUTO)
-#define PSM_BLOCK_FIND_ENABLED(pageseg_mode) \
-  ((pageseg_mode) >= PSM_AUTO_OSD && (pageseg_mode) <= PSM_SINGLE_COLUMN)
-#define PSM_LINE_FIND_ENABLED(pageseg_mode) \
-  ((pageseg_mode) >= PSM_AUTO_OSD && (pageseg_mode) <= PSM_SINGLE_BLOCK)
-#define PSM_WORD_FIND_ENABLED(pageseg_mode) \
-  ((pageseg_mode) >= PSM_AUTO_OSD && (pageseg_mode) <= PSM_SINGLE_LINE)
+inline bool PSM_OSD_ENABLED(int pageseg_mode) {
+  return pageseg_mode <= PSM_AUTO_OSD || pageseg_mode == PSM_SPARSE_TEXT_OSD;
+}
+inline bool PSM_ORIENTATION_ENABLED(int pageseg_mode) {
+  return pageseg_mode <= PSM_AUTO || pageseg_mode == PSM_SPARSE_TEXT_OSD;
+}
+inline bool PSM_COL_FIND_ENABLED(int pageseg_mode) {
+  return pageseg_mode >= PSM_AUTO_OSD && pageseg_mode <= PSM_AUTO;
+}
+inline bool PSM_SPARSE(int pageseg_mode) {
+  return pageseg_mode == PSM_SPARSE_TEXT || pageseg_mode == PSM_SPARSE_TEXT_OSD;
+}
+inline bool PSM_BLOCK_FIND_ENABLED(int pageseg_mode) {
+  return pageseg_mode >= PSM_AUTO_OSD && pageseg_mode <= PSM_SINGLE_COLUMN;
+}
+inline bool PSM_LINE_FIND_ENABLED(int pageseg_mode) {
+  return pageseg_mode >= PSM_AUTO_OSD && pageseg_mode <= PSM_SINGLE_BLOCK;
+}
+inline bool PSM_WORD_FIND_ENABLED(int pageseg_mode) {
+  return (pageseg_mode >= PSM_AUTO_OSD && pageseg_mode <= PSM_SINGLE_LINE) ||
+      pageseg_mode == PSM_SPARSE_TEXT || pageseg_mode == PSM_SPARSE_TEXT_OSD;
+}
 
 /**
  * enum of the elements of the page hierarchy, used in ResultIterator
@@ -191,7 +225,7 @@ enum PageIteratorLevel {
 };
 
 /**
- * JUSTIFICATION_UNKNONW
+ * JUSTIFICATION_UNKNOWN
  *   The alignment is not clearly one of the other options.  This could happen
  *   for example if there are only one or two lines of text or the text looks
  *   like source code or poetry.
@@ -213,7 +247,7 @@ enum PageIteratorLevel {
  *
  * JUSTIFICATION_RIGHT
  *   Each line, except possibly the first, is flush to the same right tab stop.
-*/
+ */
 enum ParagraphJustification {
   JUSTIFICATION_UNKNOWN,
   JUSTIFICATION_LEFT,
@@ -232,18 +266,21 @@ enum ParagraphJustification {
  * mention the connection to OcrEngineMode in the comments.
 */
 enum OcrEngineMode {
-  OEM_TESSERACT_ONLY,           // Run Tesseract only - fastest
-  OEM_CUBE_ONLY,                // Run Cube only - better accuracy, but slower
-  OEM_TESSERACT_CUBE_COMBINED,  // Run both and combine results - best accuracy
-  OEM_DEFAULT                   // Specify this mode when calling init_*(),
+  OEM_TESSERACT_ONLY,           // Run Tesseract only - fastest; deprecated
+  OEM_LSTM_ONLY,                // Run just the LSTM line recognizer.
+  OEM_TESSERACT_LSTM_COMBINED,  // Run the LSTM recognizer, but allow fallback
+                                // to Tesseract when things get difficult.
+                                // deprecated
+  OEM_DEFAULT,                  // Specify this mode when calling init_*(),
                                 // to indicate that any of the above modes
                                 // should be automatically inferred from the
                                 // variables in the language-specific config,
                                 // command-line configs, or if not specified
                                 // in any of the above should be set to the
                                 // default OEM_TESSERACT_ONLY.
+  OEM_COUNT                     // Number of OEMs
 };
 
 }  // namespace tesseract.
 
-#endif  // TESSERACT_CCSTRUCT_PUBLICTYPES_H__
+#endif  // TESSERACT_CCSTRUCT_PUBLICTYPES_H_

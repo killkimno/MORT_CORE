@@ -7,32 +7,38 @@
 #ifndef _TIFFCONF_
 #define _TIFFCONF_
 
-/* Define to 1 if the system has the type `int16'. */
-/* #undef HAVE_INT16 */
+/* Signed 16-bit type */
+#define TIFF_INT16_T signed short
 
-/* Define to 1 if the system has the type `int32'. */
-/* #undef HAVE_INT32 */
-
-/* Define to 1 if the system has the type `int8'. */
-/* #undef HAVE_INT8 */
-
-/* The size of a `int', as computed by sizeof. */
-#define SIZEOF_INT 4
-
-/* The size of a `long', as computed by sizeof. */
-#define SIZEOF_LONG 4
-
-/* Signed 64-bit type formatter */
-#define TIFF_INT64_FORMAT "%I64d"
+/* Signed 32-bit type */
+#define TIFF_INT32_T signed int
 
 /* Signed 64-bit type */
-#define TIFF_INT64_T signed __int64
+#define TIFF_INT64_T signed long long
 
-/* Unsigned 64-bit type formatter */
-#define TIFF_UINT64_FORMAT "%I64u"
+/* Signed 8-bit type */
+#define TIFF_INT8_T signed char
+
+/* Unsigned 16-bit type */
+#define TIFF_UINT16_T unsigned short
+
+/* Unsigned 32-bit type */
+#define TIFF_UINT32_T unsigned int
 
 /* Unsigned 64-bit type */
-#define TIFF_UINT64_T unsigned __int64
+#define TIFF_UINT64_T unsigned long long
+
+/* Unsigned 8-bit type */
+#define TIFF_UINT8_T unsigned char
+
+/* Unsigned size type */
+#define TIFF_SIZE_T unsigned int
+
+/* Signed size type */
+#define TIFF_SSIZE_T signed int
+
+/* Pointer difference type */
+#define TIFF_PTRDIFF_T ptrdiff_t
 
 /* Compatibility stuff. */
 
@@ -41,7 +47,7 @@
 #define HAVE_IEEEFP 1
 
 /* Set the native cpu bit order (FILLORDER_LSB2MSB or FILLORDER_MSB2LSB) */
-#define HOST_FILLORDER FILLORDER_LSB2MSB
+#define HOST_FILLORDER FILLORDER_MSB2LSB
 
 /* Native cpu byte order: 1 if big-endian (Motorola) or 0 if little-endian
    (Intel) */
@@ -51,7 +57,10 @@
 #define CCITT_SUPPORT 1
 
 /* Support JPEG compression (requires IJG JPEG library) */
-/* #undef JPEG_SUPPORT */
+#define JPEG_SUPPORT 1
+
+/* Support JBIG compression (requires JBIG-KIT library) */
+/* #undef JBIG_SUPPORT */
 
 /* Support LogLuv high dynamic range encoding */
 #define LOGLUV_SUPPORT 1
@@ -64,23 +73,23 @@
 
 /* Support Old JPEG compresson (read contrib/ojpeg/README first! Compilation
    fails with unpatched IJG JPEG library) */
-/* #undef OJPEG_SUPPORT */
+#define OJPEG_SUPPORT 1
 
 /* Support Macintosh PackBits algorithm */
 #define PACKBITS_SUPPORT 1
 
 /* Support Pixar log-format algorithm (requires Zlib) */
-/* #undef PIXARLOG_SUPPORT */
+#define PIXARLOG_SUPPORT 1
 
 /* Support ThunderScan 4-bit RLE algorithm */
 #define THUNDER_SUPPORT 1
 
 /* Support Deflate compression */
-/* #undef ZIP_SUPPORT */
+#define ZIP_SUPPORT 1
 
 /* Support strip chopping (whether or not to convert single-strip uncompressed
    images to mutiple strips of ~8Kb to reduce memory usage) */
-#define STRIPCHOP_DEFAULT TIFF_STRIPCHOP
+#define STRIPCHOP_DEFAULT 1
 
 /* Enable SubIFD tag (330) support */
 #define SUBIFD_SUPPORT 1
@@ -93,6 +102,9 @@
 /* Pick up YCbCr subsampling info from the JPEG data stream to support files
    lacking the tag (default enabled). */
 #define CHECK_JPEG_YCBCR_SUBSAMPLING 1
+
+/* Support MS MDI magic number files as TIFF */
+#define MDI_SUPPORT 1
 
 /*
  * Feature support definitions.
@@ -107,10 +119,3 @@
 #define IPTC_SUPPORT
 
 #endif /* _TIFFCONF_ */
-/*
- * Local Variables:
- * mode: c
- * c-basic-offset: 8
- * fill-column: 78
- * End:
- */

@@ -1,16 +1,27 @@
 /*====================================================================*
  -  Copyright (C) 2001 Leptonica.  All rights reserved.
- -  This software is distributed in the hope that it will be
- -  useful, but with NO WARRANTY OF ANY KIND.
- -  No author or distributor accepts responsibility to anyone for the
- -  consequences of using this software, or for whether it serves any
- -  particular purpose or works at all, unless he or she says so in
- -  writing.  Everyone is granted permission to copy, modify and
- -  redistribute this source code, for commercial or non-commercial
- -  purposes, with the following restrictions: (1) the origin of this
- -  source code must not be misrepresented; (2) modified versions must
- -  be plainly marked as such; and (3) this notice may not be removed
- -  or altered from any source or modified source distribution.
+ -
+ -  Redistribution and use in source and binary forms, with or without
+ -  modification, are permitted provided that the following conditions
+ -  are met:
+ -  1. Redistributions of source code must retain the above copyright
+ -     notice, this list of conditions and the following disclaimer.
+ -  2. Redistributions in binary form must reproduce the above
+ -     copyright notice, this list of conditions and the following
+ -     disclaimer in the documentation and/or other materials
+ -     provided with the distribution.
+ -
+ -  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ -  ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ -  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ -  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL ANY
+ -  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ -  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ -  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ -  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ -  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ -  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ -  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *====================================================================*/
 
 #ifndef  LEPTONICA_READBARCODE_H
@@ -19,9 +30,11 @@
     /* ----------------------------------------------------------------- *
      *            Flags for method of extracting barcode widths          *
      * ----------------------------------------------------------------- */
+
+/*! Barcode Method */
 enum {
-    L_USE_WIDTHS = 1,           /* use histogram of barcode widths           */
-    L_USE_WINDOWS = 2           /* find best window for decoding transitions */
+    L_USE_WIDTHS = 1,     /*!< use histogram of barcode widths           */
+    L_USE_WINDOWS = 2     /*!< find best window for decoding transitions */
 };
 
     /* ----------------------------------------------------------------- *
@@ -29,24 +42,28 @@ enum {
      * These are used both to identify a barcode format and to identify  *
      * the decoding method to use on a barcode.                          *
      * ----------------------------------------------------------------- */
+
+/*! Barcode Format */
 enum {
-    L_BF_UNKNOWN = 0,           /* unknown format                            */
-    L_BF_ANY = 1,               /* try decoding with all known formats       */
-    L_BF_CODE128 = 2,           /* decode with Code128 format                */
-    L_BF_EAN8 = 3,              /* decode with EAN8 format                   */
-    L_BF_EAN13 = 4,             /* decode with EAN13 format                  */
-    L_BF_CODE2OF5 = 5,          /* decode with Code 2 of 5 format            */
-    L_BF_CODEI2OF5 = 6,         /* decode with Interleaved 2 of 5 format     */
-    L_BF_CODE39 = 7,            /* decode with Code39 format                 */
-    L_BF_CODE93 = 8,            /* decode with Code93 format                 */
-    L_BF_CODABAR = 9,           /* decode with Code93 format                 */
-    L_BF_UPCA = 10              /* decode with UPC A format                  */
+    L_BF_UNKNOWN = 0,     /*!< unknown format                            */
+    L_BF_ANY = 1,         /*!< try decoding with all known formats       */
+    L_BF_CODE128 = 2,     /*!< decode with Code128 format                */
+    L_BF_EAN8 = 3,        /*!< decode with EAN8 format                   */
+    L_BF_EAN13 = 4,       /*!< decode with EAN13 format                  */
+    L_BF_CODE2OF5 = 5,    /*!< decode with Code 2 of 5 format            */
+    L_BF_CODEI2OF5 = 6,   /*!< decode with Interleaved 2 of 5 format     */
+    L_BF_CODE39 = 7,      /*!< decode with Code39 format                 */
+    L_BF_CODE93 = 8,      /*!< decode with Code93 format                 */
+    L_BF_CODABAR = 9,     /*!< decode with Code93 format                 */
+    L_BF_UPCA = 10        /*!< decode with UPC A format                  */
 };
 
     /* ----------------------------------------------------------------- *
      *                  Currently supported formats                      *
      *            Update these arrays as new formats are added.          *
      * ----------------------------------------------------------------- */
+
+/*! Currently supported formats */
 static const l_int32  SupportedBarcodeFormat[] = {
     L_BF_CODE2OF5,
     L_BF_CODEI2OF5,
@@ -56,6 +73,8 @@ static const l_int32  SupportedBarcodeFormat[] = {
     L_BF_UPCA,
     L_BF_EAN13
 };
+
+/*! Currently supported format names */
 static const char  *SupportedBarcodeFormatName[] = {
     "Code2of5",
     "CodeI2of5",
@@ -65,7 +84,7 @@ static const char  *SupportedBarcodeFormatName[] = {
     "Upca",
     "Ean13"
 };
-static const l_int32  NumSupportedBarcodeFormats = 7;
+static const l_int32  NumSupportedBarcodeFormats = 7; /*!< Number of formats */
 
 
     /* ----------------------------------------------------------------- *

@@ -1,31 +1,43 @@
 /*====================================================================*
  -  Copyright (C) 2001 Leptonica.  All rights reserved.
- -  This software is distributed in the hope that it will be
- -  useful, but with NO WARRANTY OF ANY KIND.
- -  No author or distributor accepts responsibility to anyone for the
- -  consequences of using this software, or for whether it serves any
- -  particular purpose or works at all, unless he or she says so in
- -  writing.  Everyone is granted permission to copy, modify and
- -  redistribute this source code, for commercial or non-commercial
- -  purposes, with the following restrictions: (1) the origin of this
- -  source code must not be misrepresented; (2) modified versions must
- -  be plainly marked as such; and (3) this notice may not be removed
- -  or altered from any source or modified source distribution.
+ -
+ -  Redistribution and use in source and binary forms, with or without
+ -  modification, are permitted provided that the following conditions
+ -  are met:
+ -  1. Redistributions of source code must retain the above copyright
+ -     notice, this list of conditions and the following disclaimer.
+ -  2. Redistributions in binary form must reproduce the above
+ -     copyright notice, this list of conditions and the following
+ -     disclaimer in the documentation and/or other materials
+ -     provided with the distribution.
+ -
+ -  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ -  ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ -  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ -  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL ANY
+ -  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ -  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ -  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ -  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ -  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ -  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ -  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *====================================================================*/
 
 #ifndef  LEPTONICA_HEAP_H
 #define  LEPTONICA_HEAP_H
 
-/*
- *  heap.h
+/*!
+ * \file heap.h
  *
+ * <pre>
  *      Expandable priority queue configured as a heap for arbitrary void* data
  *
  *      The L_Heap is used to implement a priority queue.  The elements
  *      in the heap are ordered in either increasing or decreasing key value.
  *      The key is a float field 'keyval' that is required to be
  *      contained in the elements of the queue.
- * 
+ *
  *      The heap is a simple binary tree with the following constraints:
  *         - the key of each node is >= the keys of the two children
  *         - the tree is complete, meaning that each level (1, 2, 4, ...)
@@ -56,16 +68,18 @@
  *      it goes at the end of the array, and is swapped up to restore
  *      the heap.  If the ptr array is full, adding another item causes
  *      the ptr array size to double.
- *      
+ *
  *      For further implementation details, see heap.c.
+ * </pre>
  */
 
+/*! Heap of arbitrary void* data */
 struct L_Heap
 {
-    l_int32      nalloc;      /* size of allocated ptr array                 */
-    l_int32      n;           /* number of elements stored in the heap       */
-    void       **array;       /* ptr array                                   */
-    l_int32      direction;   /* L_SORT_INCREASING or L_SORT_DECREASING      */
+    l_int32      nalloc;      /*!< size of allocated ptr array               */
+    l_int32      n;           /*!< number of elements stored in the heap     */
+    void       **array;       /*!< ptr array                                 */
+    l_int32      direction;   /*!< L_SORT_INCREASING or L_SORT_DECREASING    */
 };
 typedef struct L_Heap  L_HEAP;
 

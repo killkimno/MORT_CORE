@@ -14,9 +14,9 @@ Part 1: Extracting contours from text
 #endif
  
 #ifndef _EiC
-#include "cv.h"
-#include "highgui.h"
-#include "ml.h"
+#include "opencv.hpp"
+#include "highgui.hpp"
+#include "ml.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -54,9 +54,25 @@ extern std::wstring stringToWstring(std::string originalString);
 	
 void getImg(int captureIndex)
 {
-
 	myMainCore->getScreen(screenImg, captureIndex);
 }
+
+bool isError = false;
+std::string legacyTesData;
+
+void GetTesserctText()
+{
+	__try {
+	
+		api.Recognize(0);
+	}
+	__except (EXCEPTION_EXECUTE_HANDLER)
+	{
+		isError = true;
+		//cout << "Error! : " << ex.what();
+	}
+}
+
 
 void getText(resultDB *result)
 {
@@ -78,11 +94,54 @@ void getText(resultDB *result)
 		}
 		else
 		{ 
+
+			
 			api.SetImage((uchar*)screenImg->data, screenImg->size().width, screenImg->size().height, screenImg->channels(), screenImg->step1());
-			api.Recognize(0);
-			char* out = api.GetUTF8Text();
-			text = out;
-			wText = utfStringToWstring(text);
+			
+			cout << "start! : " << std::endl;
+			isError = false;
+			GetTesserctText();
+
+			if (!isError)
+			{
+				char* out = api.GetUTF8Text();
+				text = out;
+				wText = utfStringToWstring(text);
+			}
+			else
+
+			{
+				cout << "Error! : " << std::endl;
+				
+				api.Clear();
+				api.End();
+				api.Init(".\\tessdata", legacyTesData.c_str(), tesseract::OEM_TESSERACT_ONLY);		//레가시 모드
+				//api.Init(".\\tessdata", currentTesData, tesseract::OEM_LSTM_ONLY);				//고급 모드
+				api.SetPageSegMode(tesseract::PSM_AUTO);
+				
+				if (myMainCore->GetIsUseJpnFlag() == false)
+				{
+					api.SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmonpqrstuvwxyz1234567890.,`'&?!()- ");
+				}
+				else
+				{
+					api.SetVariable("tessedit_char_whitelist", "");
+				}
+
+				api.SetImage((uchar*)screenImg->data, screenImg->size().width, screenImg->size().height, screenImg->channels(), screenImg->step1());
+
+				GetTesserctText();
+
+				char* out = api.GetUTF8Text();
+				text = out;
+				wText = utfStringToWstring(text);
+
+				wText = L"에러 : Tesseract OCR 에 문제가 발생하여 레가시로 전환합니다. " + wText;
+				
+			}
+		
+
+			
 		}
 		 
 		 if(myMainCore->getUseCheckSpellingFlag() == true)
@@ -153,29 +212,42 @@ SetIsActiveWindow(bool isActiveWindow)
 	 myMainCore->setAdvencedImgOption(isUseRGBFlag, isUseHSVFlag, isUseErodeFlag,  imgZoomSize);
  }
    extern "C" __declspec(dllexport)void
-	   setUseCheckSpelling(bool isUseCheckSpellingFlag, char *dicFileTxt)
+	   setUseCheckSpelling(bool isUseCheckSpellingFlag, bool isMatchingWord, char *dicFileTxt)
  {
-	 myMainCore->setUseCheckSpellingFlag(isUseCheckSpellingFlag, dicFileTxt);
+	 myMainCore->setUseCheckSpellingFlag(isUseCheckSpellingFlag, isMatchingWord, dicFileTxt);
  }
+
+   extern "C" __declspec(dllexport)void
+	   SetIsUseJpn(bool _isUseJpn)
+   {
+	   myMainCore->setIsUseJpnFlag(_isUseJpn);
+   }
    
 
  extern "C" __declspec(dllexport)void
 	 setTessdata(char *tessData, bool isUseJpnFlag)
  {
 
-		api.Clear();
-		api.End();
-		api.Init(".\\tessdata",tessData); 
-		api.SetPageSegMode(tesseract::PSM_AUTO);
-		myMainCore->setIsUseJpnFlag(isUseJpnFlag);
-		if(isUseJpnFlag == false)
-		{
-			api.SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmonpqrstuvwxyz1234567890.,`'&?!()-");
-		}
-		else
-		{
-			api.SetVariable("tessedit_char_whitelist", "");
-		}
+
+	isError = false;
+	
+
+	api.Clear();
+	api.End();
+	//api.Init(".\\tessdata", tessData, tesseract::OEM_TESSERACT_ONLY);		//레가시 모드
+	api.Init(".\\tessdata",tessData, tesseract::OEM_LSTM_ONLY);				//고급 모드
+	api.SetPageSegMode(tesseract::PSM_AUTO);
+	myMainCore->setIsUseJpnFlag(isUseJpnFlag);
+	if(isUseJpnFlag == false)
+	{
+		api.SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmonpqrstuvwxyz1234567890.,`'&?!()- ");
+	}
+	else
+	{
+		api.SetVariable("tessedit_char_whitelist", "");
+	}
+
+	legacyTesData.assign(strcat(tessData,"_legacy"));
 		
  }
  
@@ -191,16 +263,28 @@ SetIsActiveWindow(bool isActiveWindow)
  extern "C" __declspec(dllexport)void
 	 initOcr(){
 	
-	 InitNHOCR();
+	isError = false;
+	std::wcout << "init nhocr" << std::endl;
+	InitNHOCR();
+	std::wcout << "init setting" << std::endl;
 	myMainCore->init();
-	//api.Init(".\\tessdata","eng"); 
-		//api.Init("l","eng+amh");
-		//api.Init("l", "eng", tesseract::OEM_TESSERACT_CUBE_COMBINED);
-	api.Init(".\\tessdata","eng"); 
+	
+	api.Clear();
+	api.End();
+
+	std::wcout << "init tessract ocr " << std::endl;
+
+	api.Init(".\\tessdata", "eng", tesseract::OEM_LSTM_ONLY);
+	
+
+	std::wcout << "init tessract set page mode " << std::endl;
 	api.SetPageSegMode(tesseract::PSM_AUTO);
-	api.SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmonpqrstuvwxyz1234567890.,'&?!");
-	//InitNHOCR();
-	//getContours(fileName);
+	std::wcout << "init tessract white list " << std::endl;
+	api.SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmonpqrstuvwxyz1234567890.,'&?! ");
+	std::wcout << "init complete " << std::endl;
+
+	legacyTesData = "eng_legacy";
+
  }
  
 
@@ -314,7 +398,7 @@ SetIsActiveWindow(bool isActiveWindow)
 
 	//스펠 체크.
 	extern "C" __declspec(dllexport)void
-		ProcessGetSpellingCheck(wchar_t resultOriginal[], bool isUseJpn) {
+		ProcessGetSpellingCheck(wchar_t resultOriginal[], bool isUseMatchWordDic) {
 
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
@@ -323,7 +407,7 @@ SetIsActiveWindow(bool isActiveWindow)
 		std::wstring wText = resultOriginal;
 	
 		bool isReplaceFlag = false;
-		if (isUseJpn)
+		if (!isUseMatchWordDic)
 		{
 			wText = myMainCore->GetJpnSpellingCheck(wText, &isReplaceFlag);
 		}

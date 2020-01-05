@@ -1,8 +1,8 @@
 #include "MainCore.h"
 
-#include "cv.h"
-#include "highgui.h"
-#include "ml.h"
+#include "opencv.hpp"
+#include "highgui.hpp"
+#include "ml.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -128,6 +128,11 @@ void MainCore::setIsUseJpnFlag(bool newJpnFlag)
 	isUseJpnFlag = newJpnFlag;
 }
 
+bool MainCore::GetIsUseJpnFlag()
+{
+	return isUseJpnFlag;
+}
+
 void MainCore::setFiducialValue(int newFiducialR[], int newFiducialG[], int newFiducialB[], int newFiducialSS[], int newFiducialES[], int newFiducialSV[], int newFiducialEV[], int newSize)
 {
 	fiducialValuseList.clear();
@@ -166,8 +171,9 @@ bool MainCore::getUseCheckSpellingFlag()
 {
 	return isUseSpellcheckFlag;
 }
-void MainCore::setUseCheckSpellingFlag(bool newUseCheckSpellingFlag, char *newFileName)
+void MainCore::setUseCheckSpellingFlag(bool newUseCheckSpellingFlag, bool _isMatchingWord, char *newFileName)
 {
+	isUseMatchWordDic = _isMatchingWord;
 	isUseSpellcheckFlag = newUseCheckSpellingFlag;
 	openDicFile(newFileName);
 
@@ -866,31 +872,43 @@ std::wstring MainCore::GetEnglishSpellingCheck(std::wstring text, bool* isReplac
 	int addIndex = 1;
 	int tokenSize = tokens.countTokens();
 	int nowTokenCount = 0;
-	bool isReplaceWordFlag = true;
+	bool isReplaceWordFlag = false;
 	std::wstring *replaceText;
 
+
+	//std::wcout << "step1 " << text << std::endl;
 	std::vector<std::wstring> textList;
 
 	for (int x = 1; tokens.hasMoreTokens(); x++)
 	{
 		textList.push_back(tokenString = tokens.nextToken());
 	}
+
+	//std::cout << "step 2 token size : " << tokenSize;
 	std::pair <std::multimap<std::wstring, DicDB>::iterator, std::multimap<std::wstring, DicDB>::iterator> mapPD;
 	for (int i = 0; i < tokenSize; )			//원문 갯수 만큼 돌림
 	{
+		//std::cout << "step3 " << i << std::endl;
 		mapPD = myDicMap.equal_range(textList[i]);
 		replaceText = &textList[i];
+
 		for (std::multimap<std::wstring, DicDB>::iterator it = mapPD.first; it != mapPD.second; ++it)
 		{
+			//std::wcout << "step4 " << it->second.originalText << std::endl;
 			if (it->second.tokenSize > nowTokenCount)
 			{
-				for (int j = 0; j < it->second.tokenSize; j++)
+				int textSize = textList.max_size();
+				int textListSize = it->second.originalTextList.size();
+				for (int j = 0; j < it->second.tokenSize && i + j < textSize && j < textListSize; j++)
 				{
+					
 					if (tokenSize < i + it->second.tokenSize)
 					{
+						std::cout << "step6 " << i << std::endl;
 						isReplaceWordFlag = false;
 						break;
 					}
+					
 					if (it->second.originalTextList[j].compare(textList[i + j]) == 0)
 					{
 						isReplaceWordFlag = true;
@@ -904,6 +922,7 @@ std::wstring MainCore::GetEnglishSpellingCheck(std::wstring text, bool* isReplac
 			}
 			if (isReplaceWordFlag == true)
 			{
+			
 				(*isReplaceFlag) = true;
 				nowTokenCount = it->second.tokenSize;
 				replaceText = &it->second.resultText;
@@ -935,6 +954,7 @@ std::wstring MainCore::GetJpnSpellingCheck(std::wstring text, bool* isReplaceFla
 	bool isReplaceWordFlag = true;
 	std::pair <std::multimap<std::wstring, DicDB>::iterator, std::multimap<std::wstring, DicDB>::iterator> mapPD;
 	std::wstring tokenString = L"";
+
 	for (int i = 0; i < tokenSize; )			//원문 갯수 만큼 돌림
 	{
 		tokenString = text[i];
@@ -999,136 +1019,15 @@ std::wstring MainCore::checkSpelling(std::wstring text, bool* isReplaceFlag)
 	ReplaceAll(text, L"\n", L" ");
 	std::wstring resultSTring = L"";
 
-	if (isUseJpnFlag == false)
+	if (isUseMatchWordDic)
 	{
 		resultSTring = GetEnglishSpellingCheck(text, isReplaceFlag);
-		/*
-		StringTokenizer tokens(text, L" ");
-		std::wstring tokenString;
-		int addIndex = 1;
-		int tokenSize = tokens.countTokens();
-		int nowTokenCount = 0;
-		bool isReplaceWordFlag = true;
-		std::wstring *replaceText;
-
-		std::vector<std::wstring> textList;
-
-		for (int x = 1; tokens.hasMoreTokens(); x++)
-		{
-			textList.push_back(tokenString = tokens.nextToken());
-		}
-		std::pair <std::multimap<std::wstring, DicDB>::iterator, std::multimap<std::wstring, DicDB>::iterator> mapPD;
-		for (int i = 0; i < tokenSize; )			//원문 갯수 만큼 돌림
-		{
-			mapPD = myDicMap.equal_range(textList[i]);
-			replaceText = &textList[i];
-			for (std::multimap<std::wstring, DicDB>::iterator it = mapPD.first; it != mapPD.second; ++it)
-			{
-				if (it->second.tokenSize > nowTokenCount)
-				{
-					for (int j = 0; j < it->second.tokenSize; j++)
-					{
-						if (tokenSize < i + it->second.tokenSize)
-						{
-							isReplaceWordFlag = false;
-							break;
-						}
-						if (it->second.originalTextList[j].compare(textList[i + j]) == 0)
-						{
-							isReplaceWordFlag = true;
-						}
-						else
-						{
-							isReplaceWordFlag = false;
-							break;
-						}
-					}
-				}
-				if (isReplaceWordFlag == true)
-				{
-					(*isReplaceFlag) = true;
-					nowTokenCount = it->second.tokenSize;
-					replaceText = &it->second.resultText;
-					isReplaceWordFlag = false;
-				}
-			}
-			if (nowTokenCount > 1)
-			{
-				i = i + nowTokenCount;
-			}
-			else
-			{
-				i++;
-			}
-			resultSTring = resultSTring + (*replaceText) + L" ";
-			nowTokenCount = 0;
-		}
-		*/
+		
 	}
-	else if (isUseJpnFlag == true)
+	else
 	{
 		resultSTring = GetJpnSpellingCheck(text, isReplaceFlag);
-		/*
-		std::wstring replaceText;
-		int nowTokenCount = 0;
-		int tokenSize = text.length();
-		bool isReplaceWordFlag = true;
-		std::pair <std::multimap<std::wstring, DicDB>::iterator, std::multimap<std::wstring, DicDB>::iterator> mapPD;
-		std::wstring tokenString = L"";
-		for (int i = 0; i < tokenSize; )			//원문 갯수 만큼 돌림
-		{
-			tokenString = text[i];
-			mapPD = myDicMap.equal_range(tokenString);
-			replaceText = text[i];
-			for (std::multimap<std::wstring, DicDB>::iterator it = mapPD.first; it != mapPD.second; ++it)
-			{
-				if (it->second.tokenSize > nowTokenCount)
-				{
-					for (int j = 0; j < it->second.tokenSize; j++)
-					{
-						if (tokenSize < i + it->second.tokenSize)
-						{
-							isReplaceWordFlag = false;
-							break;
-						}
-						std::wstring text1 = L"";
-						text1 = it->second.originalText[j];
-						std::wstring text2 = L"";
-						text2 = text[i + j];
-
-						if (text1.compare(text2) == 0)
-						{
-							isReplaceWordFlag = true;
-						}
-						else
-						{
-							isReplaceWordFlag = false;
-							break;
-						}
-					}
-
-				}
-				if (isReplaceWordFlag == true)
-				{
-					(*isReplaceFlag) = true;
-					nowTokenCount = it->second.tokenSize;
-					replaceText = it->second.resultText;
-					isReplaceWordFlag = false;
-				}
-
-			}
-			if (nowTokenCount > 1)
-			{
-				i = i + nowTokenCount;
-			}
-			else
-			{
-				i++;
-			}
-			resultSTring = resultSTring + (replaceText);
-			nowTokenCount = 0;
-		}
-		*/
+		
 	}
 
 	return resultSTring;
@@ -1137,7 +1036,7 @@ std::wstring MainCore::checkSpelling(std::wstring text, bool* isReplaceFlag)
 }
 
 
-void MainCore::readENGDicFile(char *dicFileText)
+void MainCore::ReadMatchingDicFile(char *dicFileText)
 {
 		bool endFileFlag = false;
 		char getLine[1000];
@@ -1201,7 +1100,7 @@ void MainCore::readENGDicFile(char *dicFileText)
 		fin.close();
 }
 
-void MainCore::readJPNDicFile(char *dicFileText)
+void MainCore::ReadUnMatchingDicFile(char *dicFileText)
 {
 		bool endFileFlag = false;
 		char getLine[1000];
@@ -1270,19 +1169,36 @@ void MainCore::openDicFile(char *dicFileText)
 
 	if(isUseJpnFlag == false)
 	{
-		readENGDicFile("dic.txt");
+		ReadMatchingDicFile("dic.txt");
 		if(strcmp(dicFileText, "") != 0 && strcmp(dicFileText, "dic.txt") != 0 && strcmp(dicFileText, "dicJpn.txt") != 0)
 		{
-			readENGDicFile(dicFileText);
+			if (isUseMatchWordDic)
+			{
+				ReadMatchingDicFile(dicFileText);
+			}
+			else
+
+			{
+				ReadUnMatchingDicFile(dicFileText);
+			}
+			
 		}
  			
 	}
 	else if(isUseJpnFlag == true)
 	{
-		readJPNDicFile("dicJpn.txt");
+		ReadUnMatchingDicFile("dicJpn.txt");
 		if(strcmp(dicFileText, "") != 0 && strcmp(dicFileText, "dic.txt") != 0 && strcmp(dicFileText, "dicJpn.txt") != 0)
 		{
-			readJPNDicFile(dicFileText);
+			if (isUseMatchWordDic)
+			{
+				ReadMatchingDicFile(dicFileText);
+			}
+			else
+
+			{
+				ReadUnMatchingDicFile(dicFileText);
+			}
 		}
 			
 
@@ -1373,6 +1289,8 @@ void MainCore::openSettingFile(char *dbFileName)
 
 	if(isUseDBFlag == true)
 	{		
+		std::cout << "\n\nopen db file and is jpn? : " << isUseJpnFlag << "\n";
+
 		int nowDBIndex =0;
 		if(isUseJpnFlag == false)
 		{
@@ -1705,8 +1623,15 @@ void MainCore::adjustImg(cv::Mat* img, int captureIndex)
 	}
 	else if(isHSVOptionFlag == true)
 	{
+		
+		
+
+
+
+
+
 		cv::Mat hsv; 
-		cvtColor(*img,hsv,CV_BGR2HSV);
+		cvtColor(*img,hsv, 40);	//CV_BGR2HSV
 		for(int i = 0; i < img->rows; i++)
 		{
 			for(int j = 0; j < img->cols; j++) 
@@ -1748,7 +1673,7 @@ void MainCore::adjustImg(cv::Mat* img, int captureIndex)
 	}
 	else
 	{
-		 cvtColor(*img,*img,CV_BGR2GRAY);
+		 cvtColor(*img,*img, 6);	//CV_BGR2GRAY
 		 //cvtColor(*img, *img, CV_GRAY2BGRA);
 	}
 

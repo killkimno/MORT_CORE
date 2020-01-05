@@ -1,0 +1,11 @@
+prefix=H:/vcpkg-master/packages/tiff_x86-windows
+exec_prefix=H:/vcpkg-master/packages/tiff_x86-windows
+libdir=H:/vcpkg-master/packages/tiff_x86-windows/lib
+includedir=H:/vcpkg-master/packages/tiff_x86-windows/include
+
+Name: libtiff
+Description:  Tag Image File Format (TIFF) library.
+Version: 4.0.10
+Libs: -LH:/vcpkg-master/packages/tiff_x86-windows/lib -ltiff
+Libs.private: 
+Cflags: -IH:/vcpkg-master/packages/tiff_x86-windows/include

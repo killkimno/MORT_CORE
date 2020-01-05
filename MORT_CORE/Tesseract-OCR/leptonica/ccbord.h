@@ -1,42 +1,59 @@
 /*====================================================================*
  -  Copyright (C) 2001 Leptonica.  All rights reserved.
- -  This software is distributed in the hope that it will be
- -  useful, but with NO WARRANTY OF ANY KIND.
- -  No author or distributor accepts responsibility to anyone for the
- -  consequences of using this software, or for whether it serves any
- -  particular purpose or works at all, unless he or she says so in
- -  writing.  Everyone is granted permission to copy, modify and
- -  redistribute this source code, for commercial or non-commercial
- -  purposes, with the following restrictions: (1) the origin of this
- -  source code must not be misrepresented; (2) modified versions must
- -  be plainly marked as such; and (3) this notice may not be removed
- -  or altered from any source or modified source distribution.
+ -
+ -  Redistribution and use in source and binary forms, with or without
+ -  modification, are permitted provided that the following conditions
+ -  are met:
+ -  1. Redistributions of source code must retain the above copyright
+ -     notice, this list of conditions and the following disclaimer.
+ -  2. Redistributions in binary form must reproduce the above
+ -     copyright notice, this list of conditions and the following
+ -     disclaimer in the documentation and/or other materials
+ -     provided with the distribution.
+ -
+ -  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ -  ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ -  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ -  A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL ANY
+ -  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ -  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ -  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ -  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ -  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ -  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ -  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *====================================================================*/
 
 #ifndef  LEPTONICA_CCBORD_H
 #define  LEPTONICA_CCBORD_H
 
-/*
- *  ccbord.h
+/*!
+ * \file ccbord.h
  *
+ * <pre>
  *           CCBord:   represents a single connected component
  *           CCBorda:  an array of CCBord
+ * </pre>
  */
 
-    /* Use in ccbaStepChainsToPixCoords() */
+    /*! Use in ccbaStepChainsToPixCoords() */
+/*! CCB Coords */
 enum {
       CCB_LOCAL_COORDS = 1,
       CCB_GLOBAL_COORDS = 2
 };
 
-    /* Use in ccbaGenerateSPGlobalLocs() */
+    /*! Use in ccbaGenerateSPGlobalLocs() */
+/*! CCB Points */
 enum {
       CCB_SAVE_ALL_PTS = 1,
       CCB_SAVE_TURNING_PTS = 2
 };
 
 
-    /* CCBord contains:
+    /*!
+     * <pre>
+     * CCBord contains:
      *
      *    (1) a minimally-clipped bitmap of the component (pix),
      *    (2) a boxa consisting of:
@@ -71,30 +88,31 @@ enum {
      *    (9) a pta for a single chain for each c.c., comprised of outer
      *        and hole borders, plus cut paths between them, all in
      *        global coords.
+     * </pre>
      */
 struct CCBord
 {
-    struct Pix          *pix;            /* component bitmap (min size)      */
-    struct Boxa         *boxa;           /* regions of each closed curve     */
-    struct Pta          *start;          /* initial border pixel locations   */
-    l_int32              refcount;       /* number of handles; start at 1    */
-    struct Ptaa         *local;          /* ptaa of chain pixels (local)     */
-    struct Ptaa         *global;         /* ptaa of chain pixels (global)    */
-    struct Numaa        *step;           /* numaa of chain code (step dir)   */
-    struct Pta          *splocal;        /* pta of single chain (local)      */
-    struct Pta          *spglobal;       /* pta of single chain (global)     */
+    struct Pix          *pix;          /*!< component bitmap (min size)      */
+    struct Boxa         *boxa;         /*!< regions of each closed curve     */
+    struct Pta          *start;        /*!< initial border pixel locations   */
+    l_int32              refcount;     /*!< number of handles; start at 1    */
+    struct Ptaa         *local;        /*!< ptaa of chain pixels (local)     */
+    struct Ptaa         *global;       /*!< ptaa of chain pixels (global)    */
+    struct Numaa        *step;         /*!< numaa of chain code (step dir)   */
+    struct Pta          *splocal;      /*!< pta of single chain (local)      */
+    struct Pta          *spglobal;     /*!< pta of single chain (global)     */
 };
 typedef struct CCBord CCBORD;
 
-
+/*! Array of CCBord */
 struct CCBorda
 {
-    struct Pix          *pix;            /* input pix (may be null)          */
-    l_int32              w;              /* width of pix                     */
-    l_int32              h;              /* height of pix                    */
-    l_int32              n;              /* number of ccbord in ptr array    */
-    l_int32              nalloc;         /* number of ccbord ptrs allocated  */
-    struct CCBord      **ccb;            /* ccb ptr array                    */
+    struct Pix          *pix;          /*!< input pix (may be null)          */
+    l_int32              w;            /*!< width of pix                     */
+    l_int32              h;            /*!< height of pix                    */
+    l_int32              n;            /*!< number of ccbord in ptr array    */
+    l_int32              nalloc;       /*!< number of ccbord ptrs allocated  */
+    struct CCBord      **ccb;          /*!< ccb ptr array                    */
 };
 typedef struct CCBorda CCBORDA;
 

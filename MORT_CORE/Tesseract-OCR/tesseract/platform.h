@@ -1,8 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // File:        platform.h
 // Description: Place holder
-// Author:
-// Created:
 //
 // (C) Copyright 2006, Google Inc.
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,56 +15,45 @@
 //
 ///////////////////////////////////////////////////////////////////////
 
-#ifndef TESSERACT_CCUTIL_PLATFORM_H__
-#define TESSERACT_CCUTIL_PLATFORM_H__
+#ifndef TESSERACT_CCUTIL_PLATFORM_H_
+#define TESSERACT_CCUTIL_PLATFORM_H_
 
 #define DLLSYM
-#ifdef _WIN32
-#ifdef __GNUC__
-#define ultoa _ultoa
-typedef struct _BLOB {
-  unsigned int cbSize;
-  char *pBlobData;
-} BLOB, *LPBLOB;
-#endif  /* __GNUC__ */
-#define SIGNED
-#define snprintf _snprintf
-#if (_MSC_VER <= 1400)
-#define vsnprintf _vsnprintf
-#endif /* _WIN32 */
-#else
-#define __UNIX__
-#include <limits.h>
-#ifndef PATH_MAX
-#define MAX_PATH 4096
-#else
-#define MAX_PATH PATH_MAX
-#endif
-#define SIGNED signed
+#ifndef _WIN32
+#  ifdef __cplusplus
+#    include <climits>
+#  else /* C compiler*/
+#    include <limits.h>
+#  endif /* __cplusplus */
+#  ifndef PATH_MAX
+#    define MAX_PATH 4096
+#  else
+#    define MAX_PATH PATH_MAX
+#  endif
 #endif
 
 #if defined(_WIN32) || defined(__CYGWIN__)
-    #if defined(TESS_EXPORTS)
-       #define TESS_API __declspec(dllexport)
-    #elif defined(TESS_IMPORTS)
-       #define TESS_API __declspec(dllimport)
-    #else
-       #define TESS_API
-    #endif
-    #define TESS_LOCAL
+#  if defined(TESS_EXPORTS)
+#    define TESS_API __declspec(dllexport)
+#  elif defined(TESS_IMPORTS)
+#    define TESS_API __declspec(dllimport)
+#  else
+#    define TESS_API
+#  endif
+#  define TESS_LOCAL
 #else
-    #if __GNUC__ >= 4
-      #if defined(TESS_EXPORTS) || defined(TESS_IMPORTS)
-          #define TESS_API  __attribute__ ((visibility ("default")))
-          #define TESS_LOCAL  __attribute__ ((visibility ("hidden")))
-      #else
-          #define TESS_API
-          #define TESS_LOCAL
-      #endif
-    #else
-      #define TESS_API
-      #define TESS_LOCAL
-    #endif
+#  if __GNUC__ >= 4
+#    if defined(TESS_EXPORTS) || defined(TESS_IMPORTS)
+#      define TESS_API __attribute__((visibility("default")))
+#      define TESS_LOCAL __attribute__((visibility("hidden")))
+#    else
+#      define TESS_API
+#      define TESS_LOCAL
+#    endif
+#  else
+#    define TESS_API
+#    define TESS_LOCAL
+#  endif
 #endif
 
-#endif  // TESSERACT_CCUTIL_PLATFORM_H__
+#endif  // TESSERACT_CCUTIL_PLATFORM_H_
