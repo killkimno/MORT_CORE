@@ -17,7 +17,7 @@
 #include "StringTokenizer.h"
 #include <map>
 
-void ReplaceAll (std::wstring& strSrc, const std::wstring& strFind, const std::wstring& strDest)
+void MainCore::ReplaceAll (std::wstring& strSrc, const std::wstring& strFind, const std::wstring& strDest)
 {
     size_t j;
     while ((j = strSrc.find(strFind)) != std::wstring::npos)
@@ -78,6 +78,16 @@ void MainCore::init()
 void MainCore::setErode(bool newFlag)
 {
 	isErodeOptionFlag = newFlag;
+}
+
+void MainCore::SetRemoveSpace(bool isRemove)
+{
+	isRemoveSpace = isRemove;
+}
+
+void MainCore::SetShowOCRIndex(bool isShow)
+{
+	isShowOCRIndex = isShow;
 }
 
 void MainCore::setDefaultOption()
@@ -165,6 +175,16 @@ void MainCore::setUseDB(bool newIsUseDBFlag, char *dbFileName)
 bool MainCore::getUseDBFlag()
 {
 	return isUseDBFlag;
+}
+
+bool MainCore::GetIsRemoveSpace()
+{
+	return isRemoveSpace;
+}
+
+bool MainCore::GetIsShowOCRIndex()
+{
+	return isShowOCRIndex;
 }
 
 bool MainCore::getUseCheckSpellingFlag()
@@ -863,8 +883,10 @@ void MainCore::analysisText(std::wstring text, struct TranslationsDB* newDB)
 	}
 }
 
-std::wstring MainCore::GetEnglishSpellingCheck(std::wstring text, bool* isReplaceFlag)
+//완전히 매칭 되는 단어로 검색.
+std::wstring MainCore::GetMatchingSpellingCheck(std::wstring text, bool* isReplaceFlag)
 {
+	std::cout << "eng";
 	std::wstring resultSTring = L"";
 	
 	StringTokenizer tokens(text, L" ");
@@ -874,6 +896,7 @@ std::wstring MainCore::GetEnglishSpellingCheck(std::wstring text, bool* isReplac
 	int nowTokenCount = 0;
 	bool isReplaceWordFlag = false;
 	std::wstring *replaceText;
+	std::wstring debugText = L"";
 
 
 	//std::wcout << "step1 " << text << std::endl;
@@ -925,7 +948,17 @@ std::wstring MainCore::GetEnglishSpellingCheck(std::wstring text, bool* isReplac
 			
 				(*isReplaceFlag) = true;
 				nowTokenCount = it->second.tokenSize;
-				replaceText = &it->second.resultText;
+				if (debugMode.isActive && debugMode.isShowReplace)
+				{
+					debugText = L"[" + *replaceText + L"]";
+					replaceText = &it->second.resultText;
+					
+				}
+				else
+				{
+					replaceText = &it->second.resultText;
+				}
+				
 				isReplaceWordFlag = false;
 			}
 		}
@@ -937,16 +970,31 @@ std::wstring MainCore::GetEnglishSpellingCheck(std::wstring text, bool* isReplac
 		{
 			i++;
 		}
-		resultSTring = resultSTring + (*replaceText) + L" ";
+
+		if (debugMode.isActive && debugMode.isShowReplace)
+		{
+			resultSTring = resultSTring + (*replaceText) + debugText + L" ";
+			debugText = L"";
+		}
+		else
+		{
+			resultSTring = resultSTring + (*replaceText) + L" ";
+		}
+
+		
 		nowTokenCount = 0;
 	}
 	
 	return resultSTring;
 }
 
-std::wstring MainCore::GetJpnSpellingCheck(std::wstring text, bool* isReplaceFlag)
+//문자 단위로 체크.
+std::wstring MainCore::GetLetterSpellingCheck(std::wstring text, bool* isReplaceFlag)
 {
+	
+
 	std::wstring resultSTring = L"";
+	std::wstring debugText = L"";
 
 	std::wstring replaceText;
 	int nowTokenCount = 0;
@@ -955,11 +1003,25 @@ std::wstring MainCore::GetJpnSpellingCheck(std::wstring text, bool* isReplaceFla
 	std::pair <std::multimap<std::wstring, DicDB>::iterator, std::multimap<std::wstring, DicDB>::iterator> mapPD;
 	std::wstring tokenString = L"";
 
+
+	std::cout << "jpn " << tokenSize << std::endl;
+
 	for (int i = 0; i < tokenSize; )			//원문 갯수 만큼 돌림
 	{
 		tokenString = text[i];
 		mapPD = myDicMap.equal_range(tokenString);
 		replaceText = text[i];
+
+
+		std::wstring unicodeString = L"start : " + tokenString + L"\n";
+		
+		DWORD writtenCount;
+		WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE),
+			unicodeString.c_str(), static_cast<DWORD>(unicodeString.length()), &writtenCount, NULL);
+		
+
+
+
 		for (std::multimap<std::wstring, DicDB>::iterator it = mapPD.first; it != mapPD.second; ++it)
 		{
 			if (it->second.tokenSize > nowTokenCount)
@@ -976,12 +1038,25 @@ std::wstring MainCore::GetJpnSpellingCheck(std::wstring text, bool* isReplaceFla
 					std::wstring text2 = L"";
 					text2 = text[i + j];
 
+
+					unicodeString = L"\n" + (std::wstring)L"do : " + text1 + L" token : " + text2 + L" ori : " + text + L"\n";
+
+					WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE),
+						unicodeString.c_str(), static_cast<DWORD>(unicodeString.length()), &writtenCount, NULL);
+
 					if (text1.compare(text2) == 0)
 					{
 						isReplaceWordFlag = true;
 					}
 					else
 					{
+						unicodeString = L"\n" + (std::wstring)L"false : " + text1 + L" token : " + text2 + L"\n";
+
+						WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE),
+							unicodeString.c_str(), static_cast<DWORD>(unicodeString.length()), &writtenCount, NULL);
+
+
+
 						isReplaceWordFlag = false;
 						break;
 					}
@@ -991,7 +1066,26 @@ std::wstring MainCore::GetJpnSpellingCheck(std::wstring text, bool* isReplaceFla
 			{
 				(*isReplaceFlag) = true;
 				nowTokenCount = it->second.tokenSize;
-				replaceText = it->second.resultText;
+				
+			
+
+				if (debugMode.isActive && debugMode.isShowReplace)
+				{
+					debugText = L"[" + replaceText + L"]";
+					replaceText = it->second.resultText;
+
+				}
+				else
+				{
+					replaceText = it->second.resultText;
+				}
+
+				unicodeString = L"\n" + (std::wstring) L"replace : " + replaceText + L" token : " + tokenString + L"\n" ;
+
+				WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE),
+					unicodeString.c_str(), static_cast<DWORD>(unicodeString.length()), &writtenCount, NULL);
+
+
 				isReplaceWordFlag = false;
 			}
 
@@ -1005,7 +1099,17 @@ std::wstring MainCore::GetJpnSpellingCheck(std::wstring text, bool* isReplaceFla
 			i++;
 		}
 
-		resultSTring = resultSTring + (replaceText);
+		if (debugMode.isActive && debugMode.isShowReplace)
+		{
+			resultSTring = resultSTring + (replaceText) + debugText;
+			debugText = L"";
+		}
+		else
+		{
+			resultSTring = resultSTring + (replaceText);
+		}
+
+		
 		nowTokenCount = 0;
 	}
 
@@ -1021,12 +1125,12 @@ std::wstring MainCore::checkSpelling(std::wstring text, bool* isReplaceFlag)
 
 	if (isUseMatchWordDic)
 	{
-		resultSTring = GetEnglishSpellingCheck(text, isReplaceFlag);
+		resultSTring = GetMatchingSpellingCheck(text, isReplaceFlag);
 		
 	}
 	else
 	{
-		resultSTring = GetJpnSpellingCheck(text, isReplaceFlag);
+		resultSTring = GetLetterSpellingCheck(text, isReplaceFlag);
 		
 	}
 
@@ -1495,6 +1599,7 @@ void MainCore::ClearOcrColorSet()
 //추출 좌표 설정
 void MainCore::setCutPoint(int newX[], int newY[], int  newWidth[], int newHeight[], int newSize)
 {
+	//모니터 dpi 비율
 	float scaleX = 1;
 	float scaleY = 1;
 
@@ -1523,7 +1628,7 @@ void MainCore::setCutPoint(int newX[], int newY[], int  newWidth[], int newHeigh
 	}
 	*/
 
-	RECT rc;
+	RECT rc;	//모니터 사이즈를 가져오는 부분
 	rc.left = GetSystemMetrics(SM_CXFOCUSBORDER);
 	rc.top = GetSystemMetrics(SM_CYFOCUSBORDER);
 	rc.right = GetSystemMetrics (SM_CXVIRTUALSCREEN); 
@@ -1532,6 +1637,8 @@ void MainCore::setCutPoint(int newX[], int newY[], int  newWidth[], int newHeigh
 	int width = rc.right - rc.left;
 	int height = rc.bottom - rc.top;
 
+	std::cout << "Scree X: " << width << " Y : " << height <<  " Left : " << rc.left << " / Right : " << rc.right << " Monitor : " << monitor_count << std::endl;
+
 	HDC hdcScreen = CreateDC(TEXT("DISPLAY"),NULL,NULL,NULL);
 	GetClipBox(hdcScreen, &rc);
 	
@@ -1539,6 +1646,8 @@ void MainCore::setCutPoint(int newX[], int newY[], int  newWidth[], int newHeigh
 	int startPointY = rc.top;
 	int width2 = rc.right - rc.left;
 	int height2 = rc.bottom - rc.top;
+
+	std::cout << "Display X: " << width2 << " Y : " << height2 << " Left : " << rc.left << " / Right : " << rc.right;
 
 	if(width != 0 || height != 0)
 	{

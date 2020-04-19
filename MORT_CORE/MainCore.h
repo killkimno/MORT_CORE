@@ -51,6 +51,22 @@ protected:
 	bool isHSVOptionFlag;				//hsv로 색 구분
 	float imgZoomSize;					//OCR 추출 이미지 확대 사이즈
 
+	bool isRemoveSpace = false;					//공백 제거.
+	bool isShowOCRIndex = false;				//OCR 인덱스 표시
+
+	struct DebugMode					//디버그 모드.
+	{
+	public :
+		bool isActive;
+		bool isShowReplace;
+
+		DebugMode()
+		{
+			isActive = false;
+			isShowReplace = false;
+		}
+	};
+
 	struct FiducialValuseStruct
 	{
 		int fiducialSS;
@@ -157,6 +173,10 @@ public:
 	MainCore();
 	 ~MainCore();
 	 int testInt;
+	 int monitor_count;
+
+
+	 DebugMode debugMode;
 	 DebugStruct debugStruct;
 	 void init();
 	 void setDefaultOption();
@@ -190,13 +210,20 @@ public:
 	 void setUseCheckSpellingFlag(bool newUseCheckspellFlag, bool _isMatchingWord, char *newDicFileText);
 
 	 std::wstring checkSpelling(std::wstring text , bool* isReplaceFlag);
-	 std::wstring GetEnglishSpellingCheck(std::wstring text, bool* isReplaceFlag);
-	 std::wstring GetJpnSpellingCheck(std::wstring text, bool* isReplaceFlag);
+	 std::wstring GetMatchingSpellingCheck(std::wstring text, bool* isReplaceFlag);
+	 std::wstring GetLetterSpellingCheck(std::wstring text, bool* isReplaceFlag);
 	 void openDicFile(char *newDicFileText);
 	 void ReadUnMatchingDicFile(char *dicFileText);
 	 void ReadMatchingDicFile(char *dicFileText);
 
 	 void setErode(bool newFlag);
+	 void SetRemoveSpace(bool isRemove);
+	 void SetShowOCRIndex(bool isShow);
+	 bool GetIsRemoveSpace();
+	 bool GetIsShowOCRIndex();
 
+	 void ReplaceAll(std::wstring& strSrc, const std::wstring& strFind, const std::wstring& strDest);
+
+	
 
 };

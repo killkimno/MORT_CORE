@@ -138,11 +138,14 @@ void getText(resultDB *result)
 
 				wText = L"에러 : Tesseract OCR 에 문제가 발생하여 레가시로 전환합니다. " + wText;
 				
-			}
-		
-
-			
+			}			
 		}
+
+		if (myMainCore->GetIsRemoveSpace())
+		{
+			myMainCore->ReplaceAll(wText, L" ", L"");
+		}
+		
 		 
 		 if(myMainCore->getUseCheckSpellingFlag() == true)
 		 {			 
@@ -257,6 +260,19 @@ SetIsActiveWindow(bool isActiveWindow)
 	 myMainCore->setErode(true);
   }
 
+  extern "C" __declspec(dllexport)void
+	  SetRemoveSpace(bool isRemove)
+  {
+	  myMainCore->SetRemoveSpace(isRemove);
+  }
+
+  //OCR 인덱스 번호 출력
+  extern "C" __declspec(dllexport)void
+	  SetShowOCRIndex(bool isShow)
+  {
+	  myMainCore->SetShowOCRIndex(isShow);
+  }
+
 
 
   
@@ -321,7 +337,7 @@ SetIsActiveWindow(bool isActiveWindow)
 		resultDB getDB;
 		std::wstring out;
 
-		std::wstring ocrResult = L" ";
+		std::wstring ocrResult = L"";
 		std::wstring translationResult = L"";
 		if(captureCount == 1)
 		{
@@ -338,16 +354,31 @@ SetIsActiveWindow(bool isActiveWindow)
 				getImg(i);
 				getText(&getDB);
 
-				stringstream s;
-				s << i + 1;
-				std::string converted(s.str());
-				std::wstring wConverted = stringToWstring(converted);
-				ocrResult = ocrResult + wConverted + L": " + getDB.original + L"\r\n";
-				if(getDB.translation.compare(L"not thing") != 0)
-				{						
-					translationResult = translationResult + wConverted + L": "  + getDB.translation + L"\r\n";
+				if (myMainCore->GetIsShowOCRIndex())
+				{
+					stringstream s;
+					s << i + 1;
+					std::string converted(s.str());
+					std::wstring wConverted = stringToWstring(converted);
+					ocrResult = ocrResult + wConverted + L": " + getDB.original + L"\r\n";
+					if (getDB.translation.compare(L"not thing") != 0)
+					{
+						translationResult = translationResult + wConverted + L": " + getDB.translation + L"\r\n";
+					}
+					s.clear();
 				}
-
+				else
+				{
+					if (!getDB.original.empty())
+					{
+						ocrResult = ocrResult + L"- " + getDB.original + L"\r\n";
+						if (getDB.translation.compare(L"not thing") != 0)
+						{
+							translationResult = translationResult + L"- " + getDB.translation + L"\r\n";
+						}
+					}					
+				}
+			
 			}
 		}
 		//testestst
@@ -409,12 +440,12 @@ SetIsActiveWindow(bool isActiveWindow)
 		bool isReplaceFlag = false;
 		if (!isUseMatchWordDic)
 		{
-			wText = myMainCore->GetJpnSpellingCheck(wText, &isReplaceFlag);
+			wText = myMainCore->GetLetterSpellingCheck(wText, &isReplaceFlag);
 		}
 		else
 
 		{
-			wText = myMainCore->GetEnglishSpellingCheck(wText, &isReplaceFlag);
+			wText = myMainCore->GetMatchingSpellingCheck(wText, &isReplaceFlag);
 		}
 	
 
