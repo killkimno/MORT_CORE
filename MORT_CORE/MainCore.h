@@ -30,6 +30,11 @@ protected:
 	
 	BITMAPINFOHEADER myBitmapHeader;
 
+	std::vector<int> exceptCodinateXList;
+	std::vector<int> exceptCodinateYList;
+	std::vector<int> exceptHeightList;
+	std::vector<int> exceptWidthList;
+
 	std::vector<int> cutCodinateXList;	
 	std::vector<int> cutCodinateYList;	
 	std::vector<int> cutHeightList;	
@@ -200,10 +205,12 @@ public:
 	 bool equalWord(int ocrValue, int dbValue, int ocrCount);
 	 void analysisText(std::wstring text, struct TranslationsDB * newDB);
 	 void setCutPoint(int newX[], int newY[], int newHeight[], int newWidth[], int newSize);
+	 void SetExceptPoint(int newX[], int newY[], int newHeight[], int newWidth[], int newSize);	//제외 영역.
 	 void ClearOcrColorSet();
 	 void AddOcrColorSet(int colorList[], int size);
 	 void getScreen(cv::Mat *newImg, int captureIndex);
 	 void adjustImg(cv::Mat* img, int captureIndex);
+	 void RemoveAreaImg(cv::Mat* newImg, int captureIndex);
 
 
 	 bool getUseCheckSpellingFlag();

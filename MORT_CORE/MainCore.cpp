@@ -1683,9 +1683,73 @@ void MainCore::setCutPoint(int newX[], int newY[], int  newWidth[], int newHeigh
 
 }
 
+
+
+//제외 영역 추가.
+void MainCore::SetExceptPoint(int newX[], int newY[], int  newWidth[], int newHeight[], int newSize)
+{
+	//모니터 dpi 비율
+	float scaleX = 1;
+	float scaleY = 1;
+
+
+	RECT rc;	//모니터 사이즈를 가져오는 부분
+	rc.left = GetSystemMetrics(SM_CXFOCUSBORDER);
+	rc.top = GetSystemMetrics(SM_CYFOCUSBORDER);
+	rc.right = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+	rc.bottom = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+
+	int width = rc.right - rc.left;
+	int height = rc.bottom - rc.top;
+
+	HDC hdcScreen = CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL);
+	GetClipBox(hdcScreen, &rc);
+
+	int startPointX = rc.left;
+	int startPointY = rc.top;
+	int width2 = rc.right - rc.left;
+	int height2 = rc.bottom - rc.top;
+
+
+	if (width != 0 || height != 0)
+	{
+		scaleX = (float)(width2) / (float)(width);
+		scaleY = (float)(height2) / (float)(height);
+	}
+	else
+	{
+		scaleX = 1;
+		scaleY = 1;
+	}
+
+	if (scaleX == 0)
+	{
+		scaleX = 1;
+	}
+	if (scaleY == 0)
+	{
+		scaleY = 1;
+	}
+	ReleaseDC(NULL, hdcScreen);
+	exceptCodinateXList.clear();
+	exceptCodinateYList.clear();
+	exceptHeightList.clear();
+	exceptWidthList.clear();
+	for (int i = 0; i < newSize; i++)
+	{
+		exceptCodinateXList.push_back((int)(newX[i] * scaleX));
+		exceptCodinateYList.push_back((int)(newY[i] * scaleY));
+		exceptHeightList.push_back((int)(newHeight[i] * scaleY));
+		exceptWidthList.push_back((int)(newWidth[i] * scaleX));
+	}
+
+}
+
+
 //이미지 보정
 void MainCore::adjustImg(cv::Mat* img, int captureIndex)
 {
+	
 	//fiducialH
 	if(isRGBOptionFlag == true)
 	{
@@ -1732,13 +1796,6 @@ void MainCore::adjustImg(cv::Mat* img, int captureIndex)
 	}
 	else if(isHSVOptionFlag == true)
 	{
-		
-		
-
-
-
-
-
 		cv::Mat hsv; 
 		cvtColor(*img,hsv, 40);	//CV_BGR2HSV
 		for(int i = 0; i < img->rows; i++)
@@ -1798,6 +1855,87 @@ void MainCore::adjustImg(cv::Mat* img, int captureIndex)
 
 
 }
+
+//제외 영역 처리
+void MainCore::RemoveAreaImg(cv::Mat* newImg, int captureIndex)
+{
+	int oriStartX = cutCodinateXList[captureIndex];
+	int oriEndX = oriStartX + cutWidthList[captureIndex];
+
+	int oriStartY = cutCodinateYList[captureIndex];
+	int oriEndY = oriStartY + cutHeightList[captureIndex];
+
+
+	int exceptCount = exceptCodinateXList.size();
+	std::cout << "!!! oriStartX : " << oriStartX << " / " << oriEndX << " / oriStartY : " << oriStartY << " / " << oriEndY << " / Count " << exceptCount << std::endl;
+	if (exceptCount > 0)
+	{
+		for (int i = 0; i < exceptCount; i++)
+		{
+			int exStartX = exceptCodinateXList[i];
+			int exEndX = exStartX + exceptWidthList[i];
+			std::cout << "oriStartX : " << oriStartX << " / " << oriEndX << " / exStartX " << exStartX << " / " << exEndX << std::endl;
+
+
+			int exStartY = exceptCodinateYList[i];
+			int exEndY = exStartY + exceptHeightList[i];
+
+			if (exStartX > oriEndX || exEndX < oriStartX || exStartY > oriEndY || exEndY < oriStartY)
+			{
+
+			}
+			else
+			{
+				std::cout << captureIndex << " : 제외 영역에 포함 되었음 -> " << i;
+
+				RECT target = { 0,0,0,0 };
+
+				target.left = exStartX - oriStartX;
+				target.right = target.left + exceptWidthList[i];
+				target.bottom = exStartY - oriStartY;
+				target.top = target.bottom + exceptHeightList[i];
+
+
+				std::cout << std::endl << std::endl << std::endl;
+				std::cout << "Ori Left : " << target.left << " Right :" << target.right << " Top : " << target.top << " Bottom : " << target.bottom << std::endl;
+
+
+				if (target.left < 0)
+				{
+					target.left = 0;
+				}
+
+				if (target.right > newImg->cols)
+				{
+					target.right = newImg->cols;
+				}
+
+
+				if (target.bottom < 0)
+				{
+					target.bottom = 0;
+				}
+
+				if (target.top > newImg->rows)
+				{
+					target.top = newImg->rows;
+				}
+
+
+				std::cout << std::endl << std::endl << std::endl;
+				std::cout << "ImgX : " << newImg->cols << " Y : " << newImg->rows << "Left : " << target.left << " Right :" << target.right << " Top : " << target.top << " Bottom : " << target.bottom << std::endl;
+				
+				cv::Scalar white = cv::Scalar(255, 255, 255);
+				cv::Rect rect(target.left, target.bottom, (target.right - target.left), (target.top - target.bottom));
+				cv::rectangle(*newImg, rect, white, -1);
+		
+			}
+
+		}
+	}
+
+}
+
 
 //화면 가져오기
 void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
@@ -1867,8 +2005,12 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 	StretchBlt(hdc, 0, 0, cutWidthList[captureIndex], cutHeightList[captureIndex], hdcScreen, cutCodinateXList[captureIndex] - clientCoordinate.left, cutCodinateYList[captureIndex] - clientCoordinate.top, cutWidthList[captureIndex], cutHeightList[captureIndex], SRCCOPY); //change SRCCOPY to NOTSRCCOPY for wacky colors !
 
 
+
 	//GetDIBits(hdc,hbmp,0,cutHeight,cutScreen.data,(BITMAPINFO *)&myBitmapHeader,DIB_RGB_COLORS);  //copy from hwindowCompatibleDC to hbwindow
 	GetDIBits(hdc, hbmp, 0, cutHeightList[captureIndex], newImg->data, (BITMAPINFO *)&myBitmapHeader, DIB_RGB_COLORS);  //copy from hwindowCompatibleDC to hbwindow
+
+		//원본 캡쳐
+	//cv::imwrite("test.bmp", *newImg);
 
 	DeleteDC(hdc);
 	DeleteObject(hbmp);
@@ -1876,6 +2018,8 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 
 	//if(isAdvencedIMGOptionFlag == true)
 	adjustImg(newImg, captureIndex);
+	RemoveAreaImg(newImg, captureIndex);
+
 
 	//테스트용
 	//cv::imwrite("test.bmp", *newImg);

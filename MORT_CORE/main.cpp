@@ -328,6 +328,13 @@ SetIsActiveWindow(bool isActiveWindow)
 }
 
 
+ extern "C" __declspec(dllexport)void
+	 SetExceptPoint(int newX[], int newY[], int newX2[], int newY2[], int size) {
+	 myMainCore->SetExceptPoint(newX, newY, newX2, newY2, size);
+
+ }
+
+
 
     extern "C" __declspec(dllexport)void
 	 processOcr(wchar_t resultOriginal[], wchar_t resultTranslation[]){
