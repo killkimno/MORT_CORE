@@ -250,7 +250,20 @@ SetIsActiveWindow(bool isActiveWindow)
 		api.SetVariable("tessedit_char_whitelist", "");
 	}
 
-	legacyTesData.assign(strcat(tessData,"_legacy"));
+	if (strcmp(tessData, "eng_fast") == 0)
+	{
+		legacyTesData.assign("eng_legacy");
+	}
+	else if (strcmp(tessData, "jpn_fast") == 0)
+	{
+		legacyTesData.assign("jpn_legacy");
+	}
+	else
+	{
+		legacyTesData.assign(strcat(tessData, "_legacy"));
+	}
+
+	
 		
  }
  
