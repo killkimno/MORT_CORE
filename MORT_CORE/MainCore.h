@@ -64,11 +64,15 @@ protected:
 	public :
 		bool isActive;
 		bool isShowReplace;
+		bool isSaveCapture;
+		bool isSaveCaptureResult;
 
 		DebugMode()
 		{
 			isActive = false;
 			isShowReplace = false;
+			isSaveCapture = false;
+			isSaveCaptureResult = false;
 		}
 	};
 

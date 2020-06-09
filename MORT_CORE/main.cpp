@@ -181,6 +181,16 @@ void GetDBText(resultDB *result)
 }
 
 extern "C" __declspec(dllexport)void
+SetIsDebugMode(bool isDebug, bool isShowReplace, bool isSaveCapture, bool isSaveCaptureResult)
+{
+	myMainCore->debugMode.isActive = isDebug;
+	myMainCore->debugMode.isShowReplace = isShowReplace;
+	myMainCore->debugMode.isSaveCapture = isSaveCapture;
+	myMainCore->debugMode.isSaveCaptureResult = isSaveCaptureResult;
+}
+
+
+extern "C" __declspec(dllexport)void
 	setFiducialValue(int r[], int g[], int b[], int s1[], int s2[], int v1[], int v2[], int size)
 {
 	myMainCore->setFiducialValue(r, g, b, s1, s2, v1, v2, size);

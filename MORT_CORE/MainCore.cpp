@@ -1948,20 +1948,31 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 	clientCoordinate.top = 0;
 	HDC hdcScreen = NULL;
 	if (!isActiveWindow)
-		hdcScreen = CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL);
+	{
+		hdcScreen = CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL);				
+	}
+	
 	else
 	{
+
+		//hdcScreen = CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL);
 		//엑티브 윈도우
 		HWND firstHwnd = GetForegroundWindow();
 		hdcScreen = GetWindowDC(firstHwnd);
 		GetClipBox(hdcScreen, &rc);
 		GetWindowRect(firstHwnd, &clientCoordinate);
 
+		
 		if (rc.bottom == 0 && rc.right == 0)
 		{
+			std::cout << "We Doom";
+			std::cout << " rc : " << rc.left << " / " << rc.right << " + " << rc.top << " / " << rc.bottom << " top : " << cutCodinateYList[captureIndex] << " cut : " << cutHeightList[captureIndex] << "\n";
+
 			HWND hwnd = GetDesktopWindow();
 			GetClientRect(hwnd, &rc);
 		}
+		
+
 		
 	}
 	std::cout << " rc : " << rc.left << " / " << rc.right << " + " << rc.top << " / " << rc.bottom << " top : " << cutCodinateYList[captureIndex] << " cut : " << cutHeightList[captureIndex] << "\n";
@@ -2009,8 +2020,12 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 	//GetDIBits(hdc,hbmp,0,cutHeight,cutScreen.data,(BITMAPINFO *)&myBitmapHeader,DIB_RGB_COLORS);  //copy from hwindowCompatibleDC to hbwindow
 	GetDIBits(hdc, hbmp, 0, cutHeightList[captureIndex], newImg->data, (BITMAPINFO *)&myBitmapHeader, DIB_RGB_COLORS);  //copy from hwindowCompatibleDC to hbwindow
 
+	if (debugMode.isActive && debugMode.isSaveCapture)
+	{
 		//원본 캡쳐
-	//cv::imwrite("test.bmp", *newImg);
+		cv::imwrite("capture_Original.bmp", *newImg);
+	}
+
 
 	DeleteDC(hdc);
 	DeleteObject(hbmp);
@@ -2020,12 +2035,17 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 	adjustImg(newImg, captureIndex);
 	RemoveAreaImg(newImg, captureIndex);
 
-
-	//테스트용
-	//cv::imwrite("test.bmp", *newImg);
+	
+	
 
 	//debugStruct.clientCoordinateX = newImg->channels();
 	resize(*newImg, *newImg, cv::Size(), imgZoomSize, imgZoomSize, cv::INTER_LINEAR);
 	//cv::imwrite("test.bmp", *newImg);
 	//src.release();
+
+	if (debugMode.isActive && debugMode.isSaveCaptureResult)
+	{
+		//테스트용
+		cv::imwrite("capture_Result.bmp", *newImg);
+	}
 }
