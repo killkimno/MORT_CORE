@@ -203,7 +203,7 @@ public:
 	 bool sequentialSearchDB(TranslationsDB *newDB);
 	 bool searchDB(TranslationsDB *ocrDB , TranslationsDB *resultDB, int adjustRange, int mapTokenIndex, int *nowDistance, int *nowTextDistance);
 	 bool searchJpnDB(TranslationsDB *ocrDB , TranslationsDB *resultDB, int adjustRange, int mapTokenIndex, int *nowDistance, int *nowTextDistance);
-	 std::wstring getTranslation(std::wstring text);
+	 std::wstring getTranslation(std::wstring text, bool& isFound);
 	 int compareWordList(std::vector<int> ocrWordValueList, std::vector<int> dbWordValueList, int ocrCount, int dbCount);
 	 int compareOriginalText(std::wstring inputText, std::wstring resultText);
 	 bool equalWord(int ocrValue, int dbValue, int ocrCount);
@@ -220,7 +220,7 @@ public:
 	 bool getUseCheckSpellingFlag();
 	 void setUseCheckSpellingFlag(bool newUseCheckspellFlag, bool _isMatchingWord, char *newDicFileText);
 
-	 std::wstring checkSpelling(std::wstring text , bool* isReplaceFlag);
+	 std::wstring checkSpelling(std::wstring text , bool* isReplaceFlag, std::wstring toekn);
 	 std::wstring GetMatchingSpellingCheck(std::wstring text, bool* isReplaceFlag);
 	 std::wstring GetLetterSpellingCheck(std::wstring text, bool* isReplaceFlag);
 	 void openDicFile(char *newDicFileText);

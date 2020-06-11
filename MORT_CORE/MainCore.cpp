@@ -17,6 +17,7 @@
 #include "StringTokenizer.h"
 #include <map>
 
+
 void MainCore::ReplaceAll (std::wstring& strSrc, const std::wstring& strFind, const std::wstring& strDest)
 {
     size_t j;
@@ -596,9 +597,10 @@ bool MainCore::searchJpnDB(TranslationsDB *newDB , TranslationsDB *resultDB, int
 
 
 
-std::wstring MainCore::getTranslation(std::wstring text)
+std::wstring MainCore::getTranslation(std::wstring text, bool& isFound)
 {
-			
+	isFound = true;
+
 	int nowDistance = 100;
 	int nowTextDistance = 100;
 
@@ -736,7 +738,7 @@ std::wstring MainCore::getTranslation(std::wstring text)
 	}
 
 
-
+	isFound = false;
 	return L"not thing";
 
 
@@ -886,7 +888,8 @@ void MainCore::analysisText(std::wstring text, struct TranslationsDB* newDB)
 //완전히 매칭 되는 단어로 검색.
 std::wstring MainCore::GetMatchingSpellingCheck(std::wstring text, bool* isReplaceFlag)
 {
-	std::cout << "eng";
+
+	std::wcout << text << L"End?";
 	std::wstring resultSTring = L"";
 	
 	StringTokenizer tokens(text, L" ");
@@ -927,7 +930,6 @@ std::wstring MainCore::GetMatchingSpellingCheck(std::wstring text, bool* isRepla
 					
 					if (tokenSize < i + it->second.tokenSize)
 					{
-						std::cout << "step6 " << i << std::endl;
 						isReplaceWordFlag = false;
 						break;
 					}
@@ -973,12 +975,17 @@ std::wstring MainCore::GetMatchingSpellingCheck(std::wstring text, bool* isRepla
 
 		if (debugMode.isActive && debugMode.isShowReplace)
 		{
-			resultSTring = resultSTring + (*replaceText) + debugText + L" ";
+			resultSTring = resultSTring + (*replaceText) + debugText;
 			debugText = L"";
 		}
 		else
 		{
-			resultSTring = resultSTring + (*replaceText) + L" ";
+			resultSTring = resultSTring + (*replaceText);
+		}
+
+		if (i < tokenSize)
+		{
+			resultSTring = resultSTring + L" ";
 		}
 
 		
@@ -1003,8 +1010,6 @@ std::wstring MainCore::GetLetterSpellingCheck(std::wstring text, bool* isReplace
 	std::pair <std::multimap<std::wstring, DicDB>::iterator, std::multimap<std::wstring, DicDB>::iterator> mapPD;
 	std::wstring tokenString = L"";
 
-
-	std::cout << "jpn " << tokenSize << std::endl;
 
 	for (int i = 0; i < tokenSize; )			//원문 갯수 만큼 돌림
 	{
@@ -1117,25 +1122,34 @@ std::wstring MainCore::GetLetterSpellingCheck(std::wstring text, bool* isReplace
 }
 
 //교정단어 검색
-std::wstring MainCore::checkSpelling(std::wstring text, bool* isReplaceFlag)
+std::wstring MainCore::checkSpelling(std::wstring text, bool* isReplaceFlag, std::wstring toekn)
 {
-	ReplaceAll(text, L"\r\n", L" ");
-	ReplaceAll(text, L"\n", L" ");
 	std::wstring resultSTring = L"";
 
-	if (isUseMatchWordDic)
+	bool isReplace = false;
+	StringTokenizer tokens(text, toekn);
+	for (int x = 1; tokens.hasMoreTokens(); x++)
 	{
-		resultSTring = GetMatchingSpellingCheck(text, isReplaceFlag);
+		if (isUseMatchWordDic)
+		{
+			resultSTring = resultSTring + GetMatchingSpellingCheck(tokens.nextToken(), isReplaceFlag) + L"\r\n";
+		}
+		else
+		{
+			resultSTring = resultSTring +  GetLetterSpellingCheck(tokens.nextToken(), isReplaceFlag)  +L"\r\n";;
+		}
+
 		
+
+		if (isReplaceFlag)
+		{
+			isReplace = true;
+		}
 	}
-	else
-	{
-		resultSTring = GetLetterSpellingCheck(text, isReplaceFlag);
-		
-	}
+
+	*isReplaceFlag = isReplace;
 
 	return resultSTring;
-
 
 }
 
@@ -1637,8 +1651,6 @@ void MainCore::setCutPoint(int newX[], int newY[], int  newWidth[], int newHeigh
 	int width = rc.right - rc.left;
 	int height = rc.bottom - rc.top;
 
-	std::cout << "Scree X: " << width << " Y : " << height <<  " Left : " << rc.left << " / Right : " << rc.right << " Monitor : " << monitor_count << std::endl;
-
 	HDC hdcScreen = CreateDC(TEXT("DISPLAY"),NULL,NULL,NULL);
 	GetClipBox(hdcScreen, &rc);
 	
@@ -1646,8 +1658,6 @@ void MainCore::setCutPoint(int newX[], int newY[], int  newWidth[], int newHeigh
 	int startPointY = rc.top;
 	int width2 = rc.right - rc.left;
 	int height2 = rc.bottom - rc.top;
-
-	std::cout << "Display X: " << width2 << " Y : " << height2 << " Left : " << rc.left << " / Right : " << rc.right;
 
 	if(width != 0 || height != 0)
 	{
@@ -1867,15 +1877,14 @@ void MainCore::RemoveAreaImg(cv::Mat* newImg, int captureIndex)
 
 
 	int exceptCount = exceptCodinateXList.size();
-	std::cout << "!!! oriStartX : " << oriStartX << " / " << oriEndX << " / oriStartY : " << oriStartY << " / " << oriEndY << " / Count " << exceptCount << std::endl;
+	
 	if (exceptCount > 0)
 	{
 		for (int i = 0; i < exceptCount; i++)
 		{
 			int exStartX = exceptCodinateXList[i];
 			int exEndX = exStartX + exceptWidthList[i];
-			std::cout << "oriStartX : " << oriStartX << " / " << oriEndX << " / exStartX " << exStartX << " / " << exEndX << std::endl;
-
+			
 
 			int exStartY = exceptCodinateYList[i];
 			int exEndY = exStartY + exceptHeightList[i];
@@ -1886,19 +1895,14 @@ void MainCore::RemoveAreaImg(cv::Mat* newImg, int captureIndex)
 			}
 			else
 			{
-				std::cout << captureIndex << " : 제외 영역에 포함 되었음 -> " << i;
-
+				
 				RECT target = { 0,0,0,0 };
 
 				target.left = exStartX - oriStartX;
 				target.right = target.left + exceptWidthList[i];
 				target.bottom = exStartY - oriStartY;
 				target.top = target.bottom + exceptHeightList[i];
-
-
-				std::cout << std::endl << std::endl << std::endl;
-				std::cout << "Ori Left : " << target.left << " Right :" << target.right << " Top : " << target.top << " Bottom : " << target.bottom << std::endl;
-
+							
 
 				if (target.left < 0)
 				{
@@ -1922,9 +1926,6 @@ void MainCore::RemoveAreaImg(cv::Mat* newImg, int captureIndex)
 				}
 
 
-				std::cout << std::endl << std::endl << std::endl;
-				std::cout << "ImgX : " << newImg->cols << " Y : " << newImg->rows << "Left : " << target.left << " Right :" << target.right << " Top : " << target.top << " Bottom : " << target.bottom << std::endl;
-				
 				cv::Scalar white = cv::Scalar(255, 255, 255);
 				cv::Rect rect(target.left, target.bottom, (target.right - target.left), (target.top - target.bottom));
 				cv::rectangle(*newImg, rect, white, -1);

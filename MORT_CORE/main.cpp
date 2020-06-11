@@ -106,7 +106,10 @@ void getText(resultDB *result)
 			{
 				char* out = api.GetUTF8Text();
 				text = out;
+
+
 				wText = utfStringToWstring(text);
+
 			}
 			else
 
@@ -152,17 +155,20 @@ void getText(resultDB *result)
 			 for(int i = 0; i < 2 ; i++)
 			 {
 				 bool isReplaceFlag = false;
-				 wText = myMainCore->checkSpelling(wText , &isReplaceFlag);
+				 wText = myMainCore->checkSpelling(wText , &isReplaceFlag, L"\r\n");
 
 				 if(isReplaceFlag == false)
 				 {
 					 break;
 				 }
-			 }			
+			 }	
 		 }
 
 		 result->original = wText;
-		 GetDBText(result);
+
+
+		
+		 GetDBText(result); 
 
 		 
 		 screenImg->release();
@@ -170,14 +176,27 @@ void getText(resultDB *result)
 
 void GetDBText(resultDB *result)
 {
+	bool isFound = false;
+	clock_t start, end;
+
+	start = clock();
 	if (myMainCore->getUseDBFlag() == true)
 	{
-		result->translation = myMainCore->getTranslation(result->original);
+		result->translation = myMainCore->getTranslation(result->original, isFound);	
+	
 	}
 	else
 	{
 		result->translation = L"";
 	}
+
+	end = clock();
+
+	double  time = (end - start);
+
+	std::wcout << std::endl << "OCR : " << result->original << std::endl;
+
+	std::cout  << std::endl<<  "Found : " << isFound << " DB Time : " << time << std::endl;
 }
 
 extern "C" __declspec(dllexport)void
@@ -468,6 +487,9 @@ SetIsActiveWindow(bool isActiveWindow)
 		std::wstring wText = resultOriginal;
 	
 		bool isReplaceFlag = false;
+		wText = myMainCore->checkSpelling(wText, &isReplaceFlag, L"\r\n");
+
+		/*
 		if (!isUseMatchWordDic)
 		{
 			wText = myMainCore->GetLetterSpellingCheck(wText, &isReplaceFlag);
@@ -477,7 +499,7 @@ SetIsActiveWindow(bool isActiveWindow)
 		{
 			wText = myMainCore->GetMatchingSpellingCheck(wText, &isReplaceFlag);
 		}
-	
+	*/
 
 		std::wcscpy(resultOriginal, wText.c_str());
 	}
