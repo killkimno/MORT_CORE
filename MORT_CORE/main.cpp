@@ -98,7 +98,7 @@ void getText(resultDB *result)
 			
 			api.SetImage((uchar*)screenImg->data, screenImg->size().width, screenImg->size().height, screenImg->channels(), screenImg->step1());
 			
-			cout << "start! : " << std::endl;
+			//cout << "start! : " << std::endl;
 			isError = false;
 			GetTesserctText();
 
@@ -114,7 +114,7 @@ void getText(resultDB *result)
 			else
 
 			{
-				cout << "Error! : " << std::endl;
+				cout << "Error Tesseract OCR! : " << std::endl;
 				
 				api.Clear();
 				api.End();
@@ -149,20 +149,40 @@ void getText(resultDB *result)
 			myMainCore->ReplaceAll(wText, L" ", L"");
 		}
 		
+
+
 		 
 		 if(myMainCore->getUseCheckSpellingFlag() == true)
 		 {			 
+			 bool isReplaceFlag = false;
+
+			 wText = myMainCore->checkSpelling(wText, &isReplaceFlag, L"\n");
+
+			 /*
+			 //두번 교정 안 하도록 변경
 			 for(int i = 0; i < 2 ; i++)
 			 {
 				 bool isReplaceFlag = false;
-				 wText = myMainCore->checkSpelling(wText , &isReplaceFlag, L"\r\n");
+				 wText = myMainCore->checkSpelling(wText , &isReplaceFlag, L"\n");
 
 				 if(isReplaceFlag == false)
 				 {
 					 break;
 				 }
 			 }	
+			 */
 		 }
+		 else
+		 {
+
+			 std::vector<std::wstring> text = myMainCore->StringSplite(wText, L"\n", -1);
+			 wText = L"";
+			 for (int i = 0; i < text.size(); i++)
+			 {
+				 wText = wText + text[i] + L"\r\n";
+			 }
+		 }
+
 
 		 result->original = wText;
 
@@ -182,7 +202,113 @@ void GetDBText(resultDB *result)
 	start = clock();
 	if (myMainCore->getUseDBFlag() == true)
 	{
-		result->translation = myMainCore->getTranslation(result->original, isFound);	
+
+		bool isMultiDB = myMainCore->GetIsUsePartialDB();
+
+
+		if (isMultiDB)
+		{//멀티에서는 분할해서 다시 검색한다.
+
+			isFound = false;
+			result->translation = myMainCore->getTranslation(result->original, isFound);
+
+			if (!isFound)
+			{
+				bool isFoundSomething = false;
+
+				std::wstring transResult;
+				std::vector<std::wstring> textList = myMainCore->StringSplite(result->original, L"\r\n", 9);
+
+				std::wcout << std::endl << L" ----------------" << textList.size() << std::endl;
+				//std::wcout << std::endl << result->original << std::endl;
+				int limit = textList.size();
+
+				//10줄 이상 넘어가면 막아버린다.
+				if (limit >= 10)
+				{
+					limit = 10;
+				}
+
+
+				int startIndex = limit - 1;
+				int index = 0;
+
+
+				for ( ; startIndex > -1; startIndex--)
+				{
+					//std::wcout << std::endl << L"Start : " << startIndex;
+					std::wstring text;
+					for (; index < startIndex; index++)
+					{
+						//std::wcout << std::endl << L" index : " << index << std::endl;
+
+						if (index == -1)
+						{
+							for (int i = 0; i <= startIndex; i++)
+							{
+								text = text + textList[i] + L" ";
+
+							}
+						}
+						else
+						{
+							text = textList[startIndex- index] + L" " + text;
+						}
+
+						//std::wcout << std::endl << L"text : " << text;
+
+						std::wstring dbResult = myMainCore->getTranslation(text, isFound);
+
+						if (isFound)
+						{
+							//std::wcout << std::endl << L"isFound : " << isFound;
+
+							isFoundSomething = true;
+							transResult =  dbResult + L"\r\n" + transResult;
+
+							if (index == -1)
+							{
+								startIndex = 0;
+							}
+							else
+							{
+								startIndex = startIndex - (index);
+							}
+
+							//std::wcout << std::endl << L" Result StartIndex :  : " << startIndex;
+
+							break;
+							
+						}
+
+						if (index == -1)
+						{
+							text = L"";
+						}
+
+					}
+
+					index = -1;
+				}
+
+				if (isFoundSomething)
+				{
+					result->translation = transResult;
+				}
+
+				textList.clear();
+			}
+		
+
+		}
+		else
+		{
+			result->translation = myMainCore->getTranslation(result->original, isFound);
+		}
+		
+		
+
+		
 	
 	}
 	else
@@ -194,7 +320,7 @@ void GetDBText(resultDB *result)
 
 	double  time = (end - start);
 
-	std::wcout << std::endl << "OCR : " << result->original << std::endl;
+	//std::wcout << std::endl << "OCR : " << result->original << std::endl;
 
 	std::cout  << std::endl<<  "Found : " << isFound << " DB Time : " << time << std::endl;
 }
@@ -234,10 +360,12 @@ SetIsActiveWindow(bool isActiveWindow)
  }
 
    extern "C" __declspec(dllexport)void
-	   setUseDB(bool isUseDBFlag, char *dbFileText)
+	   setUseDB(bool isUseDBFlag, bool isUsePartialDB, char *dbFileText)
  {
-	 myMainCore->setUseDB(isUseDBFlag, dbFileText);
+	 myMainCore->setUseDB(isUseDBFlag, isUsePartialDB, dbFileText);
  }
+
+
       extern "C" __declspec(dllexport)void
 	   setAdvencedImgOption(bool isUseRGBFlag, bool isUseHSVFlag, bool isUseErodeFlag, float imgZoomSize)
  {
@@ -409,10 +537,10 @@ SetIsActiveWindow(bool isActiveWindow)
 					s << i + 1;
 					std::string converted(s.str());
 					std::wstring wConverted = stringToWstring(converted);
-					ocrResult = ocrResult + wConverted + L": " + getDB.original + L"\r\n";
+					ocrResult = ocrResult + wConverted + L": " + getDB.original;
 					if (getDB.translation.compare(L"not thing") != 0)
 					{
-						translationResult = translationResult + wConverted + L": " + getDB.translation + L"\r\n";
+						translationResult = translationResult + wConverted + L" : " + getDB.translation + L"\r\n";
 					}
 					s.clear();
 				}
@@ -420,12 +548,17 @@ SetIsActiveWindow(bool isActiveWindow)
 				{
 					if (!getDB.original.empty())
 					{
-						ocrResult = ocrResult + L"- " + getDB.original + L"\r\n";
+						ocrResult = ocrResult + L"- " + getDB.original;
 						if (getDB.translation.compare(L"not thing") != 0)
 						{
 							translationResult = translationResult + L"- " + getDB.translation + L"\r\n";
 						}
 					}					
+				}
+
+				if (i + 1 < captureCount)
+				{
+					ocrResult = ocrResult + L"\t" + L"\r\n";
 				}
 			
 			}
@@ -487,19 +620,7 @@ SetIsActiveWindow(bool isActiveWindow)
 		std::wstring wText = resultOriginal;
 	
 		bool isReplaceFlag = false;
-		wText = myMainCore->checkSpelling(wText, &isReplaceFlag, L"\r\n");
-
-		/*
-		if (!isUseMatchWordDic)
-		{
-			wText = myMainCore->GetLetterSpellingCheck(wText, &isReplaceFlag);
-		}
-		else
-
-		{
-			wText = myMainCore->GetMatchingSpellingCheck(wText, &isReplaceFlag);
-		}
-	*/
+		wText = myMainCore->checkSpelling(wText, &isReplaceFlag, L"\r\n");	
 
 		std::wcscpy(resultOriginal, wText.c_str());
 	}

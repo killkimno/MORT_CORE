@@ -61,6 +61,64 @@ std::wstring utfStringToWstring(std::string originalString)
 	
 }
 
+std::vector<std::wstring> MainCore::StringSplite(std::wstring text , std::wstring token, int minSize = 0)
+{
+	std::vector<std::wstring> vector;
+
+
+	StringTokenizer tokens(text, token);
+	int size = tokens.countTokens();
+	int nowTokenWordSize = 0;
+	std::wstring splite = L"";
+
+	bool isPush = false;
+
+	if (minSize == -1)
+	{
+		isPush = true;
+	}
+
+	for (int x = 1; tokens.hasMoreTokens(); x++)
+	{
+		std::wstring tx = tokens.nextToken();// +L"\r\n";
+		//std::wcout << std::endl << tx.size() << std::endl;
+		if (minSize == -1 || tx.size() >= minSize)
+		{
+			
+			if (!isPush)
+			{
+				vector.push_back(splite);
+				//std::wcout << L"##" << splite << std::endl;
+			}
+			isPush = true;
+
+			vector.push_back(tx);
+
+			splite = L"";
+
+			//std::wcout << tx << std::endl;
+		}
+		else
+		{
+			splite = splite + tx;
+
+			isPush = false;
+		}	
+	}
+
+	if (!isPush)
+	{
+		vector.push_back(splite);
+		//std::wcout << L"##" << splite << std::endl;
+	}
+
+
+
+
+	return vector;
+
+}
+
 
 
 MainCore::MainCore()
@@ -163,9 +221,10 @@ void MainCore::setFiducialValue(int newFiducialR[], int newFiducialG[], int newF
 }
 
 
-void MainCore::setUseDB(bool newIsUseDBFlag, char *dbFileName)
+void MainCore::setUseDB(bool newIsUseDBFlag, bool _IsUsePartialDB, char *dbFileName)
 {
 	isUseDBFlag = newIsUseDBFlag;
+	isUsePartialDB = _IsUsePartialDB;
 	
 	if(isUseDBFlag == true)
 	{
@@ -173,6 +232,13 @@ void MainCore::setUseDB(bool newIsUseDBFlag, char *dbFileName)
 	}
 
 }
+
+
+bool MainCore::GetIsUsePartialDB()
+{
+	return isUsePartialDB;
+}
+
 bool MainCore::getUseDBFlag()
 {
 	return isUseDBFlag;
@@ -889,7 +955,7 @@ void MainCore::analysisText(std::wstring text, struct TranslationsDB* newDB)
 std::wstring MainCore::GetMatchingSpellingCheck(std::wstring text, bool* isReplaceFlag)
 {
 
-	std::wcout << text << L"End?";
+	//std::wcout << text << L"End?";
 	std::wstring resultSTring = L"";
 	
 	StringTokenizer tokens(text, L" ");
@@ -920,11 +986,13 @@ std::wstring MainCore::GetMatchingSpellingCheck(std::wstring text, bool* isRepla
 
 		for (std::multimap<std::wstring, DicDB>::iterator it = mapPD.first; it != mapPD.second; ++it)
 		{
+			debugText = L"";
 			//std::wcout << "step4 " << it->second.originalText << std::endl;
 			if (it->second.tokenSize > nowTokenCount)
 			{
 				int textSize = textList.max_size();
 				int textListSize = it->second.originalTextList.size();
+			
 				for (int j = 0; j < it->second.tokenSize && i + j < textSize && j < textListSize; j++)
 				{
 					
@@ -936,6 +1004,11 @@ std::wstring MainCore::GetMatchingSpellingCheck(std::wstring text, bool* isRepla
 					
 					if (it->second.originalTextList[j].compare(textList[i + j]) == 0)
 					{
+						if (debugMode.isActive && debugMode.isShowReplace)
+						{
+							debugText = debugText + textList[i + j] + L" ";
+						}
+
 						isReplaceWordFlag = true;
 					}
 					else
@@ -952,7 +1025,7 @@ std::wstring MainCore::GetMatchingSpellingCheck(std::wstring text, bool* isRepla
 				nowTokenCount = it->second.tokenSize;
 				if (debugMode.isActive && debugMode.isShowReplace)
 				{
-					debugText = L"[" + *replaceText + L"]";
+					debugText = L"[" + debugText + L"]";
 					replaceText = &it->second.resultText;
 					
 				}
@@ -1017,18 +1090,10 @@ std::wstring MainCore::GetLetterSpellingCheck(std::wstring text, bool* isReplace
 		mapPD = myDicMap.equal_range(tokenString);
 		replaceText = text[i];
 
-
-		std::wstring unicodeString = L"start : " + tokenString + L"\n";
-		
-		DWORD writtenCount;
-		WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE),
-			unicodeString.c_str(), static_cast<DWORD>(unicodeString.length()), &writtenCount, NULL);
-		
-
-
-
+		debugText = L"";
 		for (std::multimap<std::wstring, DicDB>::iterator it = mapPD.first; it != mapPD.second; ++it)
 		{
+
 			if (it->second.tokenSize > nowTokenCount)
 			{
 				for (int j = 0; j < it->second.tokenSize; j++)
@@ -1043,25 +1108,19 @@ std::wstring MainCore::GetLetterSpellingCheck(std::wstring text, bool* isReplace
 					std::wstring text2 = L"";
 					text2 = text[i + j];
 
-
-					unicodeString = L"\n" + (std::wstring)L"do : " + text1 + L" token : " + text2 + L" ori : " + text + L"\n";
-
-					WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE),
-						unicodeString.c_str(), static_cast<DWORD>(unicodeString.length()), &writtenCount, NULL);
-
 					if (text1.compare(text2) == 0)
 					{
+
+						if (debugMode.isActive && debugMode.isShowReplace)
+						{
+							debugText = debugText + text2;
+
+						}
+				
 						isReplaceWordFlag = true;
 					}
 					else
 					{
-						unicodeString = L"\n" + (std::wstring)L"false : " + text1 + L" token : " + text2 + L"\n";
-
-						WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE),
-							unicodeString.c_str(), static_cast<DWORD>(unicodeString.length()), &writtenCount, NULL);
-
-
-
 						isReplaceWordFlag = false;
 						break;
 					}
@@ -1076,7 +1135,7 @@ std::wstring MainCore::GetLetterSpellingCheck(std::wstring text, bool* isReplace
 
 				if (debugMode.isActive && debugMode.isShowReplace)
 				{
-					debugText = L"[" + replaceText + L"]";
+					debugText = L"[" + debugText + L"]";
 					replaceText = it->second.resultText;
 
 				}
@@ -1084,12 +1143,6 @@ std::wstring MainCore::GetLetterSpellingCheck(std::wstring text, bool* isReplace
 				{
 					replaceText = it->second.resultText;
 				}
-
-				unicodeString = L"\n" + (std::wstring) L"replace : " + replaceText + L" token : " + tokenString + L"\n" ;
-
-				WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE),
-					unicodeString.c_str(), static_cast<DWORD>(unicodeString.length()), &writtenCount, NULL);
-
 
 				isReplaceWordFlag = false;
 			}
@@ -1124,21 +1177,28 @@ std::wstring MainCore::GetLetterSpellingCheck(std::wstring text, bool* isReplace
 //교정단어 검색
 std::wstring MainCore::checkSpelling(std::wstring text, bool* isReplaceFlag, std::wstring toekn)
 {
+	clock_t start, end;
+
+	start = clock();
 	std::wstring resultSTring = L"";
 
 	bool isReplace = false;
 	StringTokenizer tokens(text, toekn);
 	for (int x = 1; tokens.hasMoreTokens(); x++)
 	{
-		if (isUseMatchWordDic)
-		{
-			resultSTring = resultSTring + GetMatchingSpellingCheck(tokens.nextToken(), isReplaceFlag) + L"\r\n";
-		}
-		else
-		{
-			resultSTring = resultSTring +  GetLetterSpellingCheck(tokens.nextToken(), isReplaceFlag)  +L"\r\n";;
-		}
+		std::wstring splite = tokens.nextToken();
 
+		if ( splite.compare(L"\r\n") == 1 )
+		{
+			if (isUseMatchWordDic)
+			{
+				resultSTring = resultSTring + GetMatchingSpellingCheck(splite, isReplaceFlag) + L"\r\n";
+			}
+			else
+			{
+				resultSTring = resultSTring + GetLetterSpellingCheck(splite, isReplaceFlag) + L"\r\n";;
+			}
+		}	
 		
 
 		if (isReplaceFlag)
@@ -1148,6 +1208,16 @@ std::wstring MainCore::checkSpelling(std::wstring text, bool* isReplaceFlag, std
 	}
 
 	*isReplaceFlag = isReplace;
+
+
+
+	end = clock();
+
+	double  time = (end - start);
+
+	//std::wcout << std::endl << "OCR : " << result->original << std::endl;
+
+	std::cout << std::endl <<  "Check Spelling Time : " << time << std::endl;
 
 	return resultSTring;
 
@@ -1504,7 +1574,7 @@ void MainCore::openSettingFile(char *dbFileName)
 					else
 					{
 						wGetString += wGetLinestring;
-						wGetString += L"\r\n";
+						//wGetString += L"\r\n";
 					}
 				}
 			}
@@ -1976,7 +2046,7 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 
 		
 	}
-	std::cout << " rc : " << rc.left << " / " << rc.right << " + " << rc.top << " / " << rc.bottom << " top : " << cutCodinateYList[captureIndex] << " cut : " << cutHeightList[captureIndex] << "\n";
+	//std::cout << " rc : " << rc.left << " / " << rc.right << " + " << rc.top << " / " << rc.bottom << " top : " << cutCodinateYList[captureIndex] << " cut : " << cutHeightList[captureIndex] << "\n";
 
 	//디버그용
 	//debugStruct.clientCoordinateX = clientCoordinate.left;

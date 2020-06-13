@@ -46,6 +46,7 @@ protected:
 	bool isUseWin10OCR;					//윈도우 OCR 사용 여부.
 	bool isUseJpnFlag;					//일본어를 사용하는가
 	bool isUseDBFlag;					//DB파일에서 번역본 가져온다 설정
+	bool isUsePartialDB;				//부분일치 검색 사용어부.
 	bool isUseSpellcheckFlag;			//스펠링 체크.
 	bool isUseMatchWordDic;		//스펠링 체크.
 	bool isStringUpper;					//대소문자 구분 안 함.
@@ -195,8 +196,9 @@ public:
 	 void setIsUseJpnFlag(bool newJpnFlag);
 	 bool GetIsUseJpnFlag();
 	 void setFiducialValue(int newFiducialR[], int newFiducialG[], int newFiducialB[], int newFiducialSS[], int newFiducialES[], int newFiducialSV[], int newFiducialEV[], int newSize);
-	 void setUseDB(bool newIsUseDBFlag ,  char *dbFileName);
+	 void setUseDB(bool newIsUseDBFlag ,  bool _IsUsePartialDB,char *dbFileName);
 	 bool getUseDBFlag();
+	 bool GetIsUsePartialDB();
 	 bool GetIsUseNHocr();
 	 void setAdvencedImgOption(bool newIsUseRGBFlag, bool newIsUseHSVFlag, bool newIsUseErodeFlag, float newImgZoomSize);
 	 void openSettingFile(char *dbFileName);
@@ -234,7 +236,7 @@ public:
 	 bool GetIsShowOCRIndex();
 
 	 void ReplaceAll(std::wstring& strSrc, const std::wstring& strFind, const std::wstring& strDest);
-
+	 std::vector<std::wstring> StringSplite(std::wstring text, std::wstring toekn, int minSize);
 	
 
 };
