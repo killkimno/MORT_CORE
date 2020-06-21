@@ -223,10 +223,10 @@ void GetDBText(resultDB *result)
 				//std::wcout << std::endl << result->original << std::endl;
 				int limit = textList.size();
 
-				//10줄 이상 넘어가면 막아버린다.
-				if (limit >= 10)
+				//8줄 이상 넘어가면 막아버린다.
+				if (limit >= 8)
 				{
-					limit = 10;
+					limit = 8;
 				}
 
 
