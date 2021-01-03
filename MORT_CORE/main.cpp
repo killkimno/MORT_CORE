@@ -57,6 +57,11 @@ void getImg(int captureIndex)
 	myMainCore->getScreen(screenImg, captureIndex);
 }
 
+void getImg2(int captureIndex, uint8_t* data, int widht, int height, int positionX, int positionY)
+{
+	myMainCore->getScreen2(screenImg, captureIndex, data, widht, height, positionX,  positionY);
+}
+
 bool isError = false;
 std::string legacyTesData;
 
@@ -506,6 +511,7 @@ SetIsActiveWindow(bool isActiveWindow)
 
 
 
+
     extern "C" __declspec(dllexport)void
 	 processOcr(wchar_t resultOriginal[], wchar_t resultTranslation[]){
 
@@ -563,16 +569,72 @@ SetIsActiveWindow(bool isActiveWindow)
 			
 			}
 		}
-		//testestst
-		//ocrResult = ocrResult + L"utf : " + stringToWstring(std::to_string(MainCore::utf));
-
-
-		//std::wstring debug = std::to_wstring(myMainCore->debugStruct.clientCoordinateX) + L" / " + std::to_wstring(myMainCore->debugStruct.clientCoordinateY);	//for debug
-
 		std::wcscpy(resultOriginal, ocrResult.c_str());
-		//std::wcscat(resultOriginal, myMainCore->debugStruct.debug.c_str());	//for debug
 		std::wcscpy(resultTranslation , translationResult.c_str());
 }
+
+
+	extern "C" __declspec(dllexport)void
+		processOcrWithData(wchar_t resultOriginal[], wchar_t resultTranslation[], int width, int height, int positionX, int positionY, uint8_t * data) {
+
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+		resultDB getDB;
+		std::wstring out;
+
+		std::wstring ocrResult = L"";
+		std::wstring translationResult = L"";
+		if (captureCount == 1)
+		{
+			getImg2(0, data, width, height, positionX, positionY);
+			getText(&getDB);
+
+			ocrResult = ocrResult + getDB.original + L"\r\n";
+			translationResult = translationResult + getDB.translation;
+		}
+		else
+		{
+			for (int i = 0; i < captureCount; i++)
+			{
+				getImg2(i, data, width, height, positionX, positionY);
+				getText(&getDB);
+
+				if (myMainCore->GetIsShowOCRIndex())
+				{
+					stringstream s;
+					s << i + 1;
+					std::string converted(s.str());
+					std::wstring wConverted = stringToWstring(converted);
+					ocrResult = ocrResult + wConverted + L": " + getDB.original;
+					if (getDB.translation.compare(L"not thing") != 0)
+					{
+						translationResult = translationResult + wConverted + L" : " + getDB.translation + L"\r\n";
+					}
+					s.clear();
+				}
+				else
+				{
+					if (!getDB.original.empty())
+					{
+						ocrResult = ocrResult + L"- " + getDB.original;
+						if (getDB.translation.compare(L"not thing") != 0)
+						{
+							translationResult = translationResult + L"- " + getDB.translation + L"\r\n";
+						}
+					}
+				}
+
+				if (i + 1 < captureCount)
+				{
+					ocrResult = ocrResult + L"\t" + L"\r\n";
+				}
+
+			}
+		}
+		std::wcscpy(resultOriginal, ocrResult.c_str());
+		std::wcscpy(resultTranslation, translationResult.c_str());
+	}
+
 
 	//이미지 결과 가져오기.
 	extern "C" __declspec(dllexport)uchar*
@@ -608,6 +670,45 @@ SetIsActiveWindow(bool isActiveWindow)
 		//nhocrResult = ProcessNHocr(screenImg->size().width, screenImg->size().height, screenImg->data, &wText, screenImg->channels());
 		
 	}
+
+
+
+	//이미지 결과 가져오기.
+	extern "C" __declspec(dllexport)uchar *
+		processGetImgDataFromByte(int caputreIndex, int width, int height, int positionX, int positionY, uint8_t* data, int* x, int* y, int* channels) {
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+		//std::cout << "ssss"  << (int)(data[0]) << "/"<< (int) data[1] << "/" << (int)data[2] << "/" << (int)data[3];
+		if (captureCount >= caputreIndex + 1)
+		{
+
+			getImg2(caputreIndex, data ,width, height, positionX, positionY);
+
+			//data = screenImg->data;
+			*y = screenImg->size().height;
+			*x = screenImg->size().width;
+			*channels = screenImg->channels();
+
+			uchar* data = (uchar*)LocalAlloc(LPTR, screenImg->size().height * screenImg->size().width * screenImg->channels());
+			int max = screenImg->size().height * screenImg->size().width * screenImg->channels();
+			for (int i = 0; i < max; i++)
+			{
+				data[i] = screenImg->data[i];
+			}
+			//LocalFree(data);
+			screenImg->release();
+			return data;
+		}
+		else
+
+		{
+			return NULL;
+		}
+
+
+	}
+
+
 
 	//스펠 체크.
 	extern "C" __declspec(dllexport)void

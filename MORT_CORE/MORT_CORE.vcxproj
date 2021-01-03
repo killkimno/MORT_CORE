@@ -12,12 +12,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainCore.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="StringTokenizer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainCore.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MORT_CORE.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C22FAB34-B175-42E4-AC8E-D0EA895B8C81}</ProjectGuid>

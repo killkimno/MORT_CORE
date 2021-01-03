@@ -1854,9 +1854,9 @@ void MainCore::adjustImg(cv::Mat* img, int captureIndex)
 					{
 						if ((r == fiducialValuseList[y].fiducialR) && (g == fiducialValuseList[y].fiducialG) && (b == fiducialValuseList[y].fiducialB))
 						{
-							img->at<cv::Vec4b>(i, j)[0] = 255;
-							img->at<cv::Vec4b>(i, j)[1] = 255;
-							img->at<cv::Vec4b>(i, j)[2] = 255;
+							img->at<cv::Vec4b>(i, j)[0] = 0;
+							img->at<cv::Vec4b>(i, j)[1] = 0;
+							img->at<cv::Vec4b>(i, j)[2] = 0;
 							img->at<cv::Vec4b>(i, j)[3] = 255;
 							isInRangeFlag = true;
 							break;
@@ -1866,9 +1866,9 @@ void MainCore::adjustImg(cv::Mat* img, int captureIndex)
 				}
 				if(isInRangeFlag == false)
 				{
-					img->at<cv::Vec4b>(i,j)[0] = 0;
-					img->at<cv::Vec4b>(i,j)[1] = 0;
-					img->at<cv::Vec4b>(i,j)[2] = 0;
+					img->at<cv::Vec4b>(i,j)[0] = 255;
+					img->at<cv::Vec4b>(i,j)[1] = 255;
+					img->at<cv::Vec4b>(i,j)[2] = 255;
 					img->at<cv::Vec4b>(i, j)[3] = 255;
 				}
 			}
@@ -1925,10 +1925,45 @@ void MainCore::adjustImg(cv::Mat* img, int captureIndex)
 
 	if(isErodeOptionFlag == true)
 	{
-		cv::Mat element = getStructuringElement( cv::MORPH_RECT,
-										   cv::Size( 2+1, 2+1 ),
-										   cv::Point( 2, 2 ) );
-		cv::erode(*img,*img,element);  
+
+	
+
+		if (isHSVOptionFlag || isRGBOptionFlag)
+		{
+			*img = ~*img;
+			//cvtColor(*img, *img, 6);	//CV_BGR2GRAY
+		}
+		cv::erode(*img, *img, getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3)));
+		/*
+		cv::Mat mask;
+		img->copyTo(mask);
+		
+	
+		cv::Mat element = getStructuringElement( cv::MORPH_RECT, cv::Size( 2+1, 2+1 ) );
+		cv::erode(mask, mask, getStructuringElement(cv::MORPH_RECT, cv::Size(6, 6)));
+		cv::dilate(mask, mask, getStructuringElement(cv::MORPH_RECT, cv::Size(24,24)));
+
+		
+		cv::bitwise_not(*img, *img, mask);
+		mask.release();
+		*/
+
+		if (isHSVOptionFlag || isRGBOptionFlag)
+		{
+			*img = ~*img;
+		}
+
+
+
+		//오리지날
+		/*
+		cv::Mat element = getStructuringElement(cv::MORPH_RECT,
+			cv::Size(3, 3),
+			cv::Point(2, 2));
+		cv::erode(*img, *img, element);
+		*/
+
+
 	
 	}
     
@@ -2025,7 +2060,6 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 	
 	else
 	{
-
 		//hdcScreen = CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL);
 		//엑티브 윈도우
 		HWND firstHwnd = GetForegroundWindow();
@@ -2042,15 +2076,7 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 			HWND hwnd = GetDesktopWindow();
 			GetClientRect(hwnd, &rc);
 		}
-		
-
-		
 	}
-	//std::cout << " rc : " << rc.left << " / " << rc.right << " + " << rc.top << " / " << rc.bottom << " top : " << cutCodinateYList[captureIndex] << " cut : " << cutHeightList[captureIndex] << "\n";
-
-	//디버그용
-	//debugStruct.clientCoordinateX = clientCoordinate.left;
-	//debugStruct.clientCoordinateY = clientCoordinate.top;
 
 	
 
@@ -2080,15 +2106,7 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 
 	//CV_8UC4
 	newImg->create(cutHeightList[captureIndex], cutWidthList[captureIndex], CV_8UC4);
-	//cutScreen.create(cutHeight,cutWidth,CV_8UC4);
-
-
-	//StretchBlt( hdc, 0,0, cutWidth, cutHeight, hdcScreen, cutCodinateX, cutCodinateY,cutWidth,cutHeight, SRCCOPY); //change SRCCOPY to NOTSRCCOPY for wacky colors !
 	StretchBlt(hdc, 0, 0, cutWidthList[captureIndex], cutHeightList[captureIndex], hdcScreen, cutCodinateXList[captureIndex] - clientCoordinate.left, cutCodinateYList[captureIndex] - clientCoordinate.top, cutWidthList[captureIndex], cutHeightList[captureIndex], SRCCOPY); //change SRCCOPY to NOTSRCCOPY for wacky colors !
-
-
-
-	//GetDIBits(hdc,hbmp,0,cutHeight,cutScreen.data,(BITMAPINFO *)&myBitmapHeader,DIB_RGB_COLORS);  //copy from hwindowCompatibleDC to hbwindow
 	GetDIBits(hdc, hbmp, 0, cutHeightList[captureIndex], newImg->data, (BITMAPINFO *)&myBitmapHeader, DIB_RGB_COLORS);  //copy from hwindowCompatibleDC to hbwindow
 
 	if (debugMode.isActive && debugMode.isSaveCapture)
@@ -2107,16 +2125,95 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 	RemoveAreaImg(newImg, captureIndex);
 
 	
-	
-
-	//debugStruct.clientCoordinateX = newImg->channels();
 	resize(*newImg, *newImg, cv::Size(), imgZoomSize, imgZoomSize, cv::INTER_LINEAR);
-	//cv::imwrite("test.bmp", *newImg);
-	//src.release();
 
 	if (debugMode.isActive && debugMode.isSaveCaptureResult)
 	{
 		//테스트용
 		cv::imwrite("capture_Result.bmp", *newImg);
 	}
+}
+
+
+
+//화면 가져오기
+void MainCore::getScreen2(cv::Mat* newImg, int captureIndex, uint8_t* bytes , int _width, int _height , int positionX, int positionY)
+{
+	
+	int xStart = cutCodinateXList[captureIndex] - positionX;
+	int xEnd = xStart + cutWidthList[captureIndex];
+
+	int yStart = cutCodinateYList[captureIndex] - positionY;
+	int yEnd = yStart + cutHeightList[captureIndex];
+
+	if (xStart < 0)
+	{
+		xStart = 0;			
+	}
+	else if (xStart > _width)
+	{
+		xStart = _width -1;
+	}
+
+
+	if (xEnd > _width)
+	{
+		xEnd = _width;
+	}
+	else if (xEnd <= 0)
+	{
+		xEnd = 1;
+	}
+
+
+	if (yStart < 0)
+	{
+		yStart = 0;
+	}
+	else if (yStart > _height)
+	{
+		yStart = _height -1;
+	}
+
+	if (yEnd > _height)
+	{
+		yEnd = _height;
+	}
+	else if (yEnd <= 0)
+	{
+		yEnd = 1;
+	}
+
+	std::cout << "x start " << xStart << " / xEnd " << xEnd << " / yStart " << yStart << " / yEnd " << yEnd ;
+
+	cv::Mat targetImg = cv::Mat(_height, _width, CV_8UC4, bytes);
+	cv::Mat targetImg2 = targetImg( cv::Range::Range(yStart, yEnd), cv::Range::Range(xStart, xEnd));
+
+	//CV_8UC4
+	//newImg->create(cutHeightList[captureIndex], cutWidthList[captureIndex], CV_8UC4);
+	targetImg2.copyTo(*newImg);
+	
+	if (debugMode.isActive && debugMode.isSaveCapture)
+	{
+		//원본 캡쳐
+		cv::imwrite("capture_Original.bmp", *newImg);
+	}
+
+
+
+	//if(isAdvencedIMGOptionFlag == true)
+	adjustImg(newImg, captureIndex);
+	RemoveAreaImg(newImg, captureIndex);
+
+
+	resize(*newImg, *newImg, cv::Size(), imgZoomSize, imgZoomSize, cv::INTER_LINEAR);
+
+	if (debugMode.isActive && debugMode.isSaveCaptureResult)
+	{
+		//테스트용
+		cv::imwrite("capture_Result.bmp", *newImg);
+	}
+
+	targetImg.release();
+	targetImg2.release();
 }
