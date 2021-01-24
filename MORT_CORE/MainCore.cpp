@@ -2042,22 +2042,22 @@ void MainCore::RemoveAreaImg(cv::Mat* newImg, int captureIndex)
 
 }
 
-
 //화면 가져오기
-void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
+void MainCore::getScreen(cv::Mat* newImg, int captureIndex, int *locationX, int *locationY)
 {
+	bool isError = false;
 	RECT rc, clientCoordinate;
-	
+
 	rc = { 0,0,0,0 };
-	
+
 	clientCoordinate.left = 0;
 	clientCoordinate.top = 0;
 	HDC hdcScreen = NULL;
 	if (!isActiveWindow)
 	{
-		hdcScreen = CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL);				
+		hdcScreen = CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL);
 	}
-	
+
 	else
 	{
 		//hdcScreen = CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL);
@@ -2066,8 +2066,8 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 		hdcScreen = GetWindowDC(firstHwnd);
 		GetClipBox(hdcScreen, &rc);
 		GetWindowRect(firstHwnd, &clientCoordinate);
-
 		
+
 		if (rc.bottom == 0 && rc.right == 0)
 		{
 			std::cout << "We Doom";
@@ -2075,10 +2075,17 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 
 			HWND hwnd = GetDesktopWindow();
 			GetClientRect(hwnd, &rc);
+			isError = true;
 		}
+		else
+		{
+			*locationX = clientCoordinate.left;
+			*locationY = clientCoordinate.top;
+		}
+
 	}
 
-	
+
 
 	HDC hdc = CreateCompatibleDC(hdcScreen);
 	HBITMAP hbmp = CreateCompatibleBitmap(hdcScreen,
@@ -2104,11 +2111,96 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 	myBitmapHeader.biClrUsed = 0;
 	myBitmapHeader.biClrImportant = 0;
 
-	//CV_8UC4
-	newImg->create(cutHeightList[captureIndex], cutWidthList[captureIndex], CV_8UC4);
-	StretchBlt(hdc, 0, 0, cutWidthList[captureIndex], cutHeightList[captureIndex], hdcScreen, cutCodinateXList[captureIndex] - clientCoordinate.left, cutCodinateYList[captureIndex] - clientCoordinate.top, cutWidthList[captureIndex], cutHeightList[captureIndex], SRCCOPY); //change SRCCOPY to NOTSRCCOPY for wacky colors !
-	GetDIBits(hdc, hbmp, 0, cutHeightList[captureIndex], newImg->data, (BITMAPINFO *)&myBitmapHeader, DIB_RGB_COLORS);  //copy from hwindowCompatibleDC to hbwindow
 
+
+	if (isActiveWindow && !isError)
+	{
+		int xStart = cutCodinateXList[captureIndex] - clientCoordinate.left;
+		int xEnd = xStart + cutWidthList[captureIndex];
+
+		int yStart = cutCodinateYList[captureIndex] - clientCoordinate.top;
+		int yEnd = yStart + cutHeightList[captureIndex];
+
+		int _width = cutWidthList[captureIndex];
+		int _height = cutHeightList[captureIndex];
+
+		_width = clientCoordinate.right - clientCoordinate.left;
+		_height = clientCoordinate.bottom - clientCoordinate.top;
+		if (xStart < 0)
+		{
+			xStart = 0;
+		}
+		else if (xStart > _width)
+		{
+			xStart = _width - 1;
+		}
+
+
+		if (xEnd > _width)
+		{
+			xEnd = _width;
+		}
+		else if (xEnd <= 0)
+		{
+			xEnd = 1;
+		}
+
+
+		if (yStart < 0)
+		{
+			yStart = 0;
+		}
+		else if (yStart > _height)
+		{
+			yStart = _height - 1;
+		}
+
+		if (yEnd > _height)
+		{
+			yEnd = _height;
+		}
+		else if (yEnd <= 0)
+		{
+			yEnd = 1;
+		}
+
+		_height = yEnd - yStart;
+		_width = xEnd - xStart;
+
+		if (_height <= 0)
+		{
+			_height = 1;
+		}
+
+		if (_width <= 0)
+		{
+			_width = 1;
+		}
+
+
+		//std::cout << " _width " << _width << " _Height " << _height << " / x start : " << xStart << " end : " << xEnd  << " Y start : " << yStart << " Y end : " << yEnd;
+		myBitmapHeader.biWidth = _width;
+		myBitmapHeader.biHeight = -_height;  //this is the line that makes it draw upside down or not
+
+
+		newImg->create(_height, _width, CV_8UC4);
+		StretchBlt(hdc, 0, 0, _width, _height, hdcScreen, xStart, yStart, _width, _height, SRCCOPY); //change SRCCOPY to NOTSRCCOPY for wacky colors !
+		//CV_8UC4
+		GetDIBits(hdc, hbmp, 0, _height, newImg->data, (BITMAPINFO*)&myBitmapHeader, DIB_RGB_COLORS);  //copy from hwindowCompatibleDC to hbwindow
+
+	}
+	else
+	{
+		newImg->create(cutHeightList[captureIndex], cutWidthList[captureIndex], CV_8UC4);
+		StretchBlt(hdc, 0, 0, cutWidthList[captureIndex], cutHeightList[captureIndex], hdcScreen, cutCodinateXList[captureIndex] - clientCoordinate.left, cutCodinateYList[captureIndex] - clientCoordinate.top, cutWidthList[captureIndex], cutHeightList[captureIndex], SRCCOPY); //change SRCCOPY to NOTSRCCOPY for wacky colors !
+		//CV_8UC4
+		GetDIBits(hdc, hbmp, 0, cutHeightList[captureIndex], newImg->data, (BITMAPINFO*)&myBitmapHeader, DIB_RGB_COLORS);  //copy from hwindowCompatibleDC to hbwindow
+
+	}
+	
+
+
+	
 	if (debugMode.isActive && debugMode.isSaveCapture)
 	{
 		//원본 캡쳐
@@ -2124,7 +2216,7 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 	adjustImg(newImg, captureIndex);
 	RemoveAreaImg(newImg, captureIndex);
 
-	
+
 	resize(*newImg, *newImg, cv::Size(), imgZoomSize, imgZoomSize, cv::INTER_LINEAR);
 
 	if (debugMode.isActive && debugMode.isSaveCaptureResult)
@@ -2132,6 +2224,17 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 		//테스트용
 		cv::imwrite("capture_Result.bmp", *newImg);
 	}
+}
+
+
+
+//화면 가져오기
+void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
+{
+	int locationX = 0;
+	int locationY = 0;
+	getScreen(newImg, captureIndex, &locationX, &locationY);
+
 }
 
 

@@ -51,6 +51,10 @@ extern std::wstring utfStringToWstring(std::string originalString);
 extern std::wstring stringToWstring(std::string originalString);
 
 
+void GetImg(int captureIndex, int* locationX, int* locationY)
+{
+	myMainCore->getScreen(screenImg, captureIndex, locationX, locationY);
+}
 	
 void getImg(int captureIndex)
 {
@@ -638,13 +642,12 @@ SetIsActiveWindow(bool isActiveWindow)
 
 	//이미지 결과 가져오기.
 	extern "C" __declspec(dllexport)uchar*
-		processGetImgData(int caputreIndex, int *x, int *y, int *channels) {
+		processGetImgData(int caputreIndex, int *x, int *y, int *channels , int *locationX, int *locationY) {
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		
 		if (captureCount >= caputreIndex + 1)
 		{
-			getImg(caputreIndex);
-
+			GetImg(caputreIndex, locationX, locationY);
 			//data = screenImg->data;
 			*y = screenImg->size().height;
 			*x = screenImg->size().width;
