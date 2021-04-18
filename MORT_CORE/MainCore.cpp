@@ -17,6 +17,7 @@
 #include "StringTokenizer.h"
 #include <map>
 
+const int PER_GET_TEXT = 2000;
 
 void MainCore::ReplaceAll (std::wstring& strSrc, const std::wstring& strFind, const std::wstring& strDest)
 {
@@ -1483,7 +1484,7 @@ void MainCore::openSettingFile(char *dbFileName)
 		if(isUseJpnFlag == false)
 		{
 			bool endFileFlag = false;
-			char getLine[1000];
+			char getLine[PER_GET_TEXT];
 
 			std::ifstream fin;
 			fin.open(L"characterValue.txt");
@@ -1498,13 +1499,13 @@ void MainCore::openSettingFile(char *dbFileName)
 
 			while(!fin.eof())
 			{
-				fin.getline(getLine, 1000);
+				fin.getline(getLine, PER_GET_TEXT);
 				myCharacterTable.characteValue[nowIndex][nowIndex2++] = atoi(getLine);
 
-				fin.getline(getLine, 1000);
+				fin.getline(getLine, PER_GET_TEXT);
 				myCharacterTable.characteValue[nowIndex][nowIndex2++] = atoi(getLine);
 
-				fin.getline(getLine, 1000);
+				fin.getline(getLine, PER_GET_TEXT);
 				myCharacterTable.characteValue[nowIndex][nowIndex2++] = atoi(getLine);
 
 				nowIndex++;
@@ -1537,7 +1538,7 @@ void MainCore::openSettingFile(char *dbFileName)
 				
 				while(!fin.eof())
 				{
-					fin.getline(getLine, 1000);
+					fin.getline(getLine, PER_GET_TEXT);
 					std::string getLineString = getLine;
 					std::wstring wGetLinestring;
 
@@ -1583,7 +1584,7 @@ void MainCore::openSettingFile(char *dbFileName)
 		else if(isUseJpnFlag == true)
 		{
 			bool endFileFlag = false;
-			char getLine[1000];
+			char getLine[PER_GET_TEXT];
 
 			std::ifstream fin;
 
@@ -1604,7 +1605,7 @@ void MainCore::openSettingFile(char *dbFileName)
 			{
 				while(!fin.eof())
 				{
-					fin.getline(getLine, 1000);
+					fin.getline(getLine, PER_GET_TEXT);
 					std::string getLineString = getLine;
 					std::wstring wGetLinestring = utfStringToWstring(getLineString);
 					if(wGetLinestring[0] == '/')
@@ -1829,9 +1830,23 @@ void MainCore::SetExceptPoint(int newX[], int newY[], int  newWidth[], int newHe
 //이미지 보정
 void MainCore::adjustImg(cv::Mat* img, int captureIndex)
 {
-	
+	bool isRequireCheck = false;		//색 그룹을 전혀 사용하지 않는 ocr은 무시한다.
+
+	if (isRGBOptionFlag || isHSVOptionFlag)
+	{
+		for (int i = 0; i < useColorSetList[captureIndex].size(); i++)
+		{
+			if (useColorSetList[captureIndex][i] == 1)
+			{
+				isRequireCheck = true;
+				break;
+			}
+		}
+	}
+
+
 	//fiducialH
-	if(isRGBOptionFlag == true)
+	if(isRequireCheck &&isRGBOptionFlag == true)
 	{
 		for(int i = 0; i < img->rows; i++)
 		{
@@ -1874,7 +1889,7 @@ void MainCore::adjustImg(cv::Mat* img, int captureIndex)
 			}
 		}
 	}
-	else if(isHSVOptionFlag == true)
+	else if(isRequireCheck && isHSVOptionFlag == true)
 	{
 		cv::Mat hsv; 
 		cvtColor(*img,hsv, 40);	//CV_BGR2HSV
@@ -1925,9 +1940,6 @@ void MainCore::adjustImg(cv::Mat* img, int captureIndex)
 
 	if(isErodeOptionFlag == true)
 	{
-
-	
-
 		if (isHSVOptionFlag || isRGBOptionFlag)
 		{
 			*img = ~*img;
