@@ -266,14 +266,17 @@ void MainCore::setUseCheckSpellingFlag(bool newUseCheckSpellingFlag, bool _isMat
 	openDicFile(newFileName);
 
 }
-void MainCore::setAdvencedImgOption(bool newIsUseRGBFlag, bool newIsUseHSVFlag, bool newIsUseErodeFlag, float newImgZoomSize)
+void MainCore::setAdvencedImgOption(bool newIsUseRGBFlag, bool newIsUseHSVFlag, bool newIsUseErodeFlag, float newImgZoomSize , bool isUseThreshold, int thresholdValue)
 {
 	isRGBOptionFlag = newIsUseRGBFlag;
 	isHSVOptionFlag = newIsUseHSVFlag;
 	isErodeOptionFlag = newIsUseErodeFlag;
 	imgZoomSize = newImgZoomSize;
 
-	if(isRGBOptionFlag == false && isHSVOptionFlag == false)
+	isThresHold = isUseThreshold;
+	this->thresholdValue = thresholdValue;
+
+	if(isRGBOptionFlag == false && isHSVOptionFlag == false && isUseThreshold == false)
 	{
 		isAdvencedIMGOptionFlag = false;
 	}
@@ -1832,7 +1835,7 @@ void MainCore::adjustImg(cv::Mat* img, int captureIndex)
 {
 	bool isRequireCheck = false;		//색 그룹을 전혀 사용하지 않는 ocr은 무시한다.
 
-	if (isRGBOptionFlag || isHSVOptionFlag)
+	if (isRGBOptionFlag || isHSVOptionFlag || isThresHold)
 	{
 		for (int i = 0; i < useColorSetList[captureIndex].size(); i++)
 		{
@@ -1931,6 +1934,12 @@ void MainCore::adjustImg(cv::Mat* img, int captureIndex)
 		}
 		
 		hsv.release();
+	}
+	else if (isRequireCheck && isThresHold)
+	{
+		double value = thresholdValue;
+		cvtColor(*img, *img, 6);	//CV_BGR2GRAY
+		threshold(*img, *img, value, 255, cv::ThresholdTypes::THRESH_BINARY);
 	}
 	else
 	{

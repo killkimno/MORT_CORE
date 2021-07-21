@@ -376,9 +376,9 @@ SetIsActiveWindow(bool isActiveWindow)
 
 
       extern "C" __declspec(dllexport)void
-	   setAdvencedImgOption(bool isUseRGBFlag, bool isUseHSVFlag, bool isUseErodeFlag, float imgZoomSize)
+	   setAdvencedImgOption(bool isUseRGBFlag, bool isUseHSVFlag, bool isUseErodeFlag, float imgZoomSize, bool isUseThreshold, int thresholdValue)
  {
-	 myMainCore->setAdvencedImgOption(isUseRGBFlag, isUseHSVFlag, isUseErodeFlag,  imgZoomSize);
+	 myMainCore->setAdvencedImgOption(isUseRGBFlag, isUseHSVFlag, isUseErodeFlag,  imgZoomSize, isUseThreshold, thresholdValue);
  }
    extern "C" __declspec(dllexport)void
 	   setUseCheckSpelling(bool isUseCheckSpellingFlag, bool isMatchingWord, char *dicFileTxt)

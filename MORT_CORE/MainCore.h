@@ -55,6 +55,8 @@ protected:
 	bool isErodeOptionFlag;				//볼드형 폰트를 위한 기능
 	bool isRGBOptionFlag;				//rgb로 색 구분
 	bool isHSVOptionFlag;				//hsv로 색 구분
+	bool isThresHold;					//임계치 사용
+	int thresholdValue;
 	float imgZoomSize;					//OCR 추출 이미지 확대 사이즈
 
 	bool isRemoveSpace = false;					//공백 제거.
@@ -200,7 +202,7 @@ public:
 	 bool getUseDBFlag();
 	 bool GetIsUsePartialDB();
 	 bool GetIsUseNHocr();
-	 void setAdvencedImgOption(bool newIsUseRGBFlag, bool newIsUseHSVFlag, bool newIsUseErodeFlag, float newImgZoomSize);
+	 void setAdvencedImgOption(bool newIsUseRGBFlag, bool newIsUseHSVFlag, bool newIsUseErodeFlag, float newImgZoomSize, bool isUseThreshold, int thresholdValue);
 	 void openSettingFile(char *dbFileName);
 	 bool sequentialSearchDB(TranslationsDB *newDB);
 	 bool searchDB(TranslationsDB *ocrDB , TranslationsDB *resultDB, int adjustRange, int mapTokenIndex, int *nowDistance, int *nowTextDistance);
