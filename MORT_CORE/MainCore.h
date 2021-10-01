@@ -49,6 +49,7 @@ protected:
 	bool isUsePartialDB;				//부분일치 검색 사용어부.
 	bool isUseSpellcheckFlag;			//스펠링 체크.
 	bool isUseMatchWordDic;		//스펠링 체크.
+	int reCehckSpllingCount;	//교정사전 추가 검사 횟수
 	bool isStringUpper;					//대소문자 구분 안 함.
 
 	bool isAdvencedIMGOptionFlag;		//이미지 보정 기능
@@ -225,6 +226,7 @@ public:
 
 	 bool getUseCheckSpellingFlag();
 	 void setUseCheckSpellingFlag(bool newUseCheckspellFlag, bool _isMatchingWord, char *newDicFileText);
+	 void SetReCheckSpellingCount(int reCheckCount);
 
 	 std::wstring checkSpelling(std::wstring text , bool* isReplaceFlag, std::wstring toekn);
 	 std::wstring GetMatchingSpellingCheck(std::wstring text, bool* isReplaceFlag);
