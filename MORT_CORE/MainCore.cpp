@@ -62,6 +62,19 @@ std::wstring utfStringToWstring(std::string originalString)
 
 }
 
+
+std::string WstringToString(std::wstring originalString)
+{
+	std::string message_a;
+	message_a.assign(originalString.begin(), originalString.end());
+
+	return message_a;
+}
+
+
+
+
+
 std::vector<std::wstring> MainCore::StringSplite(std::wstring text, std::wstring token, int minSize = 0)
 {
 	std::vector<std::wstring> vector;
@@ -1557,8 +1570,12 @@ void MainCore::openSettingFile(char* dbFileName)
 
 				while (!fin.eof())
 				{
-					fin.getline(getLine, PER_GET_TEXT);
-					std::string getLineString = getLine;
+
+					//fin.getline(getLine, PER_GET_TEXT);
+					//std::string getLineString = getLine;
+
+					std::string getLineString;
+					std::getline(fin, getLineString);
 					std::wstring wGetLinestring;
 
 					if (utf == 0)
@@ -1569,20 +1586,20 @@ void MainCore::openSettingFile(char* dbFileName)
 					{
 						wGetLinestring = utfStringToWstring(getLineString);
 					}
-					if (getLine[0] == '/')
+					if (getLineString[0] == '/')
 					{
-						if (getLine[1] == 's')	//시작을 알림
+						if (getLineString[1] == 's')	//시작을 알림
 						{
 							newDB = TranslationsDB();
 							wGetString = L"";
 						}
-						else if (getLine[1] == 't')	//번역본 시작을 알림. 고로 오리지날 분석
+						else if (getLineString[1] == 't')	//번역본 시작을 알림. 고로 오리지날 분석
 						{
 							analysisText(wGetString, &newDB);
 							wGetString = L"";
 
 						}
-						else if (getLine[1] == 'e')	//다 끝남
+						else if (getLineString[1] == 'e')	//다 끝남
 						{
 							newDB.translationText = wGetString;
 							newDB.index = nowDBIndex++;
@@ -1624,8 +1641,9 @@ void MainCore::openSettingFile(char* dbFileName)
 			{
 				while (!fin.eof())
 				{
-					fin.getline(getLine, PER_GET_TEXT);
-					std::string getLineString = getLine;
+					std::string getLineString;
+					std::getline(fin, getLineString);
+
 					std::wstring wGetLinestring = utfStringToWstring(getLineString);
 					if (wGetLinestring[0] == '/')
 					{
@@ -1646,7 +1664,7 @@ void MainCore::openSettingFile(char* dbFileName)
 							newDB.index = nowDBIndex++;
 							wGetString = L"";
 							myTranslationMap.insert(std::pair<int, TranslationsDB>(newDB.tokenValue, newDB));
-							myTranslationVector.push_back(newDB);
+							myTranslationVector.push_back(newDB);				
 
 						}
 					}
