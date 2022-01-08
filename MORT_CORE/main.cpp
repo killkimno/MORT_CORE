@@ -93,6 +93,7 @@ void getText(resultDB* result)
 
 	if (myMainCore->GetIsUseNHocr())
 	{
+		std::wcout << std::endl << L" Start Get nhocr" << std::endl;
 		myMainCore->debugStruct.debug = std::to_wstring(screenImg->channels());
 		nhocrResult = ProcessNHocr(screenImg->size().width, screenImg->size().height, screenImg->data, &wText, screenImg->channels());
 
@@ -103,27 +104,36 @@ void getText(resultDB* result)
 	}
 	else
 	{
-
+		
+		clock_t start, end;
+		start = clock();
+		std::wcout << std::endl << L" Start Get Tessract" << std::endl;
 
 		api.SetImage((uchar*)screenImg->data, screenImg->size().width, screenImg->size().height, screenImg->channels(), screenImg->step1());
+
+	
+
 
 		//cout << "start! : " << std::endl;
 		isError = false;
 		GetTesserctText();
+		end = clock();
 
+		double  time = (end - start);
+		std::wcout << std::endl << L" end Tessract" << time << std::endl;
 		if (!isError)
 		{
 			char* out = api.GetUTF8Text();
 			text = out;
 
-
 			wText = utfStringToWstring(text);
+			std::wcout << std::endl << L" Get Tessract Success" << wText << std::endl;
 
 		}
 		else
 
 		{
-			cout << "Error Tesseract OCR! : " << std::endl;
+			std::wcout << std::endl << L" Error Tesseract OCR!" << std::endl;
 
 			api.Clear();
 			api.End();
@@ -153,6 +163,7 @@ void getText(resultDB* result)
 		}
 	}
 
+	std::wcout << std::endl << L" Remove Space?" << std::endl;
 	if (myMainCore->GetIsRemoveSpace())
 	{
 		myMainCore->ReplaceAll(wText, L" ", L"");
@@ -160,30 +171,18 @@ void getText(resultDB* result)
 
 
 
-
+	std::wcout << std::endl << L" Check Spell?" << std::endl;
 	if (myMainCore->getUseCheckSpellingFlag() == true)
 	{
+		std::wcout << std::endl << L" start Check Spell?" << std::endl;
 		bool isReplaceFlag = false;
 
 		wText = myMainCore->checkSpelling(wText, &isReplaceFlag, L"\n");
 
-		/*
-		//두번 교정 안 하도록 변경
-		for(int i = 0; i < 2 ; i++)
-		{
-			bool isReplaceFlag = false;
-			wText = myMainCore->checkSpelling(wText , &isReplaceFlag, L"\n");
-
-			if(isReplaceFlag == false)
-			{
-				break;
-			}
-		}
-		*/
 	}
 	else
 	{
-
+		std::wcout << std::endl << L" start none Check Spell?" << std::endl;
 		std::vector<std::wstring> text = myMainCore->StringSplite(wText, L"\n", -1);
 		wText = L"";
 		for (int i = 0; i < text.size(); i++)
@@ -196,11 +195,12 @@ void getText(resultDB* result)
 	result->original = wText;
 
 
-
+	std::wcout << std::endl << L" Get DB?" << std::endl;
 	GetDBText(result);
 
-
+	std::wcout << std::endl << L" img release?" << std::endl;
 	screenImg->release();
+	std::wcout << std::endl << L" img release done?" << std::endl;
 }
 
 void GetDBText(resultDB* result)
@@ -535,8 +535,12 @@ processOcr(wchar_t resultOriginal[], wchar_t resultTranslation[]) {
 		getImg(0);
 		getText(&getDB);
 
+		std::wcout << std::endl << L" Done img and text" << std::endl;
+
 		ocrResult = ocrResult + getDB.original + L"\r\n";
 		translationResult = translationResult + getDB.translation;
+
+		std::wcout << std::endl << L" Copy" << std::endl;
 	}
 	else
 	{
@@ -577,8 +581,13 @@ processOcr(wchar_t resultOriginal[], wchar_t resultTranslation[]) {
 
 		}
 	}
+
+	std::wcout << std::endl << L" Copy1" << std::endl;
 	std::wcscpy(resultOriginal, ocrResult.c_str());
+	std::wcout << std::endl << L" Copy2" << std::endl;
 	std::wcscpy(resultTranslation, translationResult.c_str());
+
+	std::wcout << std::endl << L" Copy Done" << std::endl;
 }
 
 

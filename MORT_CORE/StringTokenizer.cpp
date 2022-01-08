@@ -8,6 +8,16 @@
 
 #include "StringTokenizer.h"
 
+bool StringTokenizer::IsEmpty(unsigned int pos)
+{
+    if (pos == std::wstring::npos || pos == 4294967295)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 StringTokenizer::StringTokenizer(const std::wstring& _str, const std::wstring& _delim)
 {
    if ((_str.length() == 0) || (_delim.length() == 0)) return;
@@ -22,7 +32,9 @@ StringTokenizer::StringTokenizer(const std::wstring& _str, const std::wstring& _
 
    while(true)
    {
-      if ((curr_pos = token_str.find(delim,curr_pos)) != std::wstring::npos)
+       curr_pos = token_str.find(delim, curr_pos);
+
+      if (!IsEmpty(curr_pos))
       {
          curr_pos += delim.length();
 
@@ -46,8 +58,8 @@ StringTokenizer::StringTokenizer(const std::wstring& _str, const std::wstring& _
    /*
      Trim ending delimiter
    */
-   curr_pos = 0;
-   if ((curr_pos = token_str.rfind(delim)) != std::wstring::npos)
+   curr_pos = token_str.rfind(delim);
+   if (!IsEmpty(curr_pos))
    {
       if (curr_pos != (token_str.length() - delim.length())) return;
       token_str.erase(token_str.length() - delim.length(),delim.length());
@@ -66,7 +78,8 @@ int StringTokenizer::countTokens()
       unsigned int curr_pos = 0;
       while(true)
       {
-         if ((curr_pos = token_str.find(delim,curr_pos)) != std::wstring::npos)
+         curr_pos = token_str.find(delim, curr_pos);
+         if (!IsEmpty(curr_pos))
          {
             num_tokens++;
             prev_pos  = curr_pos;
@@ -96,7 +109,7 @@ std::wstring StringTokenizer::nextToken()
    std::wstring  tmp_str = L"";
    unsigned int pos     = token_str.find(delim,0);
 
-   if (pos != std::wstring::npos)
+   if (!IsEmpty(pos))
    {
       tmp_str   = token_str.substr(0,pos);
       token_str = token_str.substr(pos+delim.length(),token_str.length()-pos);
@@ -127,7 +140,7 @@ std::wstring StringTokenizer::nextToken(const std::wstring& delimiter)
    std::wstring  tmp_str = L"";
    unsigned int pos     = token_str.find(delimiter,0);
 
-   if (pos != std::wstring::npos)
+   if (!IsEmpty(pos))
    {
       tmp_str   = token_str.substr(0,pos);
       token_str = token_str.substr(pos + delimiter.length(),token_str.length() - pos);
@@ -151,8 +164,14 @@ std::wstring StringTokenizer::filterNextToken(const std::wstring& filterStr)
    std::wstring  tmp_str    = nextToken();
    unsigned int currentPos = 0;
 
-   while((currentPos = tmp_str.find(filterStr,currentPos)) != std::wstring::npos)
+   while(true)
    {
+       currentPos = tmp_str.find(filterStr, currentPos);
+      
+       if (IsEmpty(currentPos))
+       {
+           break;
+       }
       tmp_str.erase(currentPos,filterStr.length());
    }
 

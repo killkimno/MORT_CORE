@@ -1,2 +1,2 @@
-#TargetFrameworkVersion=v4.0:PlatformToolSet=v142:EnableManagedIncrementalBuild=true:VCToolArchitecture=Native32Bit:WindowsTargetPlatformVersion=10.0
-Release|Win32|H:\Project\visualStudio Projects\MORT_CORE\|
+PlatformToolSet=v142:VCToolArchitecture=Native32Bit:VCToolsVersion=14.29.30037:VCServicingVersionATL=14.29.30038:VCServicingVersionCrtHeaders=14.29.30040:VCServicingVersionCompilers=14.29.30040:TargetPlatformVersion=10.0.19041.0:TargetFrameworkVersion=v4.0::EnableManagedIncrementalBuild=true:
+Release|Win32|F:\Project\visualStudio Projects\MORT_CORE_2\|

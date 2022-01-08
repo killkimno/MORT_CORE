@@ -65,19 +65,24 @@ typedef unsigned int uintptr_t;
 
 #endif /* _MSC_VER */
 
-/* Windows specifics */
-#ifdef _WIN32
-  /* DLL EXPORTS and IMPORTS */
-  #if defined(LIBLEPT_EXPORTS)
-    #define LEPT_DLL __declspec(dllexport)
-  #elif defined(LIBLEPT_IMPORTS)
-    #define LEPT_DLL __declspec(dllimport)
-  #else
+#ifndef LEPT_DLL
+  /* Windows specifics */
+  #ifdef _WIN32
+    /* DLL EXPORTS and IMPORTS */
+    #if defined(LIBLEPT_EXPORTS)
+      #define LEPT_DLL __declspec(dllexport)
+    #elif defined(LIBLEPT_IMPORTS)
+      #define LEPT_DLL __declspec(dllimport)
+    #else
+      #define LEPT_DLL
+    #endif
+  #else  /* non-Windows specifics */
     #define LEPT_DLL
-  #endif
-#else  /* non-Windows specifics */
+  #endif  /* _WIN32 */
+#endif  /* LEPT_DLL */
+
+#ifndef _WIN32  /* non-Windows specifics */
   #include <stdint.h>
-  #define LEPT_DLL
 #endif  /* _WIN32 */
 
 typedef intptr_t l_intptr_t;
@@ -119,9 +124,13 @@ typedef uintptr_t l_uintptr_t;
   #if !defined(HAVE_LIBWEBP)
   #define  HAVE_LIBWEBP       0
   #endif
+  #if !defined(HAVE_LIBWEBP_ANIM)
+  #define  HAVE_LIBWEBP_ANIM  0
+  #endif
   #if !defined(HAVE_LIBJP2K)
   #define  HAVE_LIBJP2K       0
   #endif
+
 
   /*-----------------------------------------------------------------------*
    * Leptonica supports OpenJPEG 2.0+.  If you have a version of openjpeg  *
@@ -317,18 +326,44 @@ typedef struct L_WallTimer  L_WALLTIMER;
 /*------------------------------------------------------------------------*
  *                      Standard memory allocation                        *
  *                                                                        *
- *  These specify the memory management functions that are used           *
- *  on all heap data except for Pix.  Memory management for Pix           *
- *  also defaults to malloc and free.  See pix1.c for details.            *
+ *  All default heap allocation is through the system malloc and free.    *
+ *                                                                        *
+ *  Leptonica also provides non-default allocation in two situations:     *
+ *                                                                        *
+ *  (1) A special allocator/deallocator pair can be provided for the      *
+ *      pix image data array.  This might be useful to prevent memory     *
+ *      fragmentation when large images are repeatedly allocated and      *
+ *      freed.  See the PixMemoryManager in pix1.c for details,           *
+ *      where the default is defined.                                     *
+ *                                                                        *
+ *  (2) Special allocator/deallocators can be provided for ALL heap       *
+ *      allocation if required, for example, for embedded systems.        *
+ *      For such builds, define LEPTONICA_INTERCEPT_ALLOC, and provide    *
+ *      custom leptonica_{malloc, calloc, realloc, free} functions.       *
  *------------------------------------------------------------------------*/
-#define LEPT_MALLOC(blocksize)           malloc(blocksize)
-#define LEPT_CALLOC(numelem, elemsize)   calloc(numelem, elemsize)
-#define LEPT_REALLOC(ptr, blocksize)     realloc(ptr, blocksize)
-#define LEPT_FREE(ptr)                   free(ptr)
-
+#ifdef LEPTONICA_INTERCEPT_ALLOC
+  #define LEPT_MALLOC(blocksize)           leptonica_malloc(blocksize)
+  #define LEPT_CALLOC(numelem, elemsize)   leptonica_calloc(numelem, elemsize)
+  #define LEPT_REALLOC(ptr, blocksize)     leptonica_realloc(ptr, blocksize)
+  #define LEPT_FREE(ptr)                   leptonica_free(ptr)
+  void *leptonica_malloc(size_t blocksize);
+  void *leptonica_calloc(size_t numelem, size_t elemsize);
+  void *leptonica_realloc(void *ptr, size_t blocksize);
+  void leptonica_free(void *ptr);
+#else
+  #define LEPT_MALLOC(blocksize)           malloc(blocksize)
+  #define LEPT_CALLOC(numelem, elemsize)   calloc(numelem, elemsize)
+  #define LEPT_REALLOC(ptr, blocksize)     realloc(ptr, blocksize)
+  #define LEPT_FREE(ptr)                   free(ptr)
+#endif   /* LEPTONICA_INTERCEPT_ALLOC */
 
 /*------------------------------------------------------------------------*
  *         Control printing of error, warning, and info messages          *
+ *                                                                        *
+ *  Leptonica never sends output to stdout.  By default, all messages     *
+ *  go to stderr.  However, we provide a mechanism for runtime            *
+ *  redirection of output, using a custom stderr handler defined          *
+ *  by the user.  See utils1.c for details and examples.                  *
  *                                                                        *
  *  To omit all messages to stderr, simply define NO_CONSOLE_IO on the    *
  *  command line.  For finer grained control, we have a mechanism         *
@@ -428,7 +463,7 @@ enum {
 #endif
 
 
-/*!  The run-time message severity threshold is defined in utils.c.  */
+/*!  The run-time message severity threshold is defined in utils1.c.  */
 LEPT_DLL extern l_int32  LeptMsgSeverity;
 
 /*
@@ -508,32 +543,32 @@ LEPT_DLL extern l_int32  LeptMsgSeverity;
 
   #define L_ERROR(a, ...) \
       IF_SEV(L_SEVERITY_ERROR, \
-             (void)fprintf(stderr, "Error in %s: " a, __VA_ARGS__), \
+             (void)lept_stderr("Error in %s: " a, __VA_ARGS__), \
              (void)0)
   #define L_WARNING(a, ...) \
       IF_SEV(L_SEVERITY_WARNING, \
-             (void)fprintf(stderr, "Warning in %s: " a, __VA_ARGS__), \
+             (void)lept_stderr("Warning in %s: " a, __VA_ARGS__), \
              (void)0)
   #define L_INFO(a, ...) \
       IF_SEV(L_SEVERITY_INFO, \
-             (void)fprintf(stderr, "Info in %s: " a, __VA_ARGS__), \
+             (void)lept_stderr("Info in %s: " a, __VA_ARGS__), \
              (void)0)
 
 #if 0  /* Alternative method for controlling L_* message output */
   #define L_ERROR(a, ...) \
     { if (L_SEVERITY_ERROR >= MINIMUM_SEVERITY && \
           L_SEVERITY_ERROR >= LeptMsgSeverity) \
-          fprintf(stderr, "Error in %s: " a, __VA_ARGS__) \
+          lept_stderr("Error in %s: " a, __VA_ARGS__) \
     }
   #define L_WARNING(a, ...) \
     { if (L_SEVERITY_WARNING >= MINIMUM_SEVERITY && \
           L_SEVERITY_WARNING >= LeptMsgSeverity) \
-          fprintf(stderr, "Warning in %s: " a, __VA_ARGS__) \
+          lept_stderr("Warning in %s: " a, __VA_ARGS__) \
     }
   #define L_INFO(a, ...) \
     { if (L_SEVERITY_INFO >= MINIMUM_SEVERITY && \
           L_SEVERITY_INFO >= LeptMsgSeverity) \
-             fprintf(stderr, "Info in %s: " a, __VA_ARGS__) \
+          lept_stderr("Info in %s: " a, __VA_ARGS__) \
     }
 #endif
 

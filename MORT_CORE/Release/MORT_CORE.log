@@ -1,81 +1,99 @@
-﻿  main.cpp
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\main.cpp(250,23): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : 'strcat' 선언을 참조하십시오.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\main.cpp(359,8): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\corecrt_wstring.h(123): message : 'wcscpy' 선언을 참조하십시오.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\main.cpp(361,8): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\corecrt_wstring.h(123): message : 'wcscpy' 선언을 참조하십시오.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\main.cpp(359,1): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\corecrt_wstring.h(123): message : 'wcscpy' 선언을 참조하십시오.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\main.cpp(361,1): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\corecrt_wstring.h(123): message : 'wcscpy' 선언을 참조하십시오.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\main.cpp(421,8): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\corecrt_wstring.h(123): message : 'wcscpy' 선언을 참조하십시오.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\main.cpp(421,2): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\corecrt_wstring.h(123): message : 'wcscpy' 선언을 참조하십시오.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\main.cpp(445,8): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\corecrt_wstring.h(123): message : 'wcscpy' 선언을 참조하십시오.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\main.cpp(445,2): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\corecrt_wstring.h(123): message : 'wcscpy' 선언을 참조하십시오.
-  MainCore.cpp
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(328,50): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(372,29): warning C4018: '<=': signed 또는 unsigned가 일치하지 않습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(390,26): warning C4018: '<=': signed 또는 unsigned가 일치하지 않습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(395,31): warning C4018: '<=': signed 또는 unsigned가 일치하지 않습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(420,26): warning C4018: '<=': signed 또는 unsigned가 일치하지 않습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(433,27): warning C4018: '<=': signed 또는 unsigned가 일치하지 않습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(616,44): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(620,44): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(676,44): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(766,22): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(816,18): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(828,18): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(1050,8): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : 'strcat' 선언을 참조하십시오.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(1114,8): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : 'strcat' 선언을 참조하십시오.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(1162,7): warning C4101: 'getLine' :참조되지 않은 지역 변수입니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(1330,9): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : 'strcat' 선언을 참조하십시오.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(1337,16): warning C4244: '초기화 중': 'std::streamoff'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(1411,9): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : 'strcat' 선언을 참조하십시오.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(1485,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(1593,22): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(1645,22): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(1733,6): warning C4101: 'height' :참조되지 않은 지역 변수입니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(1733,14): warning C4101: 'width' :참조되지 않은 지역 변수입니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(1733,21): warning C4101: 'srcheight' :참조되지 않은 지역 변수입니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\MainCore.cpp(1733,32): warning C4101: 'srcwidth' :참조되지 않은 지역 변수입니다.
-  StringTokenizer.cpp
-  코드를 생성하고 있습니다...
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\Tesseract-OCR\opencv2\core\cuda.inl.hpp(105): warning C4793: 'cv::cuda::GpuMat::GpuMat': 함수가 네이티브로 컴파일되었습니다.
+﻿  MainCore.cpp
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(99,34): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(438,51): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(482,30): warning C4018: '<=': signed 또는 unsigned가 일치하지 않습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(500,27): warning C4018: '<=': signed 또는 unsigned가 일치하지 않습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(505,32): warning C4018: '<=': signed 또는 unsigned가 일치하지 않습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(530,27): warning C4018: '<=': signed 또는 unsigned가 일치하지 않습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(543,28): warning C4018: '<=': signed 또는 unsigned가 일치하지 않습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(727,44): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(731,44): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(787,44): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(877,22): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(927,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(939,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(1271,7): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(1335,7): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(1383,7): warning C4101: 'getLine' :참조되지 않은 지역 변수입니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(1551,9): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(1558,16): warning C4244: '초기화 중': 'std::streamoff'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(1636,9): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(1623,9): warning C4101: 'getLine' :참조되지 않은 지역 변수입니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(1711,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(1874,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(1898,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(1943,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(2150,6): warning C4101: 'height' :참조되지 않은 지역 변수입니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(2150,14): warning C4101: 'width' :참조되지 않은 지역 변수입니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(2150,21): warning C4101: 'srcheight' :참조되지 않은 지역 변수입니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(2150,32): warning C4101: 'srcwidth' :참조되지 않은 지역 변수입니다.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2575,23): warning C4244: '인수': 'wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<_InIt>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _InIt=wchar_t *,
+              _Iter=wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2586): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<_InIt>(_Iter,const _Iter,std::input_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _InIt=wchar_t *,
+              _Iter=wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<_InIt>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _InIt=wchar_t *,
+              _Iter=wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(2566): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<_InIt>(const _Iter,const _Iter,std::forward_iterator_tag)'에 대한 참조를 확인하세요.
+          with
+          [
+              _InIt=wchar_t *,
+              _Iter=wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(3294): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<wchar_t*,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=wchar_t *,
+              _Alloc=std::allocator<char>
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xstring(3294): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<wchar_t*,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=wchar_t *,
+              _Alloc=std::allocator<char>
+          ]
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(69): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::assign<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(const _Iter,const _Iter)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>
+          ]
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\MainCore.cpp(69): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::assign<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(const _Iter,const _Iter)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>
+          ]
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\Tesseract-OCR\opencv2\core\cuda.inl.hpp(105): warning C4793: 'cv::cuda::GpuMat::GpuMat': 함수가 네이티브로 컴파일되었습니다.
   	관리 코드에서 지원되지 않는 내장 함수가 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\Tesseract-OCR\opencv2\core\cuda.inl.hpp(395): warning C4793: 'cv::cuda::HostMem::HostMem': 함수가 네이티브로 컴파일되었습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\Tesseract-OCR\opencv2\core\cuda.inl.hpp(395): warning C4793: 'cv::cuda::HostMem::HostMem': 함수가 네이티브로 컴파일되었습니다.
   	관리 코드에서 지원되지 않는 내장 함수가 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\Tesseract-OCR\opencv2\core\mat.inl.hpp(530): warning C4793: 'cv::Mat::Mat': 함수가 네이티브로 컴파일되었습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\Tesseract-OCR\opencv2\core\mat.inl.hpp(530): warning C4793: 'cv::Mat::Mat': 함수가 네이티브로 컴파일되었습니다.
   	관리 코드에서 지원되지 않는 내장 함수가 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\Tesseract-OCR\opencv2\core\mat.inl.hpp(850): warning C4793: 'cv::Mat::release': 함수가 네이티브로 컴파일되었습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\Tesseract-OCR\opencv2\core\mat.inl.hpp(850): warning C4793: 'cv::Mat::release': 함수가 네이티브로 컴파일되었습니다.
   	관리 코드에서 지원되지 않는 내장 함수가 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\Tesseract-OCR\opencv2\core\mat.inl.hpp(2171): warning C4793: 'cv::SparseMat::addref': 함수가 네이티브로 컴파일되었습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\Tesseract-OCR\opencv2\core\mat.inl.hpp(2171): warning C4793: 'cv::SparseMat::addref': 함수가 네이티브로 컴파일되었습니다.
   	관리 코드에서 지원되지 않는 내장 함수가 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\Tesseract-OCR\opencv2\core\mat.inl.hpp(3771): warning C4793: 'cv::UMat::addref': 함수가 네이티브로 컴파일되었습니다.
+F:\Project\visualStudio Projects\MORT_CORE_2\MORT_CORE\Tesseract-OCR\opencv2\core\mat.inl.hpp(3771): warning C4793: 'cv::UMat::addref': 함수가 네이티브로 컴파일되었습니다.
   	관리 코드에서 지원되지 않는 내장 함수가 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\Tesseract-OCR\opencv2\core\cuda.inl.hpp(105): warning C4793: 'cv::cuda::GpuMat::GpuMat': 함수가 네이티브로 컴파일되었습니다.
-  	관리 코드에서 지원되지 않는 내장 함수가 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\Tesseract-OCR\opencv2\core\cuda.inl.hpp(395): warning C4793: 'cv::cuda::HostMem::HostMem': 함수가 네이티브로 컴파일되었습니다.
-  	관리 코드에서 지원되지 않는 내장 함수가 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\Tesseract-OCR\opencv2\core\mat.inl.hpp(530): warning C4793: 'cv::Mat::Mat': 함수가 네이티브로 컴파일되었습니다.
-  	관리 코드에서 지원되지 않는 내장 함수가 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\Tesseract-OCR\opencv2\core\mat.inl.hpp(850): warning C4793: 'cv::Mat::release': 함수가 네이티브로 컴파일되었습니다.
-  	관리 코드에서 지원되지 않는 내장 함수가 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\Tesseract-OCR\opencv2\core\mat.inl.hpp(2171): warning C4793: 'cv::SparseMat::addref': 함수가 네이티브로 컴파일되었습니다.
-  	관리 코드에서 지원되지 않는 내장 함수가 있습니다.
-H:\Project\visualStudio Projects\MORT_CORE\MORT_CORE\Tesseract-OCR\opencv2\core\mat.inl.hpp(3771): warning C4793: 'cv::UMat::addref': 함수가 네이티브로 컴파일되었습니다.
-  	관리 코드에서 지원되지 않는 내장 함수가 있습니다.
-  .NETFramework,Version=v4.0.AssemblyAttributes.cpp
-     H:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.lib 라이브러리 및 H:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.exp 개체를 생성하고 있습니다.
+     F:\Project\visualStudio Projects\MORT_CORE_2\Release\MORT_CORE.lib 라이브러리 및 F:\Project\visualStudio Projects\MORT_CORE_2\Release\MORT_CORE.exp 개체를 생성하고 있습니다.
   LINK : /LTCG를 지정했지만 코드를 생성할 필요가 없습니다. 명령줄에서 /LTCG를 제거하면 링커 성능이 향상됩니다.
-main.obj : warning LNK4248: 확인되지 않은 형식 정의 토큰 (01000028)이 있습니다('GenericVector<STRING>'). 이미지가 실행되지 않습니다.
-main.obj : warning LNK4248: 확인되지 않은 형식 정의 토큰 (01000029)이 있습니다('ETEXT_DESC'). 이미지가 실행되지 않습니다.
-  MORT_CORE.vcxproj -> H:\Project\visualStudio Projects\MORT_CORE\Release\MORT_CORE.dll
+main.obj : warning LNK4248: 확인되지 않은 형식 정의 토큰 (0100002C)이 있습니다('GenericVector<STRING>'). 이미지가 실행되지 않습니다.
+main.obj : warning LNK4248: 확인되지 않은 형식 정의 토큰 (0100002D)이 있습니다('ETEXT_DESC'). 이미지가 실행되지 않습니다.
+  MORT_CORE.vcxproj -> F:\Project\visualStudio Projects\MORT_CORE_2\Release\MORT_CORE.dll

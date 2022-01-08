@@ -22,7 +22,7 @@ const int PER_GET_TEXT = 2000;
 void MainCore::ReplaceAll(std::wstring& strSrc, const std::wstring& strFind, const std::wstring& strDest)
 {
 	size_t j;
-	while ((j = strSrc.find(strFind)) != std::wstring::npos)
+	while ((j = strSrc.find(strFind)) != (std::wstring::npos))
 		strSrc.replace(j, strFind.length(), strDest);
 }
 
@@ -77,11 +77,14 @@ std::string WstringToString(std::wstring originalString)
 
 std::vector<std::wstring> MainCore::StringSplite(std::wstring text, std::wstring token, int minSize = 0)
 {
+	std::wcout << std::endl << L" start string spilite ?" << std::endl;
 	std::vector<std::wstring> vector;
 
 
 	StringTokenizer tokens(text, token);
+	std::wcout << std::endl << L" make token ?" << std::endl;
 	int size = tokens.countTokens();
+	std::wcout << std::endl << L" token size ?" << size << std::endl;
 	int nowTokenWordSize = 0;
 	std::wstring splite = L"";
 
@@ -94,6 +97,8 @@ std::vector<std::wstring> MainCore::StringSplite(std::wstring text, std::wstring
 
 	for (int x = 1; tokens.hasMoreTokens(); x++)
 	{
+		std::wcout << std::endl << L"token ?" << x << std::endl;
+
 		std::wstring tx = tokens.nextToken();// +L"\r\n";
 		//std::wcout << std::endl << tx.size() << std::endl;
 		if (minSize == -1 || tx.size() >= minSize)
@@ -127,7 +132,7 @@ std::vector<std::wstring> MainCore::StringSplite(std::wstring text, std::wstring
 	}
 
 
-
+	std::wcout << std::endl << L" end string spilite ?" << std::endl;
 
 	return vector;
 
@@ -2100,6 +2105,9 @@ void MainCore::RemoveAreaImg(cv::Mat* newImg, int captureIndex)
 //화면 가져오기
 void MainCore::getScreen(cv::Mat* newImg, int captureIndex, int* locationX, int* locationY)
 {
+
+	std::wcout << std::endl << L" Start Get Screen" << std::endl;
+
 	bool isError = false;
 	RECT rc, clientCoordinate;
 

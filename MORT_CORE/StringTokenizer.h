@@ -39,6 +39,7 @@ public:
    std::wstring nextToken();
    int         nextIntToken();
    double      nextFloatToken();
+   bool			IsEmpty(unsigned int pos);
    std::wstring nextToken(const std::wstring& delim);
    std::wstring remainingString();
    std::wstring filterNextToken(const std::wstring& filterStr);
