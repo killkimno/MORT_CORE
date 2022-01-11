@@ -28,9 +28,6 @@
 
 #include <chrono>
 #include <ctime>
-#ifndef _WIN32
-#include <sys/time.h>
-#endif
 #ifdef _WIN32
 #include <winsock2.h> // for timeval
 #endif

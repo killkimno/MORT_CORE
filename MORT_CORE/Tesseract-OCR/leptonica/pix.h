@@ -423,7 +423,8 @@ enum {
  *
  *       (6) The version numbers (below) are used in the serialization
  *           of these data structures.  They are placed in the files,
- *           and rarely (if ever) change.
+ *           and rarely (if ever) change.  Provision is currently made for
+ *           backward compatibility in reading from boxaa version 2.
  *
  *       (7) The serialization dependencies are as follows:
  *               pixaa  :  pixa  :  boxa
@@ -826,8 +827,7 @@ enum {
     L_SELECT_MAX = 5,           /*!< use max color component               */
     L_SELECT_AVERAGE = 6,       /*!< use average of color components       */
     L_SELECT_HUE = 7,           /*!< use hue value (in HSV color space)    */
-    L_SELECT_SATURATION = 8,    /*!< use saturation value (in HSV space)   */
-    L_SELECT_WEIGHTED = 9       /*!< use weighted average of color comps   */
+    L_SELECT_SATURATION = 8     /*!< use saturation value (in HSV space)   */
 };
 
 /*-------------------------------------------------------------------------*

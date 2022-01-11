@@ -39,7 +39,6 @@
     /* Generic and non-image-specific containers */
 #include "array.h"
 #include "bbuffer.h"
-#include "hashmap.h"
 #include "heap.h"
 #include "list.h"
 #include "ptra.h"
