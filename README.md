@@ -14,4 +14,5 @@ MORT 프로젝트에 필요한 MORT_CORE.DLL
 ### MORT 1.239 대응 커밋
 bd02323715552747f3e28a27418780691b4d0504
 https://github.com/killkimno/MORT_CORE/commit/bd02323715552747f3e28a27418780691b4d0504
+
 여기까지가 마지막 32비트 대응 DLL 그 다음부터는 64 비트 대응임
