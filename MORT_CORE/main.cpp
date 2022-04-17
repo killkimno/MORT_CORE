@@ -67,7 +67,6 @@ void getImg2(int captureIndex, uint8_t* data, int widht, int height, int positio
 }
 
 bool isError = false;
-std::string legacyTesData;
 
 void GetTesserctText()
 {
@@ -133,33 +132,8 @@ void getText(resultDB* result)
 		else
 
 		{
-			std::wcout << std::endl << L" Error Tesseract OCR!" << std::endl;
-
-			api.Clear();
-			api.End();
-			api.Init(".\\tessdata", legacyTesData.c_str(), tesseract::OEM_TESSERACT_ONLY);		//레가시 모드
-			//api.Init(".\\tessdata", currentTesData, tesseract::OEM_LSTM_ONLY);				//고급 모드
-			api.SetPageSegMode(tesseract::PSM_AUTO);
-
-			if (myMainCore->GetIsUseJpnFlag() == false)
-			{
-				api.SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmonpqrstuvwxyz1234567890.,`'&?!()- ");
-			}
-			else
-			{
-				api.SetVariable("tessedit_char_whitelist", "");
-			}
-
-			api.SetImage((uchar*)screenImg->data, screenImg->size().width, screenImg->size().height, screenImg->channels(), screenImg->step1());
-
-			GetTesserctText();
-
-			char* out = api.GetUTF8Text();
-			text = out;
-			wText = utfStringToWstring(text);
-
-			wText = L"에러 : Tesseract OCR 에 문제가 발생하여 레가시로 전환합니다. " + wText;
-
+			text = "에러 : Tesseract OCR을 사용할 수 없습니다. 문제가 계속 발생시 MORT 1.239V 를 사용해 주세요 ";
+			wText = L"에러 : Tesseract OCR을 사용할 수 없습니다. 문제가 계속 발생시 MORT 1.239V 를 사용해 주세요 ";
 		}
 	}
 
@@ -419,22 +393,6 @@ setTessdata(char* tessData, bool isUseJpnFlag)
 	{
 		api.SetVariable("tessedit_char_whitelist", "");
 	}
-
-	if (strcmp(tessData, "eng_fast") == 0)
-	{
-		legacyTesData.assign("eng_legacy");
-	}
-	else if (strcmp(tessData, "jpn_fast") == 0)
-	{
-		legacyTesData.assign("jpn_legacy");
-	}
-	else
-	{
-		legacyTesData.assign(strcat(tessData, "_legacy"));
-	}
-
-
-
 }
 
 extern "C" __declspec(dllexport)void
@@ -481,8 +439,6 @@ initOcr() {
 	std::wcout << "init tessract white list " << std::endl;
 	api.SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmonpqrstuvwxyz1234567890.,'&?! ");
 	std::wcout << "init complete " << std::endl;
-
-	legacyTesData = "eng_legacy";
 
 }
 
