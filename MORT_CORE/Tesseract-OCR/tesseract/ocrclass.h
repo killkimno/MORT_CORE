@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 /**********************************************************************
  * File:        ocrclass.h
  * Description: Class definitions and constants for the OCR API.
@@ -28,12 +29,8 @@
 
 #include <chrono>
 #include <ctime>
-#ifndef _WIN32
-#include <sys/time.h>
-#endif
-#ifdef _WIN32
-#include <winsock2.h> // for timeval
-#endif
+
+namespace tesseract {
 
 /**********************************************************************
  * EANYCODE_CHAR
@@ -59,7 +56,7 @@
  * version.
  **********************************************************************/
 
-typedef struct { /*single character */
+struct EANYCODE_CHAR { /*single character */
   // It should be noted that the format for char_code for version 2.0 and beyond
   // is UTF8 which means that ASCII characters will come out as one structure
   // but other characters will be returned in two or more instances of this
@@ -78,7 +75,7 @@ typedef struct { /*single character */
   uint8_t point_size; /*of char, 72=i inch, (10) */
   int8_t blanks;      /*no of spaces before this char (1) */
   uint8_t formatting; /*char formatting (0) */
-} EANYCODE_CHAR;      /*single character */
+};
 
 /**********************************************************************
  * ETEXT_DESC
@@ -98,66 +95,55 @@ typedef struct { /*single character */
  **********************************************************************/
 class ETEXT_DESC;
 
-using CANCEL_FUNC = bool (*)(void*, int);
+using CANCEL_FUNC = bool (*)(void *, int);
 using PROGRESS_FUNC = bool (*)(int, int, int, int, int);
-using PROGRESS_FUNC2 = bool (*)(ETEXT_DESC*, int, int, int, int);
+using PROGRESS_FUNC2 = bool (*)(ETEXT_DESC *, int, int, int, int);
 
-class ETEXT_DESC {  // output header
- public:
-  int16_t count{0};     /// chars in this buffer(0)
-  int16_t progress{0};  /// percent complete increasing (0-100)
+class ETEXT_DESC { // output header
+public:
+  int16_t count{0};    /// chars in this buffer(0)
+  int16_t progress{0}; /// percent complete increasing (0-100)
   /** Progress monitor covers word recognition and it does not cover layout
    * analysis.
    * See Ray comment in https://github.com/tesseract-ocr/tesseract/pull/27 */
-  int8_t more_to_come{0};        /// true if not last
-  volatile int8_t ocr_alive{0};  /// ocr sets to 1, HP 0
-  int8_t err_code{0};            /// for errcode use
-  CANCEL_FUNC cancel{nullptr};   /// returns true to cancel
+  int8_t more_to_come{0};       /// true if not last
+  volatile int8_t ocr_alive{0}; /// ocr sets to 1, HP 0
+  int8_t err_code{0};           /// for errcode use
+  CANCEL_FUNC cancel{nullptr};  /// returns true to cancel
   PROGRESS_FUNC progress_callback{
-      nullptr};                       /// called whenever progress increases
-  PROGRESS_FUNC2 progress_callback2;  /// monitor-aware progress callback
-  void* cancel_this{nullptr};         /// this or other data for cancel
-  struct timeval end_time;
+      nullptr};                      /// called whenever progress increases
+  PROGRESS_FUNC2 progress_callback2; /// monitor-aware progress callback
+  void *cancel_this{nullptr};        /// this or other data for cancel
+  std::chrono::steady_clock::time_point end_time;
   /// Time to stop. Expected to be set only
   /// by call to set_deadline_msecs().
-  EANYCODE_CHAR text[1]{};  /// character data
+  EANYCODE_CHAR text[1]{}; /// character data
 
   ETEXT_DESC() : progress_callback2(&default_progress_func) {
-    auto chrono_end_time = std::chrono::time_point<std::chrono::steady_clock,
-                                                   std::chrono::milliseconds>();
-    timePointToTimeval(chrono_end_time, &end_time);
+    end_time = std::chrono::time_point<std::chrono::steady_clock,
+                                       std::chrono::milliseconds>();
   }
 
   // Sets the end time to be deadline_msecs milliseconds from now.
   void set_deadline_msecs(int32_t deadline_msecs) {
     if (deadline_msecs > 0) {
-      auto chrono_end_time = std::chrono::steady_clock::now() +
-                             std::chrono::milliseconds(deadline_msecs);
-      timePointToTimeval(chrono_end_time, &end_time);
+      end_time = std::chrono::steady_clock::now() +
+                 std::chrono::milliseconds(deadline_msecs);
     }
   }
 
   // Returns false if we've not passed the end_time, or have not set a deadline.
   bool deadline_exceeded() const {
-    if (end_time.tv_sec == 0 && end_time.tv_usec == 0)
+    if (end_time.time_since_epoch() ==
+        std::chrono::steady_clock::duration::zero()) {
       return false;
-    auto chrono_now = std::chrono::steady_clock::now();
-    struct timeval now;
-    timePointToTimeval(chrono_now, &now);
-    return (now.tv_sec > end_time.tv_sec ||
-            (now.tv_sec == end_time.tv_sec && now.tv_usec > end_time.tv_usec));
+    }
+    auto now = std::chrono::steady_clock::now();
+    return (now > end_time);
   }
 
- private:
-  static void timePointToTimeval(
-      std::chrono::steady_clock::time_point chrono_point, struct timeval* tv) {
-    auto millisecs = std::chrono::duration_cast<std::chrono::milliseconds>(
-        chrono_point.time_since_epoch());
-    tv->tv_sec = millisecs.count() / 1000;
-    tv->tv_usec = (millisecs.count() % 1000) * 1000;
-  }
-
-  static bool default_progress_func(ETEXT_DESC* ths, int left, int right,
+private:
+  static bool default_progress_func(ETEXT_DESC *ths, int left, int right,
                                     int top, int bottom) {
     if (ths->progress_callback != nullptr) {
       return (*(ths->progress_callback))(ths->progress, left, right, top,
@@ -167,4 +153,6 @@ class ETEXT_DESC {  // output header
   }
 };
 
-#endif  // CCUTIL_OCRCLASS_H_
+} // namespace tesseract
+
+#endif // CCUTIL_OCRCLASS_H_

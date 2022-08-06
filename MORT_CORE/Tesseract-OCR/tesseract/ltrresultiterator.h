@@ -1,9 +1,8 @@
-///////////////////////////////////////////////////////////////////////
+// SPDX-License-Identifier: Apache-2.0
 // File:        ltrresultiterator.h
 // Description: Iterator for tesseract results in strict left-to-right
 //              order that avoids using tesseract internal data structures.
 // Author:      Ray Smith
-// Created:     Fri Feb 26 11:01:06 PST 2010
 //
 // (C) Copyright 2010, Google Inc.
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,22 +14,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
-///////////////////////////////////////////////////////////////////////
 
 #ifndef TESSERACT_CCMAIN_LTR_RESULT_ITERATOR_H_
 #define TESSERACT_CCMAIN_LTR_RESULT_ITERATOR_H_
 
-#include "pageiterator.h"  // for PageIterator
-#include "platform.h"      // for TESS_API
-#include "publictypes.h"   // for PageIteratorLevel
-#include "unichar.h"       // for StrongScriptDirection
+#include "export.h"       // for TESS_API
+#include "pageiterator.h" // for PageIterator
+#include "publictypes.h"  // for PageIteratorLevel
+#include "unichar.h"      // for StrongScriptDirection
+
+namespace tesseract {
 
 class BLOB_CHOICE_IT;
 class PAGE_RES;
 class WERD_RES;
-
-namespace tesseract {
 
 class Tesseract;
 
@@ -41,13 +38,14 @@ class Tesseract;
 // therefore can only be used while the TessBaseAPI class still exists and
 // has not been subjected to a call of Init, SetImage, Recognize, Clear, End
 // DetectOS, or anything else that changes the internal PAGE_RES.
-// See apitypes.h for the definition of PageIteratorLevel.
+// See tesseract/publictypes.h for the definition of PageIteratorLevel.
 // See also base class PageIterator, which contains the bulk of the interface.
 // LTRResultIterator adds text-specific methods for access to OCR output.
 
 class TESS_API LTRResultIterator : public PageIterator {
   friend class ChoiceIterator;
- public:
+
+public:
   // page_res and tesseract come directly from the BaseAPI.
   // The rectangle parameters are copied indirectly from the Thresholder,
   // via the BaseAPI. They represent the coordinates of some rectangle in an
@@ -60,9 +58,8 @@ class TESS_API LTRResultIterator : public PageIterator {
   // The scaled_yres indicates the effective resolution of the binary image
   // that tesseract has been given by the Thresholder.
   // After the constructor, Begin has already been called.
-  LTRResultIterator(PAGE_RES* page_res, Tesseract* tesseract,
-                    int scale, int scaled_yres,
-                    int rect_left, int rect_top,
+  LTRResultIterator(PAGE_RES *page_res, Tesseract *tesseract, int scale,
+                    int scaled_yres, int rect_left, int rect_top,
                     int rect_width, int rect_height);
 
   ~LTRResultIterator() override;
@@ -82,7 +79,7 @@ class TESS_API LTRResultIterator : public PageIterator {
 
   // Returns the null terminated UTF-8 encoded text string for the current
   // object at the given level. Use delete [] to free after use.
-  char* GetUTF8Text(PageIteratorLevel level) const;
+  char *GetUTF8Text(PageIteratorLevel level) const;
 
   // Set the string inserted at the end of each text line. "\n" by default.
   void SetLineSeparator(const char *new_line);
@@ -94,10 +91,6 @@ class TESS_API LTRResultIterator : public PageIterator {
   // The number should be interpreted as a percent probability. (0.0f-100.0f)
   float Confidence(PageIteratorLevel level) const;
 
-  // Returns the attributes of the current row.
-  void RowAttributes(float* row_height, float* descenders,
-                     float* ascenders) const;
-
   // ============= Functions that refer to words only ============.
 
   // Returns the font attributes of the current word. If iterating at a higher
@@ -108,18 +101,14 @@ class TESS_API LTRResultIterator : public PageIterator {
   // the iterator itself, ie rendered invalid by various members of
   // TessBaseAPI, including Init, SetImage, End or deleting the TessBaseAPI.
   // Pointsize is returned in printers points (1/72 inch.)
-  const char* WordFontAttributes(bool* is_bold,
-                                 bool* is_italic,
-                                 bool* is_underlined,
-                                 bool* is_monospace,
-                                 bool* is_serif,
-                                 bool* is_smallcaps,
-                                 int* pointsize,
-                                 int* font_id) const;
+  const char *WordFontAttributes(bool *is_bold, bool *is_italic,
+                                 bool *is_underlined, bool *is_monospace,
+                                 bool *is_serif, bool *is_smallcaps,
+                                 int *pointsize, int *font_id) const;
 
   // Return the name of the language used to recognize this word.
   // On error, nullptr.  Do not delete this pointer.
-  const char* WordRecognitionLanguage() const;
+  const char *WordRecognitionLanguage() const;
 
   // Return the overall directionality of this word.
   StrongScriptDirection WordDirection() const;
@@ -157,11 +146,11 @@ class TESS_API LTRResultIterator : public PageIterator {
 
   // Returns a null terminated UTF-8 encoded truth string for the current word.
   // Use delete [] to free after use.
-  char* WordTruthUTF8Text() const;
+  char *WordTruthUTF8Text() const;
 
   // Returns a null terminated UTF-8 encoded normalized OCR string for the
   // current word. Use delete [] to free after use.
-  char* WordNormedUTF8Text() const;
+  char *WordNormedUTF8Text() const;
 
   // Returns a pointer to serialized choice lattice.
   // Fills lattice_size with the number of bytes in lattice data.
@@ -182,18 +171,18 @@ class TESS_API LTRResultIterator : public PageIterator {
   // this will return the attributes of the first symbol in that word.
   bool SymbolIsDropcap() const;
 
- protected:
+protected:
   const char *line_separator_;
   const char *paragraph_separator_;
 };
 
 // Class to iterate over the classifier choices for a single RIL_SYMBOL.
-class ChoiceIterator {
- public:
+class TESS_API ChoiceIterator {
+public:
   // Construction is from a LTRResultIterator that points to the symbol of
   // interest. The ChoiceIterator allows a one-shot iteration over the
-  // choices for this symbol and after that is is useless.
-  explicit ChoiceIterator(const LTRResultIterator& result_it);
+  // choices for this symbol and after that it is useless.
+  explicit ChoiceIterator(const LTRResultIterator &result_it);
   ~ChoiceIterator();
 
   // Moves to the next choice for the symbol and returns false if there
@@ -206,7 +195,7 @@ class ChoiceIterator {
   // choice.
   // NOTE: Unlike LTRResultIterator::GetUTF8Text, the return points to an
   // internal structure and should NOT be delete[]ed to free after use.
-  const char* GetUTF8Text() const;
+  const char *GetUTF8Text() const;
 
   // Returns the confidence of the current choice depending on the used language
   // data. If only LSTM traineddata is used the value range is 0.0f - 1.0f. All
@@ -216,13 +205,31 @@ class ChoiceIterator {
   // probabilities won't add up to 100. Each one stands on its own.
   float Confidence() const;
 
- private:
+  // Returns a vector containing all timesteps, which belong to the currently
+  // selected symbol. A timestep is a vector containing pairs of symbols and
+  // floating point numbers. The number states the probability for the
+  // corresponding symbol.
+  std::vector<std::vector<std::pair<const char *, float>>> *Timesteps() const;
+
+private:
+  // clears the remaining spaces out of the results and adapt the probabilities
+  void filterSpaces();
   // Pointer to the WERD_RES object owned by the API.
-  WERD_RES* word_res_;
+  WERD_RES *word_res_;
   // Iterator over the blob choices.
-  BLOB_CHOICE_IT* choice_it_;
+  BLOB_CHOICE_IT *choice_it_;
+  std::vector<std::pair<const char *, float>> *LSTM_choices_ = nullptr;
+  std::vector<std::pair<const char *, float>>::iterator LSTM_choice_it_;
+
+  const int *tstep_index_;
+  // regulates the rating granularity
+  double rating_coefficient_;
+  // leading blanks
+  int blanks_before_word_;
+  // true when there is lstm engine related trained data
+  bool oemLSTM_;
 };
 
-}  // namespace tesseract.
+} // namespace tesseract.
 
-#endif  // TESSERACT_CCMAIN_LTR_RESULT_ITERATOR_H_
+#endif // TESSERACT_CCMAIN_LTR_RESULT_ITERATOR_H_

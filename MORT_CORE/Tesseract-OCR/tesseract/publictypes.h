@@ -1,8 +1,7 @@
-///////////////////////////////////////////////////////////////////////
+// SPDX-License-Identifier: Apache-2.0
 // File:        publictypes.h
 // Description: Types used in both the API and internally
 // Author:      Ray Smith
-// Created:     Wed Mar 03 09:22:53 PST 2010
 //
 // (C) Copyright 2010, Google Inc.
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +13,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
-///////////////////////////////////////////////////////////////////////
 
 #ifndef TESSERACT_CCSTRUCT_PUBLICTYPES_H_
 #define TESSERACT_CCSTRUCT_PUBLICTYPES_H_
+
+namespace tesseract {
 
 // This file contains types that are used both by the API and internally
 // to Tesseract. In order to decouple the API from Tesseract and prevent cyclic
@@ -27,7 +26,6 @@
 // but not for the low-level tesseract code to include top-level API code.
 // This file should not use other Tesseract types, as that would drag
 // their includes into the API-level.
-// API-level code should include apitypes.h in preference to this file.
 
 /** Number of printers' points in an inch. The unit of the pointsize return. */
 constexpr int kPointsPerInch = 72;
@@ -47,25 +45,25 @@ constexpr int kResolutionEstimationFactor = 10;
 /**
  * Possible types for a POLY_BLOCK or ColPartition.
  * Must be kept in sync with kPBColors in polyblk.cpp and PTIs*Type functions
- * below, as well as kPolyBlockNames in publictypes.cpp.
+ * below, as well as kPolyBlockNames in layout_test.cc.
  * Used extensively by ColPartition, and POLY_BLOCK.
-*/
+ */
 enum PolyBlockType {
-  PT_UNKNOWN,        // Type is not yet known. Keep as the first element.
-  PT_FLOWING_TEXT,   // Text that lives inside a column.
-  PT_HEADING_TEXT,   // Text that spans more than one column.
-  PT_PULLOUT_TEXT,   // Text that is in a cross-column pull-out region.
-  PT_EQUATION,       // Partition belonging to an equation region.
-  PT_INLINE_EQUATION,  // Partition has inline equation.
-  PT_TABLE,          // Partition belonging to a table region.
-  PT_VERTICAL_TEXT,  // Text-line runs vertically.
-  PT_CAPTION_TEXT,   // Text that belongs to an image.
-  PT_FLOWING_IMAGE,  // Image that lives inside a column.
-  PT_HEADING_IMAGE,  // Image that spans more than one column.
-  PT_PULLOUT_IMAGE,  // Image that is in a cross-column pull-out region.
-  PT_HORZ_LINE,      // Horizontal Line.
-  PT_VERT_LINE,      // Vertical Line.
-  PT_NOISE,          // Lies outside of any column.
+  PT_UNKNOWN,         // Type is not yet known. Keep as the first element.
+  PT_FLOWING_TEXT,    // Text that lives inside a column.
+  PT_HEADING_TEXT,    // Text that spans more than one column.
+  PT_PULLOUT_TEXT,    // Text that is in a cross-column pull-out region.
+  PT_EQUATION,        // Partition belonging to an equation region.
+  PT_INLINE_EQUATION, // Partition has inline equation.
+  PT_TABLE,           // Partition belonging to a table region.
+  PT_VERTICAL_TEXT,   // Text-line runs vertically.
+  PT_CAPTION_TEXT,    // Text that belongs to an image.
+  PT_FLOWING_IMAGE,   // Image that lives inside a column.
+  PT_HEADING_IMAGE,   // Image that spans more than one column.
+  PT_PULLOUT_IMAGE,   // Image that is in a cross-column pull-out region.
+  PT_HORZ_LINE,       // Horizontal Line.
+  PT_VERT_LINE,       // Vertical Line.
+  PT_NOISE,           // Lies outside of any column.
   PT_COUNT
 };
 
@@ -90,10 +88,6 @@ inline bool PTIsPulloutType(PolyBlockType type) {
   return type == PT_PULLOUT_IMAGE || type == PT_PULLOUT_TEXT;
 }
 
-/** String name for each block type. Keep in sync with PolyBlockType. */
-extern const char* kPolyBlockNames[];
-
-namespace tesseract {
 /**
  *  +------------------+  Orientation Example:
  *  | 1 Aaaa Aaaa Aaaa |  ====================
@@ -131,7 +125,7 @@ enum Orientation {
  *
  * For English text, the writing direction is left-to-right.  For the
  * Chinese text in the above example, the writing direction is top-to-bottom.
-*/
+ */
 enum WritingDirection {
   WRITING_DIRECTION_LEFT_TO_RIGHT = 0,
   WRITING_DIRECTION_RIGHT_TO_LEFT = 1,
@@ -148,7 +142,7 @@ enum WritingDirection {
  *
  * Note that only some combinations make sense.  For example,
  * WRITING_DIRECTION_LEFT_TO_RIGHT implies TEXTLINE_ORDER_TOP_TO_BOTTOM
-*/
+ */
 enum TextlineOrder {
   TEXTLINE_ORDER_LEFT_TO_RIGHT = 0,
   TEXTLINE_ORDER_RIGHT_TO_LEFT = 1,
@@ -159,27 +153,28 @@ enum TextlineOrder {
  * Possible modes for page layout analysis. These *must* be kept in order
  * of decreasing amount of layout analysis to be done, except for OSD_ONLY,
  * so that the inequality test macros below work.
-*/
+ */
 enum PageSegMode {
-  PSM_OSD_ONLY = 0,       ///< Orientation and script detection only.
-  PSM_AUTO_OSD = 1,       ///< Automatic page segmentation with orientation and
-                      ///< script detection. (OSD)
-  PSM_AUTO_ONLY = 2,      ///< Automatic page segmentation, but no OSD, or OCR.
-  PSM_AUTO = 3,           ///< Fully automatic page segmentation, but no OSD.
-  PSM_SINGLE_COLUMN = 4,  ///< Assume a single column of text of variable sizes.
-  PSM_SINGLE_BLOCK_VERT_TEXT = 5,  ///< Assume a single uniform block of vertically
-                               ///< aligned text.
-  PSM_SINGLE_BLOCK = 6,   ///< Assume a single uniform block of text. (Default.)
-  PSM_SINGLE_LINE = 7,    ///< Treat the image as a single text line.
-  PSM_SINGLE_WORD = 8,    ///< Treat the image as a single word.
-  PSM_CIRCLE_WORD = 9,    ///< Treat the image as a single word in a circle.
-  PSM_SINGLE_CHAR = 10,    ///< Treat the image as a single character.
-  PSM_SPARSE_TEXT = 11,    ///< Find as much text as possible in no particular order.
-  PSM_SPARSE_TEXT_OSD = 12,  ///< Sparse text with orientation and script det.
-  PSM_RAW_LINE = 13,       ///< Treat the image as a single text line, bypassing
-                      ///< hacks that are Tesseract-specific.
+  PSM_OSD_ONLY = 0,      ///< Orientation and script detection only.
+  PSM_AUTO_OSD = 1,      ///< Automatic page segmentation with orientation and
+                         ///< script detection. (OSD)
+  PSM_AUTO_ONLY = 2,     ///< Automatic page segmentation, but no OSD, or OCR.
+  PSM_AUTO = 3,          ///< Fully automatic page segmentation, but no OSD.
+  PSM_SINGLE_COLUMN = 4, ///< Assume a single column of text of variable sizes.
+  PSM_SINGLE_BLOCK_VERT_TEXT = 5, ///< Assume a single uniform block of
+                                  ///< vertically aligned text.
+  PSM_SINGLE_BLOCK = 6, ///< Assume a single uniform block of text. (Default.)
+  PSM_SINGLE_LINE = 7,  ///< Treat the image as a single text line.
+  PSM_SINGLE_WORD = 8,  ///< Treat the image as a single word.
+  PSM_CIRCLE_WORD = 9,  ///< Treat the image as a single word in a circle.
+  PSM_SINGLE_CHAR = 10, ///< Treat the image as a single character.
+  PSM_SPARSE_TEXT =
+      11, ///< Find as much text as possible in no particular order.
+  PSM_SPARSE_TEXT_OSD = 12, ///< Sparse text with orientation and script det.
+  PSM_RAW_LINE = 13, ///< Treat the image as a single text line, bypassing
+                     ///< hacks that are Tesseract-specific.
 
-  PSM_COUNT           ///< Number of enum entries.
+  PSM_COUNT ///< Number of enum entries.
 };
 
 /**
@@ -187,7 +182,7 @@ enum PageSegMode {
  * layout analysis are enabled.
  * *Depend critically on the order of elements of PageSegMode.*
  * NOTE that arg is an int for compatibility with INT_PARAM.
-*/
+ */
 inline bool PSM_OSD_ENABLED(int pageseg_mode) {
   return pageseg_mode <= PSM_AUTO_OSD || pageseg_mode == PSM_SPARSE_TEXT_OSD;
 }
@@ -208,20 +203,20 @@ inline bool PSM_LINE_FIND_ENABLED(int pageseg_mode) {
 }
 inline bool PSM_WORD_FIND_ENABLED(int pageseg_mode) {
   return (pageseg_mode >= PSM_AUTO_OSD && pageseg_mode <= PSM_SINGLE_LINE) ||
-      pageseg_mode == PSM_SPARSE_TEXT || pageseg_mode == PSM_SPARSE_TEXT_OSD;
+         pageseg_mode == PSM_SPARSE_TEXT || pageseg_mode == PSM_SPARSE_TEXT_OSD;
 }
 
 /**
  * enum of the elements of the page hierarchy, used in ResultIterator
  * to provide functions that operate on each level without having to
  * have 5x as many functions.
-*/
+ */
 enum PageIteratorLevel {
-  RIL_BLOCK,     // Block of text/image/separator line.
-  RIL_PARA,      // Paragraph within a block.
-  RIL_TEXTLINE,  // Line within a paragraph.
-  RIL_WORD,      // Word within a textline.
-  RIL_SYMBOL     // Symbol/character within a word.
+  RIL_BLOCK,    // Block of text/image/separator line.
+  RIL_PARA,     // Paragraph within a block.
+  RIL_TEXTLINE, // Line within a paragraph.
+  RIL_WORD,     // Word within a textline.
+  RIL_SYMBOL    // Symbol/character within a word.
 };
 
 /**
@@ -264,23 +259,23 @@ enum ParagraphJustification {
  * appropriate changes to all the enums mirroring it (e.g. OCREngine in
  * cityblock/workflow/detection/detection_storage.proto). Such enums will
  * mention the connection to OcrEngineMode in the comments.
-*/
+ */
 enum OcrEngineMode {
-  OEM_TESSERACT_ONLY,           // Run Tesseract only - fastest; deprecated
-  OEM_LSTM_ONLY,                // Run just the LSTM line recognizer.
-  OEM_TESSERACT_LSTM_COMBINED,  // Run the LSTM recognizer, but allow fallback
-                                // to Tesseract when things get difficult.
-                                // deprecated
-  OEM_DEFAULT,                  // Specify this mode when calling init_*(),
-                                // to indicate that any of the above modes
-                                // should be automatically inferred from the
-                                // variables in the language-specific config,
-                                // command-line configs, or if not specified
-                                // in any of the above should be set to the
-                                // default OEM_TESSERACT_ONLY.
-  OEM_COUNT                     // Number of OEMs
+  OEM_TESSERACT_ONLY,          // Run Tesseract only - fastest; deprecated
+  OEM_LSTM_ONLY,               // Run just the LSTM line recognizer.
+  OEM_TESSERACT_LSTM_COMBINED, // Run the LSTM recognizer, but allow fallback
+                               // to Tesseract when things get difficult.
+                               // deprecated
+  OEM_DEFAULT,                 // Specify this mode when calling init_*(),
+                               // to indicate that any of the above modes
+                               // should be automatically inferred from the
+                               // variables in the language-specific config,
+                               // command-line configs, or if not specified
+                               // in any of the above should be set to the
+                               // default OEM_TESSERACT_ONLY.
+  OEM_COUNT                    // Number of OEMs
 };
 
-}  // namespace tesseract.
+} // namespace tesseract.
 
-#endif  // TESSERACT_CCSTRUCT_PUBLICTYPES_H_
+#endif // TESSERACT_CCSTRUCT_PUBLICTYPES_H_
