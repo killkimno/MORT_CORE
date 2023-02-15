@@ -11,6 +11,9 @@ MORT 프로젝트에 필요한 MORT_CORE.DLL
 3. vcpkg install opencv:x64-windows-static-md
 4. vcpkg install tesseract:x64-windows-static-md
 
+### Tesseract 5.2 ###
+https://github.com/LilyWangLL/vcpkg/tree/dev/LilyWang/issue16019
+
 ### MORT 1.239 대응 커밋
 bd02323715552747f3e28a27418780691b4d0504
 https://github.com/killkimno/MORT_CORE/commit/bd02323715552747f3e28a27418780691b4d0504
