@@ -327,8 +327,6 @@ bool MainCore::equalWord(int ocrValue, int dbValue, int ocrCount)
 
 int MainCore::compareOriginalText(std::wstring inputText, std::wstring resultText)
 {
-
-
 	ReplaceAll(inputText, L" ", L"");
 	ReplaceAll(resultText, L" ", L"");
 	ReplaceAll(inputText, L".", L"");
@@ -336,6 +334,8 @@ int MainCore::compareOriginalText(std::wstring inputText, std::wstring resultTex
 
 	int ocrCount = inputText.size();
 	int dbCount = resultText.size();
+
+
 
 	if (ocrCount == 0 || dbCount == 0)
 	{
@@ -584,7 +584,7 @@ bool MainCore::searchDB(TranslationsDB* newDB, TranslationsDB* resultDB, int adj
 }
 
 
-bool MainCore::searchJpnDB(TranslationsDB* newDB, TranslationsDB* resultDB, int adjustRange, int mapTokenIndex, int* nowDistance, int* nowTextDistance)
+bool MainCore::searchJpnDB(TranslationsDB* newDB, TranslationsDB* resultDB, int adjustRange, int mapTokenIndex, int* nowDistance, int* nowTextDistance, int minCardinateDistance)
 {
 	bool isFindTranslationFlag = false;
 	std::pair <std::multimap<int, TranslationsDB>::iterator, std::multimap<int, TranslationsDB>::iterator> mapPD;
@@ -600,43 +600,60 @@ bool MainCore::searchJpnDB(TranslationsDB* newDB, TranslationsDB* resultDB, int 
 			int newDistance = abs((int)((it->second.textLength - newDB->textLength) / 5));
 			if (newDistance == 0 && it->second.value == newDB->value)
 			{
+				std::wcout << "Find? : " << it->second.altText << std::endl;
 				*resultDB = it->second;
 				*nowDistance = newDistance;
 				isFindTranslationFlag = true;
 				break;
 			}
+			
+			int rangeValue = *nowDistance == 100 ? newDistance :( newDistance - *nowDistance );
 
-			if ((newDistance == *nowDistance || newDistance - 1 == *nowDistance || newDistance + 1 == *nowDistance) && isCandidateFlag == false)
+			//std::wcout <<"adjust " << adjustRange << " value " << it->second.value << " ocr value " << newDB->value <<  "range : " << rangeValue << " dis " << *nowDistance << "text dis : " << *nowTextDistance << std::endl;
+
+			if ((-3 <= rangeValue && rangeValue <= 3) && isCandidateFlag == false)
 			{
+
 				int newExtraDistance = compareOriginalText(newDB->altText, it->second.altText);
+
+				//std::wcout << "Search alt :" << newDB->altText << " // " << it->second.altText << "// length : " << resultDB->textLength << "new dis :" << newExtraDistance << std::endl;
 				if (newExtraDistance < *nowTextDistance)
 				{
+					std::wcout << "change alt alt :" << std::endl;
 					*resultDB = it->second;
 					*nowDistance = newDistance;
 					*nowTextDistance = newExtraDistance;
-					if (*nowTextDistance <= resultDB->textLength / 11)
+					if ( abs(*nowTextDistance) <= 2 || *nowTextDistance <= resultDB->textLength / 11)
 					{
 						*resultDB = it->second;
 						*nowDistance = newDistance;
 						isFindTranslationFlag = true;
 						break;
 					}
-					else if (*nowTextDistance <= resultDB->textLength / 5)
+					else if (minCardinateDistance == -1)
 					{
-						isCandidateFlag = true;
+						if (*nowTextDistance <= resultDB->textLength / 4)
+						{
+							isCandidateFlag = true;
+						}
+						else
+						{
+							isCandidateFlag = false;
+						}
 					}
-					else
+					else if (newExtraDistance <= minCardinateDistance)
 					{
-						isCandidateFlag = false;
+						*resultDB = it->second;
+						*nowDistance = newDistance;
+						isFindTranslationFlag = true;
+						break;
 					}
+				
 				}
-
 			}
 
 			else if (newDistance < *nowDistance)
 			{
-
-
 				if (isCandidateFlag == true)
 				{
 					int newTextDistance = compareOriginalText(it->second.altText, resultDB->altText);
@@ -646,6 +663,12 @@ bool MainCore::searchJpnDB(TranslationsDB* newDB, TranslationsDB* resultDB, int 
 						*nowDistance = newDistance;
 						*nowTextDistance = newTextDistance;
 						isCandidateFlag = true;
+
+						if (newTextDistance <= it->second.originalText.size() / 11)
+						{
+							isFindTranslationFlag = true;
+							break;
+						}
 					}
 				}
 				else
@@ -674,15 +697,12 @@ bool MainCore::searchJpnDB(TranslationsDB* newDB, TranslationsDB* resultDB, int 
 						}
 					}
 
-
 				}
-
 
 			}
 
 		}
 		nowIndex++;
-
 	}
 
 	return isFindTranslationFlag;
@@ -796,17 +816,21 @@ std::wstring MainCore::getTranslation(std::wstring text, bool& isFound)
 		int endToken = mapTokenIndex + adustTokenRange;
 		adjustRange = 0;
 
-		isFindTranslationFlag = searchJpnDB(&newDB, &resultDB, adjustRange, mapTokenIndex, &nowDistance, &nowTextDistance);
+		std::wcout << std::endl <<  "Start Jpn  : Token " << adjustRange << " map " << mapTokenIndex <<  "/ token 1 : " << startToken << " / end : " << endToken << std::endl;
+
+		isFindTranslationFlag = searchJpnDB(&newDB, &resultDB, adjustRange, mapTokenIndex, &nowDistance, &nowTextDistance, -1);
 		if (isFindTranslationFlag == true)
 		{
+			std::wcout << "Found  step1" << std::endl;
 			lastDBIndex = resultDB.index;
 			return resultDB.translationText;
 		}
-		adjustRange = (newDB.originalText.length() * 100);
-		isFindTranslationFlag = searchJpnDB(&newDB, &resultDB, adjustRange, mapTokenIndex, &nowDistance, &nowTextDistance);
+		adjustRange = (newDB.originalText.length() * 700);
+		isFindTranslationFlag = searchJpnDB(&newDB, &resultDB, adjustRange, mapTokenIndex, &nowDistance, &nowTextDistance, -1);
 
 		if (isFindTranslationFlag == true)
 		{
+			std::wcout << "Found  step2" << std::endl;
 			lastDBIndex = resultDB.index;
 			return resultDB.translationText;;
 		}
@@ -816,9 +840,12 @@ std::wstring MainCore::getTranslation(std::wstring text, bool& isFound)
 		{
 			if (startToken != mapTokenIndex && startToken > 0)
 			{
-				isFindTranslationFlag = searchJpnDB(&newDB, &resultDB, adjustRange, startToken, &nowDistance, &nowTextDistance);
+				isFindTranslationFlag = searchJpnDB(&newDB, &resultDB, adjustRange, startToken, &nowDistance, &nowTextDistance, 4);
+				std::wcout << "step3 cardi : token " << startToken <<" distance : "<<nowTextDistance << " text : " << resultDB.originalText << std::endl;
+		
 				if (isFindTranslationFlag == true)
 				{
+					std::wcout << "step3 Found!!!!! :" << resultDB.originalText << std::endl;
 					lastDBIndex = resultDB.index;
 					return resultDB.translationText;
 				}
@@ -826,6 +853,7 @@ std::wstring MainCore::getTranslation(std::wstring text, bool& isFound)
 		}
 		if (nowTextDistance <= (resultDB.textLength * 4 / 10) && isFindTranslationFlag == false)
 		{
+			std::wcout << "step4 .... :" << resultDB.originalText << std::endl;
 			lastDBIndex = resultDB.index;
 			return resultDB.translationText;;
 		}

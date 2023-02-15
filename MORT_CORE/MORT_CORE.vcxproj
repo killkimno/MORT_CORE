@@ -168,7 +168,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>nhocr.lib;archive.lib;bz2.lib;charset.lib;gif.lib;iconv.lib;jpeg.lib;leptonica-1.81.1.lib;libcrypto.lib;libpng16.lib;libprotobuf-lite.lib;libprotobuf.lib;libprotoc.lib;libssl.lib;libwebpmux.lib;libxml2.lib;lz4.lib;lzma.lib;opencv_calib3d.lib;opencv_core.lib;opencv_dnn.lib;opencv_features2d.lib;opencv_flann.lib;opencv_highgui.lib;opencv_imgcodecs.lib;opencv_imgproc.lib;opencv_ml.lib;opencv_objdetect.lib;opencv_photo.lib;opencv_stitching.lib;opencv_video.lib;opencv_videoio.lib;openjp2.lib;quirc.lib;tesseract41.lib;tiff.lib;turbojpeg.lib;webp.lib;webpdecoder.lib;webpdemux.lib;zlib.lib;zstd_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>nhocr.lib;archive.lib;bz2.lib;charset.lib;gif.lib;iconv.lib;jpeg.lib;leptonica-1.82.0.lib;libcrypto.lib;libpng16.lib;libprotobuf-lite.lib;libprotobuf.lib;libprotoc.lib;libssl.lib;libwebpmux.lib;libxml2.lib;lz4.lib;lzma.lib;opencv_calib3d.lib;opencv_core.lib;opencv_dnn.lib;opencv_features2d.lib;opencv_flann.lib;opencv_highgui.lib;opencv_imgcodecs.lib;opencv_imgproc.lib;opencv_ml.lib;opencv_objdetect.lib;opencv_photo.lib;opencv_stitching.lib;opencv_video.lib;opencv_videoio.lib;openjp2.lib;quirc.lib;tesseract52.lib;tiff.lib;turbojpeg.lib;webp.lib;webpdecoder.lib;webpdemux.lib;webpmux.lib;zlib.lib;zstd.lib;zstd_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>

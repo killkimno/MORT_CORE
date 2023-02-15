@@ -207,7 +207,7 @@ public:
 	 void openSettingFile(char *dbFileName);
 	 bool sequentialSearchDB(TranslationsDB *newDB);
 	 bool searchDB(TranslationsDB *ocrDB , TranslationsDB *resultDB, int adjustRange, int mapTokenIndex, int *nowDistance, int *nowTextDistance);
-	 bool searchJpnDB(TranslationsDB *ocrDB , TranslationsDB *resultDB, int adjustRange, int mapTokenIndex, int *nowDistance, int *nowTextDistance);
+	 bool searchJpnDB(TranslationsDB *ocrDB , TranslationsDB *resultDB, int adjustRange, int mapTokenIndex, int *nowDistance, int *nowTextDistance, int minCardinate);
 	 std::wstring getTranslation(std::wstring text, bool& isFound);
 	 int compareWordList(std::vector<int> ocrWordValueList, std::vector<int> dbWordValueList, int ocrCount, int dbCount);
 	 int compareOriginalText(std::wstring inputText, std::wstring resultText);
