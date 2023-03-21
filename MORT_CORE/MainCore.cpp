@@ -598,7 +598,7 @@ bool MainCore::searchJpnDB(TranslationsDB* newDB, TranslationsDB* resultDB, int 
 			&& it->second.value <= newDB->value + adjustRange)
 		{
 			int newDistance = abs((int)((it->second.textLength - newDB->textLength) / 5));
-			if (newDistance == 0 && it->second.value == newDB->value)
+			if (newDistance == 0 && it->second.value == newDB->value && it->second.altText == newDB->altText)
 			{
 				std::wcout << "Find? : " << it->second.altText << std::endl;
 				*resultDB = it->second;
@@ -623,7 +623,7 @@ bool MainCore::searchJpnDB(TranslationsDB* newDB, TranslationsDB* resultDB, int 
 					*resultDB = it->second;
 					*nowDistance = newDistance;
 					*nowTextDistance = newExtraDistance;
-					if ( abs(*nowTextDistance) <= 2 || *nowTextDistance <= resultDB->textLength / 11)
+					if ((resultDB->textLength > 5 && abs(*nowTextDistance) <= 2) || *nowTextDistance <= resultDB->textLength / 11)
 					{
 						*resultDB = it->second;
 						*nowDistance = newDistance;
