@@ -38,17 +38,19 @@
 #ifndef GOOGLE_PROTOBUF_TEXT_FORMAT_H__
 #define GOOGLE_PROTOBUF_TEXT_FORMAT_H__
 
+
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
 
 #include <google/protobuf/stubs/common.h>
+#include <google/protobuf/port.h>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/message.h>
 #include <google/protobuf/message_lite.h>
-#include <google/protobuf/port.h>
 
+// Must be included last.
 #include <google/protobuf/port_def.inc>
 
 #ifdef SWIG
@@ -57,6 +59,11 @@
 
 namespace google {
 namespace protobuf {
+
+namespace internal {
+PROTOBUF_EXPORT extern const char kDebugStringSilentMarker[1];
+PROTOBUF_EXPORT extern const char kDebugStringSilentMarkerForDetection[3];
+}  // namespace internal
 
 namespace io {
 class ErrorCollector;  // tokenizer.h
@@ -213,7 +220,7 @@ class PROTOBUF_EXPORT TextFormat {
     virtual ~Finder();
 
     // Try to find an extension of *message by fully-qualified field
-    // name.  Returns NULL if no extension is known for this name or number.
+    // name.  Returns nullptr if no extension is known for this name or number.
     // The base implementation uses the extensions already known by the message.
     virtual const FieldDescriptor* FindExtension(Message* message,
                                                  const std::string& name) const;
@@ -224,7 +231,7 @@ class PROTOBUF_EXPORT TextFormat {
         const Descriptor* descriptor, int number) const;
 
     // Find the message type for an Any proto.
-    // Returns NULL if no message is known for this name.
+    // Returns nullptr if no message is known for this name.
     // The base implementation only accepts prefixes of type.googleprod.com/ or
     // type.googleapis.com/, and searches the DescriptorPool of the parent
     // message.
@@ -365,6 +372,13 @@ class PROTOBUF_EXPORT TextFormat {
                                 const MessagePrinter* printer);
 
    private:
+    friend std::string Message::DebugString() const;
+    friend std::string Message::ShortDebugString() const;
+    friend std::string Message::Utf8DebugString() const;
+
+    // Sets whether *DebugString should insert a silent marker.
+    void SetInsertSilentMarker(bool v) { insert_silent_marker_ = v; }
+
     // Forward declaration of an internal class used to print the text
     // output to the OutputStream (see text_format.cc for implementation).
     class TextGenerator;
@@ -447,16 +461,15 @@ class PROTOBUF_EXPORT TextFormat {
   };
 
   // Parses a text-format protocol message from the given input stream to
-  // the given message object. This function parses the human-readable format
-  // written by Print(). Returns true on success. The message is cleared first,
-  // even if the function fails -- See Merge() to avoid this behavior.
+  // the given message object. This function parses the human-readable
+  // serialization format written by Print(). Returns true on success. The
+  // message is cleared first, even if the function fails -- See Merge() to
+  // avoid this behavior.
   //
   // Example input: "user {\n id: 123 extra { gender: MALE language: 'en' }\n}"
   //
-  // One use for this function is parsing handwritten strings in test code.
-  // Another use is to parse the output from google::protobuf::Message::DebugString()
-  // (or ShortDebugString()), because these functions output using
-  // google::protobuf::TextFormat::Print().
+  // One common use for this function is parsing handwritten strings in test
+  // code.
   //
   // If you would like to read a protocol buffer serialized in the
   // (non-human-readable) binary wire format, see
@@ -564,18 +577,19 @@ class PROTOBUF_EXPORT TextFormat {
     // Like TextFormat::MergeFromString().
     bool MergeFromString(ConstStringParam input, Message* output);
 
-    // Set where to report parse errors.  If NULL (the default), errors will
+    // Set where to report parse errors.  If nullptr (the default), errors will
     // be printed to stderr.
     void RecordErrorsTo(io::ErrorCollector* error_collector) {
       error_collector_ = error_collector;
     }
 
-    // Set how parser finds extensions.  If NULL (the default), the
+    // Set how parser finds extensions.  If nullptr (the default), the
     // parser will use the standard Reflection object associated with
     // the message being parsed.
     void SetFinder(const Finder* finder) { finder_ = finder; }
 
-    // Sets where location information about the parse will be written. If NULL
+    // Sets where location information about the parse will be written. If
+    // nullptr
     // (the default), then no location will be written.
     void WriteLocationsTo(ParseInfoTree* tree) { parse_info_tree_ = tree; }
 

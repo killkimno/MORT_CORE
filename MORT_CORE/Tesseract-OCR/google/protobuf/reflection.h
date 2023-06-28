@@ -33,6 +33,7 @@
 #ifndef GOOGLE_PROTOBUF_REFLECTION_H__
 #define GOOGLE_PROTOBUF_REFLECTION_H__
 
+
 #include <memory>
 
 #include <google/protobuf/message.h>
@@ -42,6 +43,7 @@
 #error "You cannot SWIG proto headers"
 #endif
 
+// Must be included last.
 #include <google/protobuf/port_def.inc>
 
 namespace google {
@@ -92,7 +94,7 @@ class RepeatedFieldRef<
     const Reflection* reflection = message.GetReflection();
     data_ = reflection->RepeatedFieldData(const_cast<Message*>(&message), field,
                                           internal::RefTypeTraits<T>::cpp_type,
-                                          NULL);
+                                          nullptr);
     accessor_ = reflection->RepeatedFieldAccessor(field);
   }
 
@@ -143,7 +145,7 @@ class MutableRepeatedFieldRef<
   MutableRepeatedFieldRef(Message* message, const FieldDescriptor* field) {
     const Reflection* reflection = message->GetReflection();
     data_ = reflection->RepeatedFieldData(
-        message, field, internal::RefTypeTraits<T>::cpp_type, NULL);
+        message, field, internal::RefTypeTraits<T>::cpp_type, nullptr);
     accessor_ = reflection->RepeatedFieldAccessor(field);
   }
 
@@ -504,7 +506,7 @@ struct RefTypeTraits<
   typedef T* IteratorPointerType;
   static constexpr FieldDescriptor::CppType cpp_type =
       PrimitiveTraits<T>::cpp_type;
-  static const Descriptor* GetMessageFieldDescriptor() { return NULL; }
+  static const Descriptor* GetMessageFieldDescriptor() { return nullptr; }
 };
 
 template <typename T>
@@ -518,7 +520,7 @@ struct RefTypeTraits<
   typedef int32_t* IteratorPointerType;
   static constexpr FieldDescriptor::CppType cpp_type =
       FieldDescriptor::CPPTYPE_ENUM;
-  static const Descriptor* GetMessageFieldDescriptor() { return NULL; }
+  static const Descriptor* GetMessageFieldDescriptor() { return nullptr; }
 };
 
 template <typename T>
@@ -531,7 +533,7 @@ struct RefTypeTraits<
   typedef const std::string* IteratorPointerType;
   static constexpr FieldDescriptor::CppType cpp_type =
       FieldDescriptor::CPPTYPE_STRING;
-  static const Descriptor* GetMessageFieldDescriptor() { return NULL; }
+  static const Descriptor* GetMessageFieldDescriptor() { return nullptr; }
 };
 
 template <typename T>
@@ -542,7 +544,7 @@ struct MessageDescriptorGetter {
 };
 template <>
 struct MessageDescriptorGetter<Message> {
-  static const Descriptor* get() { return NULL; }
+  static const Descriptor* get() { return nullptr; }
 };
 
 template <typename T>
