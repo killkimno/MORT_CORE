@@ -1045,7 +1045,7 @@ std::wstring MainCore::GetMatchingSpellingCheck(std::wstring text, bool* isRepla
 			//std::wcout << "step4 " << it->second.originalText << std::endl;
 			if (it->second.tokenSize > nowTokenCount)
 			{
-				int textSize = textList.max_size();
+				int textSize = textList.size();
 				int textListSize = it->second.originalTextList.size();
 
 				for (int j = 0; j < it->second.tokenSize && i + j < textSize && j < textListSize; j++)
