@@ -1,6 +1,6 @@
 # MORT_CORE
 
-<img src="https://github.com/killkimno/MORT/blob/master/MORT_LOGO.png" width="90%"></img>
+<img src="https://github.com/killkimno/MORT/blob/main/MORT_LOGO.png" width="90%"></img>
 
 MORT 프로젝트에 필요한 MORT_CORE.DLL
 
