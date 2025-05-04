@@ -1152,7 +1152,7 @@ std::wstring MainCore::GetLetterSpellingCheck(std::wstring text, bool* isReplace
 			if (it->second.tokenSize > nowTokenCount)
 			{
 				for (int j = 0; j < it->second.tokenSize; j++)
-				{
+				{					
 					if (tokenSize < i + it->second.tokenSize)
 					{
 						isReplaceWordFlag = false;
@@ -1169,7 +1169,6 @@ std::wstring MainCore::GetLetterSpellingCheck(std::wstring text, bool* isReplace
 						if (debugMode.isActive && debugMode.isShowReplace)
 						{
 							debugText = debugText + text2;
-
 						}
 
 						isReplaceWordFlag = true;
@@ -1423,7 +1422,16 @@ void MainCore::openDicFile(char* dicFileText)
 
 	if (isUseJpnFlag == false)
 	{
-		ReadMatchingDicFile("dic.txt");
+		if (isUseMatchWordDic)
+		{
+			ReadMatchingDicFile("dic.txt");
+		}
+		else
+		{
+			ReadUnMatchingDicFile("dic.txt");
+		}
+
+		
 		if (strcmp(dicFileText, "") != 0 && strcmp(dicFileText, "dic.txt") != 0 && strcmp(dicFileText, "dicJpn.txt") != 0)
 		{
 			if (isUseMatchWordDic)
