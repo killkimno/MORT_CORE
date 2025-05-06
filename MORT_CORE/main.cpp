@@ -61,9 +61,9 @@ void getImg(int captureIndex)
 	myMainCore->getScreen(screenImg, captureIndex);
 }
 
-void getImg2(int captureIndex, uint8_t* data, int widht, int height, int positionX, int positionY)
+void GetImgWithData(int captureIndex, uint8_t* data, int widht, int height, int positionX, int positionY, bool getOriginal)
 {
-	myMainCore->getScreen2(screenImg, captureIndex, data, widht, height, positionX, positionY);
+	myMainCore->GetImgWithData(screenImg, captureIndex, data, widht, height, positionX, positionY, getOriginal);
 }
 
 bool isError = false;
@@ -559,7 +559,7 @@ processOcrWithData(wchar_t resultOriginal[], wchar_t resultTranslation[], int wi
 	std::wstring translationResult = L"";
 	if (captureCount == 1)
 	{
-		getImg2(0, data, width, height, positionX, positionY);
+		GetImgWithData(0, data, width, height, positionX, positionY, false);
 		getText(&getDB);
 
 		ocrResult = ocrResult + getDB.original + L"\r\n";
@@ -569,7 +569,7 @@ processOcrWithData(wchar_t resultOriginal[], wchar_t resultTranslation[], int wi
 	{
 		for (int i = 0; i < captureCount; i++)
 		{
-			getImg2(i, data, width, height, positionX, positionY);
+			GetImgWithData(i, data, width, height, positionX, positionY, false);
 			getText(&getDB);
 
 			if (myMainCore->GetIsShowOCRIndex())
@@ -647,14 +647,14 @@ processGetImgData(int caputreIndex, int* x, int* y, int* channels, int* location
 
 //이미지 결과 가져오기.
 extern "C" __declspec(dllexport)uchar *
-processGetImgDataFromByte(int caputreIndex, int width, int height, int positionX, int positionY, uint8_t * data, int* x, int* y, int* channels) {
+ProcessGetImgDataFromByte(int caputreIndex, int width, int height, int positionX, int positionY, uint8_t * data, int* x, int* y, int* channels, bool getOriginal) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	//std::cout << "ssss"  << (int)(data[0]) << "/"<< (int) data[1] << "/" << (int)data[2] << "/" << (int)data[3];
 	if (captureCount >= caputreIndex + 1)
 	{
 
-		getImg2(caputreIndex, data, width, height, positionX, positionY);
+		GetImgWithData(caputreIndex, data, width, height, positionX, positionY, getOriginal);
 
 		//data = screenImg->data;
 		*y = screenImg->size().height;

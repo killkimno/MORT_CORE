@@ -2339,7 +2339,7 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 
 
 //화면 가져오기
-void MainCore::getScreen2(cv::Mat* newImg, int captureIndex, uint8_t* bytes, int _width, int _height, int positionX, int positionY)
+void MainCore::GetImgWithData(cv::Mat* newImg, int captureIndex, uint8_t* bytes, int _width, int _height, int positionX, int positionY, bool getOriginal)
 {
 
 	int xStart = cutCodinateXList[captureIndex] - positionX;
@@ -2402,9 +2402,11 @@ void MainCore::getScreen2(cv::Mat* newImg, int captureIndex, uint8_t* bytes, int
 	}
 
 
-
-	//if(isAdvencedIMGOptionFlag == true)
-	adjustImg(newImg, captureIndex);
+	if (!getOriginal)
+	{
+		adjustImg(newImg, captureIndex);
+	}
+	
 	RemoveAreaImg(newImg, captureIndex);
 
 
