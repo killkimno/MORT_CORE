@@ -218,7 +218,7 @@ public:
 	 void ClearOcrColorSet();
 	 void AddOcrColorSet(int colorList[], int size);
 	 void getScreen(cv::Mat *newImg, int captureIndex);
-	 void getScreen(cv::Mat* newImg, int captureIndex , int *locationX, int *locationY);
+	 void getScreen(cv::Mat* newImg, int captureIndex , int *locationX, int *locationY, bool getOriginal);
 	 void GetImgWithData(cv::Mat* newImg, int captureIndex, uint8_t* data, int _width, int _height , int positionX, int positionY, bool getOriginal);
 	 void adjustImg(cv::Mat* img, int captureIndex);
 	 void RemoveAreaImg(cv::Mat* newImg, int captureIndex);

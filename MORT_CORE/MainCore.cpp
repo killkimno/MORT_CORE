@@ -2139,7 +2139,7 @@ void MainCore::RemoveAreaImg(cv::Mat* newImg, int captureIndex)
 }
 
 //화면 가져오기
-void MainCore::getScreen(cv::Mat* newImg, int captureIndex, int* locationX, int* locationY)
+void MainCore::getScreen(cv::Mat* newImg, int captureIndex, int* locationX, int* locationY, bool getOriginal)
 {
 
 	std::wcout << std::endl << L" Start Get Screen" << std::endl;
@@ -2311,8 +2311,11 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex, int* locationX, int*
 	DeleteObject(hbmp);
 	ReleaseDC(NULL, hdcScreen);;
 
-	//if(isAdvencedIMGOptionFlag == true)
-	adjustImg(newImg, captureIndex);
+	if (!getOriginal)
+	{
+		adjustImg(newImg, captureIndex);
+	}
+	
 	RemoveAreaImg(newImg, captureIndex);
 
 
@@ -2327,12 +2330,12 @@ void MainCore::getScreen(cv::Mat* newImg, int captureIndex, int* locationX, int*
 
 
 
-//화면 가져오기
+//OCR 처리를 위한 화면 가져오기
 void MainCore::getScreen(cv::Mat* newImg, int captureIndex)
 {
 	int locationX = 0;
 	int locationY = 0;
-	getScreen(newImg, captureIndex, &locationX, &locationY);
+	getScreen(newImg, captureIndex, &locationX, &locationY, false);
 
 }
 
