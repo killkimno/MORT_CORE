@@ -42,7 +42,6 @@ protected:
 	std::vector<std::vector<int>> useColorSetList;		//사용한 색그룹.
 	
 	bool isActiveWindow;				//활성화 된 윈도우로 이미지 추출
-	bool isUseNHocrFlag;				//NHOcr 사용 여부
 	bool isUseWin10OCR;					//윈도우 OCR 사용 여부.
 	bool isUseJpnFlag;					//일본어를 사용하는가
 	bool isUseDBFlag;					//DB파일에서 번역본 가져온다 설정
@@ -195,14 +194,12 @@ public:
 	 void setDefaultOption();
 	 void SetIsStringUpper(bool isUpper);	//대소문자 구별 무시 설정.
 	 void SetIsActiveWindow(bool isActiveWindow);
-	 void SetIsUseNHocr(bool isUseNHocr);
 	 void setIsUseJpnFlag(bool newJpnFlag);
 	 bool GetIsUseJpnFlag();
 	 void setFiducialValue(int newFiducialR[], int newFiducialG[], int newFiducialB[], int newFiducialSS[], int newFiducialES[], int newFiducialSV[], int newFiducialEV[], int newSize);
 	 void setUseDB(bool newIsUseDBFlag ,  bool _IsUsePartialDB,char *dbFileName);
 	 bool getUseDBFlag();
 	 bool GetIsUsePartialDB();
-	 bool GetIsUseNHocr();
 	 void setAdvencedImgOption(bool newIsUseRGBFlag, bool newIsUseHSVFlag, bool newIsUseErodeFlag, float newImgZoomSize, bool isUseThreshold, int thresholdValue);
 	 void openSettingFile(char *dbFileName);
 	 bool sequentialSearchDB(TranslationsDB *newDB);

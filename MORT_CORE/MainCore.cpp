@@ -171,7 +171,6 @@ void MainCore::SetShowOCRIndex(bool isShow)
 void MainCore::setDefaultOption()
 {
 	isActiveWindow = false;
-	isUseNHocrFlag = false;
 	isAdvencedIMGOptionFlag = false;		//이미지 보정 기능
 	isErodeOptionFlag = false;				//볼드형 폰트를 위한 기능
 	isRGBOptionFlag = false;				//rgb로 색 구분
@@ -197,18 +196,6 @@ void MainCore::SetIsStringUpper(bool isUpper)
 void MainCore::SetIsActiveWindow(bool isActiveWindow)
 {
 	this->isActiveWindow = isActiveWindow;
-}
-
-void MainCore::SetIsUseNHocr(bool isUseNHocr)
-{
-	isUseNHocrFlag = isUseNHocr;
-	if (isUseNHocrFlag)
-		isUseJpnFlag = true;
-}
-
-bool MainCore::GetIsUseNHocr()
-{
-	return isUseNHocrFlag;
 }
 
 void MainCore::setIsUseJpnFlag(bool newJpnFlag)
@@ -2389,7 +2376,7 @@ void MainCore::GetImgWithData(cv::Mat* newImg, int captureIndex, uint8_t* bytes,
 		yEnd = 1;
 	}
 
-	std::cout << "x start " << xStart << " / xEnd " << xEnd << " / yStart " << yStart << " / yEnd " << yEnd;
+	//std::cout << "x start " << xStart << " / xEnd " << xEnd << " / yStart " << yStart << " / yEnd " << yEnd;
 
 	cv::Mat targetImg = cv::Mat(_height, _width, CV_8UC4, bytes);
 	cv::Mat targetImg2 = targetImg(cv::Range::Range(yStart, yEnd), cv::Range::Range(xStart, xEnd));

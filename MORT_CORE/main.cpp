@@ -33,8 +33,6 @@ Part 1: Extracting contours from text
 
 using namespace std;
 using namespace cv;
-extern "C" __declspec(dllimport)void InitNHOCR();
-extern "C" __declspec(dllimport)int ProcessNHocr(int imgWidth, int imgheight, uchar * data, wstring * resultString, int channel);
 tesseract::TessBaseAPI api;
 MainCore* myMainCore = new MainCore();
 Mat* screenImg = new Mat();
@@ -51,9 +49,9 @@ extern std::wstring utfStringToWstring(std::string originalString);
 extern std::wstring stringToWstring(std::string originalString);
 
 
-void GetImg(int captureIndex, int* locationX, int* locationY)
+void GetImg(int captureIndex, int* locationX, int* locationY, bool getOriginal)
 {
-	myMainCore->getScreen(screenImg, captureIndex, locationX, locationY);
+	myMainCore->getScreen(screenImg, captureIndex, locationX, locationY, getOriginal);
 }
 
 void getImg(int captureIndex)
@@ -87,21 +85,7 @@ void getText(resultDB* result)
 	api.Clear();
 	std::string text;
 	std::wstring wText;
-	int nhocrResult = 1;
-
-
-	if (myMainCore->GetIsUseNHocr())
-	{
-		std::wcout << std::endl << L" Start Get nhocr" << std::endl;
-		myMainCore->debugStruct.debug = std::to_wstring(screenImg->channels());
-		nhocrResult = ProcessNHocr(screenImg->size().width, screenImg->size().height, screenImg->data, &wText, screenImg->channels());
-
-		if (nhocrResult == -1)
-		{
-			wText = L"error nhocr";
-		}
-	}
-	else
+	
 	{
 		
 		clock_t start, end;
@@ -300,7 +284,7 @@ void GetDBText(resultDB* result)
 
 	//std::wcout << std::endl << "OCR : " << result->original << std::endl;
 
-	std::cout << std::endl << "Found : " << isFound << " DB Time : " << time << std::endl;
+	//std::cout << std::endl << "Found : " << isFound << " DB Time : " << time << std::endl;
 }
 
 extern "C" __declspec(dllexport)void
@@ -329,12 +313,6 @@ extern "C" __declspec(dllexport)void
 SetIsActiveWindow(bool isActiveWindow)
 {
 	myMainCore->SetIsActiveWindow(isActiveWindow);
-}
-
-extern "C" __declspec(dllexport)void
-SetIsUseNHocr(bool isUseNHocr)
-{
-	myMainCore->SetIsUseNHocr(isUseNHocr);
 }
 
 extern "C" __declspec(dllexport)void
@@ -420,9 +398,7 @@ SetShowOCRIndex(bool isShow)
 extern "C" __declspec(dllexport)void
 initOcr() {
 
-	isError = false;
-	std::wcout << "init nhocr" << std::endl;
-	InitNHOCR();
+	isError = false;;
 	std::wcout << "init setting" << std::endl;
 	myMainCore->init();
 
@@ -611,12 +587,12 @@ processOcrWithData(wchar_t resultOriginal[], wchar_t resultTranslation[], int wi
 
 //이미지 결과 가져오기.
 extern "C" __declspec(dllexport)uchar *
-processGetImgData(int caputreIndex, int* x, int* y, int* channels, int* locationX, int* locationY) {
+processGetImgData(int caputreIndex, int* x, int* y, int* channels, int* locationX, int* locationY, bool getOriginal) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	if (captureCount >= caputreIndex + 1)
 	{
-		GetImg(caputreIndex, locationX, locationY);
+		GetImg(caputreIndex, locationX, locationY, getOriginal);
 		//data = screenImg->data;
 		*y = screenImg->size().height;
 		*x = screenImg->size().width;
@@ -638,8 +614,6 @@ processGetImgData(int caputreIndex, int* x, int* y, int* channels, int* location
 		return NULL;
 	}
 
-	//myMainCore->debugStruct.debug = std::to_wstring(screenImg->channels());
-	//nhocrResult = ProcessNHocr(screenImg->size().width, screenImg->size().height, screenImg->data, &wText, screenImg->channels());
 
 }
 
