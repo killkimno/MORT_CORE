@@ -997,7 +997,7 @@ void MainCore::analysisText(std::wstring text, struct TranslationsDB* newDB)
 //완전히 매칭 되는 단어로 검색.
 std::wstring MainCore::GetMatchingSpellingCheck(std::wstring text, bool* isReplaceFlag)
 {
-	//std::wcout << text << L"End?";
+	std::wcout << text << L"End?";
 	std::wstring resultSTring = L"";
 
 	StringTokenizer tokens(text, L" ");
@@ -1010,7 +1010,7 @@ std::wstring MainCore::GetMatchingSpellingCheck(std::wstring text, bool* isRepla
 	std::wstring debugText = L"";
 
 
-	//std::wcout << "step1 " << text << std::endl;
+	std::wcout << "step1 " << text << std::endl;
 	std::vector<std::wstring> textList;
 
 	for (int x = 1; tokens.hasMoreTokens(); x++)
@@ -1018,7 +1018,7 @@ std::wstring MainCore::GetMatchingSpellingCheck(std::wstring text, bool* isRepla
 		textList.push_back(tokenString = tokens.nextToken());
 	}
 
-	//std::cout << "step 2 token size : " << tokenSize;
+	std::cout << "step 2 token size : " << tokenSize;
 	std::pair <std::multimap<std::wstring, DicDB>::iterator, std::multimap<std::wstring, DicDB>::iterator> mapPD;
 	for (int i = 0; i < tokenSize; )			//원문 갯수 만큼 돌림
 	{
@@ -1029,7 +1029,7 @@ std::wstring MainCore::GetMatchingSpellingCheck(std::wstring text, bool* isRepla
 		for (std::multimap<std::wstring, DicDB>::iterator it = mapPD.first; it != mapPD.second; ++it)
 		{
 			debugText = L"";
-			//std::wcout << "step4 " << it->second.originalText << std::endl;
+			std::wcout << "step4 " << it->second.originalText << std::endl;
 			if (it->second.tokenSize > nowTokenCount)
 			{
 				int textSize = textList.size();

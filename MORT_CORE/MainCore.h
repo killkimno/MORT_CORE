@@ -41,26 +41,59 @@ protected:
 	std::vector<int> cutWidthList;	
 	std::vector<std::vector<int>> useColorSetList;		//사용한 색그룹.
 	
-	bool isActiveWindow;				//활성화 된 윈도우로 이미지 추출
-	bool isUseWin10OCR;					//윈도우 OCR 사용 여부.
-	bool isUseJpnFlag;					//일본어를 사용하는가
-	bool isUseDBFlag;					//DB파일에서 번역본 가져온다 설정
-	bool isUsePartialDB;				//부분일치 검색 사용어부.
-	bool isUseSpellcheckFlag;			//스펠링 체크.
-	bool isUseMatchWordDic;		//스펠링 체크.
-	int reCehckSpllingCount;	//교정사전 추가 검사 횟수
-	bool isStringUpper;					//대소문자 구분 안 함.
+// 활성화 된 윈도우로 이미지 추출
+bool isActiveWindow = false; 
 
-	bool isAdvencedIMGOptionFlag;		//이미지 보정 기능
-	bool isErodeOptionFlag;				//볼드형 폰트를 위한 기능
-	bool isRGBOptionFlag;				//rgb로 색 구분
-	bool isHSVOptionFlag;				//hsv로 색 구분
-	bool isThresHold;					//임계치 사용
-	int thresholdValue;
-	float imgZoomSize;					//OCR 추출 이미지 확대 사이즈
+// 윈도우 OCR 사용 여부.
+bool isUseWin10OCR = false; 
 
-	bool isRemoveSpace = false;					//공백 제거.
-	bool isShowOCRIndex = false;				//OCR 인덱스 표시
+// 일본어를 사용하는가
+bool isUseJpnFlag = false; 
+
+// DB파일에서 번역본 가져온다 설정
+bool isUseDBFlag = false; 
+
+// 부분일치 검색 사용어부.
+bool isUsePartialDB = false; 
+
+// 스펠링 체크.
+bool isUseSpellcheckFlag = false; 
+
+// 스펠링 체크.
+bool isUseMatchWordDic = false; 
+
+// 교정사전 추가 검사 횟수
+int reCehckSpllingCount = 0; 
+
+// 대소문자 구분 안 함.
+bool isStringUpper = false; 
+
+// 이미지 보정 기능
+bool isAdvencedIMGOptionFlag = false; 
+
+// 볼드형 폰트를 위한 기능
+bool isErodeOptionFlag = false; 
+
+// rgb로 색 구분
+bool isRGBOptionFlag = false; 
+
+// hsv로 색 구분
+bool isHSVOptionFlag = false; 
+
+// 임계치 사용
+bool isThresHold = false; 
+
+// 임계치 값
+int thresholdValue = 127; // 임계치는 보통 0~255 사이 값이므로 127을 기본값으로 제안
+
+// OCR 추출 이미지 확대 사이즈
+float imgZoomSize = 1.0f; 
+
+// 공백 제거.
+bool isRemoveSpace = false; 
+
+// OCR 인덱스 표시
+bool isShowOCRIndex = false;
 
 	struct DebugMode					//디버그 모드.
 	{
