@@ -570,6 +570,21 @@ bool MainCore::searchDB(TranslationsDB* newDB, TranslationsDB* resultDB, int adj
 	return isFindTranslationFlag;
 }
 
+inline void LogToFile(const std::wstring& message)
+{
+	std::ofstream file("MORT_DEBUG.log", std::ios::app);
+	if (file.is_open())
+	{
+		// wstring을 UTF-8 문자열로 변환
+		int size = WideCharToMultiByte(CP_UTF8, 0, message.c_str(), -1, NULL, 0, NULL, NULL);
+		std::string utf8_str(size - 1, 0);
+		WideCharToMultiByte(CP_UTF8, 0, message.c_str(), -1, &utf8_str[0], size, NULL, NULL);
+
+		file << utf8_str << std::endl;
+		file.close();
+	}
+}
+
 
 bool MainCore::searchJpnDB(TranslationsDB* newDB, TranslationsDB* resultDB, int adjustRange, int mapTokenIndex, int* nowDistance, int* nowTextDistance, int minCardinateDistance)
 {
@@ -587,7 +602,7 @@ bool MainCore::searchJpnDB(TranslationsDB* newDB, TranslationsDB* resultDB, int 
 			int newDistance = abs((int)((it->second.textLength - newDB->textLength) / 5));
 			if (newDistance == 0 && it->second.value == newDB->value && it->second.altText == newDB->altText)
 			{
-				std::wcout << "Find? : " << it->second.altText << std::endl;
+				//LogToFile(L"Find? : " + it->second.altText);
 				*resultDB = it->second;
 				*nowDistance = newDistance;
 				isFindTranslationFlag = true;
